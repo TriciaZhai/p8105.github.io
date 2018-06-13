@@ -21,8 +21,8 @@ knitr::opts_chunk$set(
 
 ## Some slides
 
-<script async class="speakerdeck-embed" data-id="e75fb41a3142444f9cde9fb3110a1858" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
-<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-data-import" title="Data Import" target="_blank">Data Import</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
+<script async class="speakerdeck-embed" data-id="d59e5ea4d1674e6785ec9aea6620b7b2" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-data-import" title="Data Import" target="_blank">Data Import</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
 
 
 ## Example
