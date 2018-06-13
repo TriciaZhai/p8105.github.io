@@ -41,8 +41,8 @@ navbar:
     href: homework_and_projects.html
   - text: Communication
     href: course_communication.html
-  - icon: fa-github fa-lg
-    href: http://github.com/jeff-goldsmith/DSI/
+  - icon: fa-github
+    href: https://github.com/P8105/p8105.github.io
 output:
   html_document:
     theme: cosmo

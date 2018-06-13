@@ -2,7 +2,7 @@
 title: ""
 ---
 
-<br><br><img src="images/dsi_logo.jpg" alt="logo" style="width:85%; border:10px solid"><br>
+<br><br><img src="images/p8105_logo.jpg" alt="logo" style="width:85%; border:10px solid"><br>
 
 
 Contemporary biostatistics and data analysis depends on the mastery of tools for computation, exploratory analysis, visualization, dissemination, and reproducibility, in addition to proficiency in traditional statistical techniques. The goal of this course is to provide training in the elements of a complete pipeline for data analysis. We will develop skills in data wrangling, reproducible research, software development, collaboration, and effective communication; all programming will be done in R. Although there are no formal prerequisites for this course, some familiarity with statistics and basic programming knowledge will be helpful.

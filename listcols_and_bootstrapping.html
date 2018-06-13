@@ -23,10 +23,12 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
 <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+<script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -35,12 +37,10 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs) {
-  hljs.configure({languages: []});
-  hljs.initHighlightingOnLoad();
-  if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
-  }
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
 }
 </script>
 
@@ -351,8 +351,8 @@ div.tocify {
   <a href="course_communication.html">Communication</a>
 </li>
 <li>
-  <a href="http://github.com/jeff-goldsmith/DSI/">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/P8105/p8105.github.io">
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -426,62 +426,62 @@ weather_nest
 weather_nest %&gt;% pull(data)
 ## [[1]]
 ## # A tibble: 366 x 4
-##   date        prcp  tmax  tmin
-##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 2016-01-01     0   5.6   1.1
-## 2 2016-01-02     0   4.4   0  
-## 3 2016-01-03     0   7.2   1.7
-## 4 2016-01-04     0   2.2  -9.9
-## 5 2016-01-05     0  -1.6 -11.6
-## 6 2016-01-06     0   5    -3.8
+##   date        prcp  tmax   tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+## 1 2016-01-01    0.  5.60   1.10
+## 2 2016-01-02    0.  4.40   0.  
+## 3 2016-01-03    0.  7.20   1.70
+## 4 2016-01-04    0.  2.20  -9.90
+## 5 2016-01-05    0. -1.60 -11.6 
+## 6 2016-01-06    0.  5.00  -3.80
 ## # ... with 360 more rows
 ## 
 ## [[2]]
 ## # A tibble: 366 x 4
 ##   date        prcp  tmax  tmin
 ##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 2016-01-01     0  29.4  16.7
-## 2 2016-01-02     0  28.3  16.7
-## 3 2016-01-03     0  28.3  16.7
-## 4 2016-01-04     0  28.3  16.1
-## 5 2016-01-05     0  27.2  16.7
-## 6 2016-01-06     0  27.2  20  
+## 1 2016-01-01    0.  29.4  16.7
+## 2 2016-01-02    0.  28.3  16.7
+## 3 2016-01-03    0.  28.3  16.7
+## 4 2016-01-04    0.  28.3  16.1
+## 5 2016-01-05    0.  27.2  16.7
+## 6 2016-01-06    0.  27.2  20.0
 ## # ... with 360 more rows
 ## 
 ## [[3]]
 ## # A tibble: 366 x 4
-##   date        prcp  tmax  tmin
-##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 2016-01-01     0   1.7  -5.9
-## 2 2016-01-02    25  -0.1  -6  
-## 3 2016-01-03     0  -5   -10  
-## 4 2016-01-04    25   0.3  -9.8
-## 5 2016-01-05    25   1.9  -1.8
-## 6 2016-01-06    25   1.4  -2.6
+##   date        prcp   tmax   tmin
+##   &lt;date&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 2016-01-01    0.  1.70   -5.90
+## 2 2016-01-02   25. -0.100  -6.00
+## 3 2016-01-03    0. -5.00  -10.0 
+## 4 2016-01-04   25.  0.300  -9.80
+## 5 2016-01-05   25.  1.90   -1.80
+## 6 2016-01-06   25.  1.40   -2.60
 ## # ... with 360 more rows</code></pre>
 <p>The list column really is a list, and will behave as such elsewhere in R. So, for example, you can examine the first list entry using usual list index procedures.</p>
 <pre class="r"><code>weather_nest$data[[1]]
 ## # A tibble: 366 x 4
-##   date        prcp  tmax  tmin
-##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 2016-01-01     0   5.6   1.1
-## 2 2016-01-02     0   4.4   0  
-## 3 2016-01-03     0   7.2   1.7
-## 4 2016-01-04     0   2.2  -9.9
-## 5 2016-01-05     0  -1.6 -11.6
-## 6 2016-01-06     0   5    -3.8
+##   date        prcp  tmax   tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+## 1 2016-01-01    0.  5.60   1.10
+## 2 2016-01-02    0.  4.40   0.  
+## 3 2016-01-03    0.  7.20   1.70
+## 4 2016-01-04    0.  2.20  -9.90
+## 5 2016-01-05    0. -1.60 -11.6 
+## 6 2016-01-06    0.  5.00  -3.80
 ## # ... with 360 more rows</code></pre>
 <p>Of course, if you can <code>nest</code> data you should be able to <code>unnest</code> it as well, and you can (with the caveat that you’re unnesting a list column that contains a data frame).</p>
 <pre class="r"><code>unnest(weather_nest)
 ## # A tibble: 1,098 x 6
-##   name           id          date        prcp  tmax  tmin
-##   &lt;chr&gt;          &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 CentralPark_NY USW00094728 2016-01-01     0   5.6   1.1
-## 2 CentralPark_NY USW00094728 2016-01-02     0   4.4   0  
-## 3 CentralPark_NY USW00094728 2016-01-03     0   7.2   1.7
-## 4 CentralPark_NY USW00094728 2016-01-04     0   2.2  -9.9
-## 5 CentralPark_NY USW00094728 2016-01-05     0  -1.6 -11.6
-## 6 CentralPark_NY USW00094728 2016-01-06     0   5    -3.8
+##   name           id          date        prcp  tmax   tmin
+##   &lt;chr&gt;          &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+## 1 CentralPark_NY USW00094728 2016-01-01    0.  5.60   1.10
+## 2 CentralPark_NY USW00094728 2016-01-02    0.  4.40   0.  
+## 3 CentralPark_NY USW00094728 2016-01-03    0.  7.20   1.70
+## 4 CentralPark_NY USW00094728 2016-01-04    0.  2.20  -9.90
+## 5 CentralPark_NY USW00094728 2016-01-05    0. -1.60 -11.6 
+## 6 CentralPark_NY USW00094728 2016-01-06    0.  5.00  -3.80
 ## # ... with 1,092 more rows</code></pre>
 <p>Nesting columns can help with data organization and comprehension by masking complexity you’re less concerned about right now and clarifying the things you are concerned about. In the weather data, it can be helpful to think of stations as the basic unit of observation, and daily weather recordings as a more granular level of observation. Nesting can also simplify the use of analytic approaches across levels of a higher variable.</p>
 </div>
@@ -669,10 +669,10 @@ instacart_nest
 ## # A tibble: 4 x 7
 ##   department minimum    q1 median  mean    q3 maximum
 ##   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
-## 1 produce          0    10     14  13.6    16      23
-## 2 beverages        0    10     13  13.5    16      23
-## 3 deli             0    11     14  13.6    17      23
-## 4 snacks           0    10     14  13.5    16      23</code></pre>
+## 1 produce         0.   10.    14.  13.6   16.     23.
+## 2 beverages       0.   10.    13.  13.5   16.     23.
+## 3 deli            0.   11.    14.  13.6   17.     23.
+## 4 snacks          0.   10.    14.  13.5   16.     23.</code></pre>
 <p>That’s pretty neat!</p>
 </div>
 <div id="bootstrapping" class="section level3">
@@ -932,7 +932,9 @@ as_data_frame(boot_straps$strap[[1]])
 
 <br><br>
 <footer>
-    <p class="copyright text-muted" align="center">Copyright &copy; 2017 Jeff Goldsmith</p>
+  <img src="images/p8105_stickers.png" alt="stickers" style="width:25%">
+    <p class="copyright text-muted" align="center">Copyright &copy; 2018 Jeff Goldsmith</p>
+    <br><br>
 </footer>
 
 
