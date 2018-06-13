@@ -1,0 +1,13 @@
+---
+title: "Linear models"
+---
+
+Models
+
+This topic is made up of the following components:
+
+* 
+
+The slack channel for this topic is [here]().
+
+The code that I produced working examples in lecture is [here]().

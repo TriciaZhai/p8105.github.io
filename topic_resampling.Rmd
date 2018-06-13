@@ -1,0 +1,15 @@
+---
+title: "Resampling"
+---
+
+When writing code in general, and when implementing modern statistical approaches specifically, you'll find yourself doing the same thing over and over and _over_ and **_over_**. In these cases, abstracting what you're doing into a function and then using that function across a lot of iterations can simplify your code and make analysis much easier. Here we'll cover functions in R, and resampling approaches to inference.
+
+This topic is made up of the following components:
+
+* [Writing functions](writing_functions.html)
+* [Iteration and simulation](iteration_and_simulation.html)
+* [List columns and bootstrapping](listcols_and_bootstrapping.html)
+
+The slack channel for this topic is [here]().
+
+The code that I produced working examples in lecture is [here]().

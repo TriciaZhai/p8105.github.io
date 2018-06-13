@@ -1,0 +1,171 @@
+---
+title: "Best Practices"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+---
+
+Before starting more complex analyses and projects, you should establish some good habits.
+
+This is the second module in the [Building blocks](topic_building_blocks.html) topic; the relevant slack channel is [here]().
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+```
+
+## Some slides
+
+<script async class="speakerdeck-embed" data-id="74bdf749fff0470a8b61662d7dc31edc" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-best-practices" title="Best Practices" target="_blank">Best Practices</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
+
+
+## Example
+
+### Revisiting old examples
+
+Last class we introduced several vectors. Looking at these with a critical eye, they're not particularly well-named -- it's impossible to know the relationship between `vec1` and `vec4` without looking at them, and already I've forgotten which vector did what.
+
+```{r}
+vec1 = 5:8
+vec2 = c("My", "name", "is", "Jeff")
+vec3 = c(TRUE, TRUE, TRUE, FALSE)
+vec4 = factor(c("male", "male", "female", "female"))
+```
+
+Let's rename, and tidy up a bit while we're at it -- you really don't want to have a cluttered workspace, because you will forget what things are. This is also a good time to point out RStudio's tabbed autocompletion -- start typing a variable name and press Tab.
+
+```{r}
+vec_numeric = 5:8
+vec_char = c("My", "name", "is", "Jeff")
+vec_logical = c(TRUE, TRUE, TRUE, FALSE)
+vec_factor = factor(c("male", "male", "female", "female"))
+
+ls()
+rm(list = c("vec1", "vec2", "vec3", "vec4"))
+ls()
+```
+
+
+### Organizing code into readable scripts
+
+You should _always_ keep the complete code that was used for an analysis or project, no matter how brief. Your scripts should be self-contained -- they should include everything you did to produce what you wanted to produce. The two scripts below repeat content from a previous example.
+
+```{r, eval = FALSE}
+##################################################################
+# June 2, 2017
+# Jeff Goldsmith
+#
+# Script exploring vector classes
+##################################################################
+
+## create vectors
+vec_numeric = 5:8
+vec_char = c("My", "name", "is", "Jeff")
+vec_logical = c(TRUE, TRUE, TRUE, FALSE)
+vec_factor = factor(c("male", "male", "female", "female"))
+
+## check class of vectors
+class(vec_numeric)
+class(vec_char)
+class(vec_logical)
+class(vec_factor)
+
+## convert factor to numeric
+as.numeric(vec_factor)
+```
+
+Note use of `snake_case` naming convention. Whatever naming convention you like best, get in the habit of using it consistently.
+
+```{r, eval = FALSE}
+##################################################################
+# June 2, 2017
+# Jeff Goldsmith
+#
+# Script producing basic plots
+##################################################################
+
+## set seed to ensure reproducibility
+set.seed(1234)
+
+## define x and y
+x = rnorm(1000)
+y = 1 + 2 * x + rnorm(1000, 0, .4)
+
+## histogram of x
+hist(x)
+
+## scatterplot of y against x
+plot(x, y)
+```
+
+The scripts above illustrate some "best practices" that you should adopt:
+
+* There is a brief section at the outset identifying the author, giving the date, and providing a brief description of the content.
+* Each script includes comments describing each block or chunk
+* Variable names are reasonable in the context of the script
+* The code iteslf is easy-to-read -- adequate spacing within and between lines of code. (Turn on code diagnositics if you haven't already; this can be found in Preferences > Code > Diagnostics.)
+
+The organization of code into self-contained scripts is itself part of a bigger picture. Rather than focusing on the variables (or plots, or even complete analyses), focus on the code that produces them. Given whatever inputs you have (none for now, although later there will be data), your code should reliably produce whatever outputs you want. 
+
+To check how "real" your scripts are, clear out your workspace using `rm(list = ls())` and re-run everything. If everything works, great; if not, address the issue by editing your script. I do this frequently, and often start scripts with a line that clears the workspace. 
+
+R will, by default, save everything in your workspace. I strongly suggest you turn this behavior off (Preferences > General > Save Workspace: Never). First, doing so will remove a crutch early on and help you focus on your scripts. Second, saving your workspace automatically and doing so in the background can get you in trouble if (or when) you deal with patient data. 
+
+A final word about scripts -- not every line of code you write will (or should) make it to your scripts. It can take a few attempts to get code you like, and you don't need to save the intermediate stuff. You also don't need to save every bit of exploratory analysis you do -- keep the stuff that improved your understanding, but discard the rest. 
+
+
+### Organizing projects
+
+Your projects will generally consist of several related files -- input data, scripts, results. It's important to keep these organized, so you can find everything you need quickly and easily. R Projects, through RStudio, give you an easy way to do this. 
+
+Create a directory and save the previous two scripts into that directory. Script names, like variable names, should be descriptive (e.g. `20170602_data_classes.R` and `20170602_simple_plots.R`). The directory name should be descriptive as well, and it should be in a reasonable place on your computer (e.g. `~/Documents/First_Project/`). Create an R Project using File > New Project > Existing Directory and specifying the directory you just created.
+
+For now, the best part about R Projects is that they force you to think about and organize the elements you need for your analysis or project. Double-clicking the new `.Rproj` file will launch the R Project; you'll see a Files tab in the usual Plots / Packages / Help / Viewer pane. Later, we'll find R Projects useful in other ways. 
+
+
+### Paths and your working directory
+
+To this point, we've been working entirely inside RStudio without a need to access anything on your computer. That's allowed us to avoid a discussion of your Working Directory, but now we'll address that too. As you're working, R is sitting inside a single directory on your computer -- it can find files in that directory or output files to that directory. Check your current working directory using.
+```{r, eval = FALSE}
+getwd()
+```
+
+If you've opened your R Project, that should be your working directory. That's great! Another bit of encouragement to keep your stuff organized. This means that anything you output will be written to this directory:
+```{r, eval = FALSE}
+plot(x, y)
+dev.print(pdf, "scatter_plot.pdf", height = 4, width = 4)
+```
+With larger projects, it can be useful to create sub-directories for your project (e.g. `Data` and `Figures`) -- you don't need to worry about that for now, but when you do this use relative paths to keep everything self-contained.
+
+Note that we exported a figure using a command, rather than clicking the Export in the Plots tab. This is intentional -- whatever your script produces, it should do so exclusively from the code you've written.
+
+### Workflow
+
+All this together suggests a workflow. For every new project (and I mean _every new project_), do the following:
+
+* Create a directory with a reasonable name and path (e.g. `~/Documents/School/DSI/Homework_2/`)
+* Put an R Project in the directory
+* Keep everything related to the analysis -- data inputs, scripts, reports, output -- in there
+* Periodically check for reproducibility of the analysis
+
+Starting this habit early will save you a _ton_ of headaches along the road. If you find yourself not using R, everything about except the R Project part holds. 
+
+## Other materials
+
+This content draws on the work of others; there are also useful references for a lot of this online.
+
+* Jenny Bryan's [deep thoughts](https://www.slideshare.net/jenniferbryan5811/cm002-deep-thoughts) on data analytic work
+* Also, her intro to [workspaces, the working directory, and R Projects](http://stat545.com/block002_hello-r-workspace-wd-project.html)
+* Also also, her slides on [how to name files](https://speakerdeck.com/jennybc/how-to-name-files)
+* RStudio's [style guide](http://style.tidyverse.org)
+* The R for Data Science workflows on [scripts](http://r4ds.had.co.nz/workflow-scripts.html) and [projects](http://r4ds.had.co.nz/workflow-projects.html)
+* RStudio's guide to [using projects](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects)
+* Lastly, the BEH [Commandments for Variable Naming and Data Management](https://beh.columbia.edu/2016/08/03/commandments-for-variable-naming-and-data-management/) make a ton of sense
+
+The code that I produced working examples in lecture is [here](./lecture_code/best_practices.zip).

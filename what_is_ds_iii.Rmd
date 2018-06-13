@@ -1,0 +1,20 @@
+---
+title: "What is Data Science?"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+---
+
+In our final lecture of the course, we'll take a look back at what we've learned, understand the limitations of data, and present a perspective on data science as a whole. 
+
+## Some slides
+
+<script async class="speakerdeck-embed" data-id="285b7be7b93e400bb09208f08dac056c" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-what-is-data-science-iii" title="What is 'Data Science' Part III" target="_blank">"Data Science" Revisited</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
+
+
+
+## Other materials
+
+* Angela Bassa's post on why [Data Alone Isn't Ground Truth](https://medium.com/@angebassa/data-alone-isnt-ground-truth-9e733079dfd4) is an excellent reminder about the importance of context in analyzing data
