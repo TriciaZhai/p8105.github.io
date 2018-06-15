@@ -23,8 +23,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
@@ -37,10 +37,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -382,48 +384,76 @@ div.tocify {
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>I’ll write code for today’s content in a new R Markdown document called <code>strings_and_factors.Rmd</code>, and put it in the same directory / GitHub repo as <code>reading_data.Rmd</code>. I’m also going to load the usual packages, as well as <code>stringr</code> and <code>forcats</code>.</p>
+<p>I’ll write code for today’s content in a new R Markdown document called <code>strings_and_factors.Rmd</code>, and put it in the same directory / GitHub repo as <code>reading_data.Rmd</code>.</p>
 <pre class="r"><code>library(tidyverse)
-library(janitor)
-library(haven)
+## ── Attaching packages ─────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ✔ ggplot2 2.2.1     ✔ purrr   0.2.4
+## ✔ tibble  1.4.2     ✔ dplyr   0.7.5
+## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
+## ✔ readr   1.1.1     ✔ forcats 0.3.0
+## ── Conflicts ────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
 library(rvest)
-
-library(stringr)
-library(forcats)
+## Loading required package: xml2
+## 
+## Attaching package: &#39;rvest&#39;
+## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     pluck
+## The following object is masked from &#39;package:readr&#39;:
+## 
+##     guess_encoding
 
 theme_set(theme_bw())
 theme_update(legend.position = &quot;bottom&quot;)</code></pre>
+<div id="thoughts-on-factors" class="section level3">
+<h3>Thoughts on factors</h3>
+<p>Factors are maybe the least intuitive of <code>R</code>’s data types. They are very useful, but they also do things you don’t expect; this is especially bad when you have factors but think you have characters – which happens more than you’d expect, because R uses factors a lot (<a href="https://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/">mostly for historical reasons</a>). Folks get pretty <a href="https://twitter.com/JennyBryan/status/630052228624068609/photo/1">riled</a> <a href="https://cran.r-project.org/web/packages/hellno/hellno.pdf">up</a> about factors.</p>
+<p>Factors are the way to store categorical variables in R. They can take on specific levels (e.g. male and female) which are usually presented as characters but are, in fact, stored by R as integers. These integer values are used by functions throughout R – in making plots, in organizing tables, in determining the “reference” category – but most of the time are hidden by easier-to-read character strings.</p>
+<p>This is the kind of thing that can get you in trouble.</p>
+<pre class="r"><code>vec_sex = factor(c(&quot;male&quot;, &quot;male&quot;, &quot;female&quot;, &quot;female&quot;))
+as.numeric(vec_sex)
+## [1] 2 2 1 1
+
+vec_sex = relevel(vec_sex, ref = &quot;male&quot;)
+vec_sex
+## [1] male   male   female female
+## Levels: male female
+as.numeric(vec_sex)
+## [1] 1 1 2 2</code></pre>
+<p>The previous code also illustrates <a href="http://r4ds.had.co.nz/vectors.html#coercion"><em>coersion</em></a>: forcing a variable from one type (e.g. factor) to another (e.g. numeric). Understanding how R coerces variables is important, because it sometimes happens unintentionally, can break your code, or impact your analyses.</p>
+</div>
 <div id="pulse-data" class="section level3">
 <h3>PULSE data</h3>
 <p>We’ll start by revisiting a <a href="./data/public_pulse_data.sas7bdat">dataset</a> we’ve seen a few times now. In <a href="tidy_data.html">tidy data</a> we spent some time tidying the PULSE dataset; as part of that we used tools available to us at the time, but now we have some better tools.</p>
-<p>The code below updates the data processing pipeline for the PULSE data using <code>strignr</code> and <code>forcats</code>. The result is the same, and the differences are pretty small, but this is a bit cleaner.</p>
-<pre class="r"><code>pulse_data = read_sas(&quot;./data/public_pulse_data.sas7bdat&quot;) %&gt;%
-  clean_names() %&gt;%
+<p>The code below updates the data processing pipeline for the PULSE data using <code>stringr</code> and <code>forcats</code>. The result is the same, and the differences are pretty small, but this is a bit cleaner.</p>
+<pre class="r"><code>pulse_data = haven::read_sas(&quot;./data/public_pulse_data.sas7bdat&quot;) %&gt;%
+  janitor::clean_names() %&gt;%
   gather(key = visit, value = bdi, bdi_score_bl:bdi_score_12m) %&gt;%
-  mutate(visit = str_replace(visit, &quot;bdiscore_&quot;, &quot;&quot;),
+  mutate(visit = str_replace(visit, &quot;bdi_score_&quot;, &quot;&quot;),
          visit = str_replace(visit, &quot;bl&quot;, &quot;00m&quot;),
          visit = fct_relevel(visit, str_c(c(&quot;00&quot;, &quot;01&quot;, &quot;06&quot;, &quot;12&quot;), &quot;m&quot;))) %&gt;%
   arrange(id, visit)
 ## Warning: attributes are not identical across measure variables;
 ## they will be dropped
-## Warning: Unknown levels in `f`: 00m, 01m, 06m, 12m
 
 print(pulse_data, n = 12)
 ## # A tibble: 4,348 x 5
-##        id   age sex   visit           bdi
-##     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;fct&gt;         &lt;dbl&gt;
-##  1 10003.  48.0 male  bdi_score_00m    7.
-##  2 10003.  48.0 male  bdi_score_01m    1.
-##  3 10003.  48.0 male  bdi_score_06m    2.
-##  4 10003.  48.0 male  bdi_score_12m    0.
-##  5 10015.  72.5 male  bdi_score_00m    6.
-##  6 10015.  72.5 male  bdi_score_01m   NA 
-##  7 10015.  72.5 male  bdi_score_06m   NA 
-##  8 10015.  72.5 male  bdi_score_12m   NA 
-##  9 10022.  58.5 male  bdi_score_00m   14.
-## 10 10022.  58.5 male  bdi_score_01m    3.
-## 11 10022.  58.5 male  bdi_score_06m    8.
-## 12 10022.  58.5 male  bdi_score_12m   NA 
+##       id   age sex   visit   bdi
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;fct&gt; &lt;dbl&gt;
+##  1 10003  48.0 male  00m       7
+##  2 10003  48.0 male  01m       1
+##  3 10003  48.0 male  06m       2
+##  4 10003  48.0 male  12m       0
+##  5 10015  72.5 male  00m       6
+##  6 10015  72.5 male  01m      NA
+##  7 10015  72.5 male  06m      NA
+##  8 10015  72.5 male  12m      NA
+##  9 10022  58.5 male  00m      14
+## 10 10022  58.5 male  01m       3
+## 11 10022  58.5 male  06m       8
+## 12 10022  58.5 male  12m      NA
 ## # ... with 4,336 more rows</code></pre>
 </div>
 <div id="nsduh" class="section level3">
@@ -458,7 +488,7 @@ table_marj = (drug_use_xml %&gt;% html_nodes(css = &quot;table&quot;))[[1]] %&gt
   ggplot(aes(x = State, y = percent, color = year)) + 
     geom_point() + 
     theme(axis.text.x = element_text(angle = 90, hjust = 1))</code></pre>
-<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
+<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
 </div>
 <div id="toothbrush-reviews" class="section level3">
 <h3>Toothbrush reviews</h3>
@@ -470,30 +500,30 @@ urls = str_c(url_base, 1:5)
 read_html(urls[1]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;Best toothbrush I have ever owned&quot;       
-##  [2] &quot;it’s terrible and that’s it&quot;             
-##  [3] &quot;Very poor packaging and advertising&quot;     
-##  [4] &quot;Five Stars&quot;                              
-##  [5] &quot;Five Stars&quot;                              
-##  [6] &quot;Four Stars&quot;                              
-##  [7] &quot;Four Stars&quot;                              
-##  [8] &quot;Amazon should be called the black market&quot;
-##  [9] &quot;Love my tooth brush&quot;                     
-## [10] &quot;Great toothbrush! I love it&quot;
+##  [1] &quot;Wish the head of the toothbrush spun instead of just vibrating&quot;
+##  [2] &quot;Five Stars&quot;                                                    
+##  [3] &quot;Best toothbrush on the market&quot;                                 
+##  [4] &quot;Five Stars&quot;                                                    
+##  [5] &quot;Five Stars&quot;                                                    
+##  [6] &quot;Best toothbrush I have ever owned&quot;                             
+##  [7] &quot;it’s terrible and that’s it&quot;                                   
+##  [8] &quot;Very poor packaging and advertising&quot;                           
+##  [9] &quot;Five Stars&quot;                                                    
+## [10] &quot;Five Stars&quot;
 
 read_html(urls[2]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;versatile&quot;                                           
-##  [2] &quot;Five Stars&quot;                                          
-##  [3] &quot;The BEST Toothbrush&quot;                                 
-##  [4] &quot;Five Stars&quot;                                          
-##  [5] &quot;It doesn&#39;t clean as good as the round spinning brush&quot;
+##  [1] &quot;Four Stars&quot;                                          
+##  [2] &quot;Four Stars&quot;                                          
+##  [3] &quot;Love my tooth brush&quot;                                 
+##  [4] &quot;Great toothbrush! I love it&quot;                         
+##  [5] &quot;versatile&quot;                                           
 ##  [6] &quot;Five Stars&quot;                                          
-##  [7] &quot;One Star&quot;                                            
-##  [8] &quot;Ni-MH battery, NOT LITHIUM!&quot;                         
-##  [9] &quot;I wasted my money&quot;                                   
-## [10] &quot;but still works fine. Great for the price&quot;</code></pre>
+##  [7] &quot;The BEST Toothbrush&quot;                                 
+##  [8] &quot;Five Stars&quot;                                          
+##  [9] &quot;It doesn&#39;t clean as good as the round spinning brush&quot;
+## [10] &quot;Five Stars&quot;</code></pre>
 <p>It would get really tedious to try to scrape all (5000+) reviews by copying code over and over; before long we’ll learn about writing R functions to reuse code and make this much easier!</p>
 </div>
 <div id="biostat-methods-i-example" class="section level3">
@@ -526,7 +556,7 @@ bmi_data = data_frame(
 
 bmi_data %&gt;% 
   ggplot(aes(x = ind, y = insulin)) + geom_boxplot()</code></pre>
-<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
+<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-10-1.png" width="90%" /></p>
 <pre class="r"><code>
 bmi_data %&gt;% 
   lm(insulin ~ ind, data = .) %&gt;% 
@@ -623,7 +653,7 @@ bmi_data %&gt;%
 <p>Shifting the reference category also changes our plot.</p>
 <pre class="r"><code>bmi_data %&gt;% 
   ggplot(aes(x = ind, y = insulin)) + geom_boxplot()</code></pre>
-<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-11-1.png" width="90%" /></p>
+<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-12-1.png" width="90%" /></p>
 <p>In the above example, <code>neutral</code> makes sense as a reference group but might not give the ordering you want for visualizations. That’s fine – you can use what you need when you need it!</p>
 </div>
 <div id="restaurant-inspections" class="section level3">
@@ -687,13 +717,13 @@ nyc_inspections %&gt;%
 <pre class="r"><code>nyc_inspections %&gt;% 
   filter(str_detect(dba, regex(&quot;pizza&quot;, ignore_case = TRUE))) %&gt;%
   ggplot(aes(x = boro, fill = grade)) + geom_bar()</code></pre>
-<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-16-1.png" width="90%" /></p>
+<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-17-1.png" width="90%" /></p>
 <p>Might help to have things in a different order – maybe number of pizza places? Fortunately this can be done using <code>fct_infreq</code>.</p>
 <pre class="r"><code>nyc_inspections %&gt;% 
   filter(str_detect(dba, regex(&quot;pizza&quot;, ignore_case = TRUE))) %&gt;%
   mutate(boro = fct_infreq(boro)) %&gt;%
   ggplot(aes(x = boro, fill = grade)) + geom_bar()</code></pre>
-<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-17-1.png" width="90%" /></p>
+<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-18-1.png" width="90%" /></p>
 <p>Suppose I want to rename a boro; I’ll try to do this using <code>replace</code>.</p>
 <pre class="r"><code>nyc_inspections %&gt;% 
   filter(str_detect(dba, regex(&quot;pizza&quot;, ignore_case = TRUE))) %&gt;%
@@ -702,14 +732,14 @@ nyc_inspections %&gt;%
   ggplot(aes(x = boro, fill = grade)) + geom_bar()
 ## Warning in `[&lt;-.factor`(`*tmp*`, list, value = &quot;Hipsterville&quot;): invalid
 ## factor level, NA generated</code></pre>
-<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-18-1.png" width="90%" /></p>
+<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-19-1.png" width="90%" /></p>
 <p>That didn’t work at all! Factors have very specific values, trying to use a value that is not an existing factor level won’t work. Fortunately there is a dedicated function for renaming factor levels:</p>
 <pre class="r"><code>nyc_inspections %&gt;% 
   filter(str_detect(dba, regex(&quot;pizza&quot;, ignore_case = TRUE))) %&gt;%
   mutate(boro = fct_infreq(boro),
          boro = fct_recode(boro, &quot;Hipsterville&quot; = &quot;Brooklyn&quot;)) %&gt;%
   ggplot(aes(x = boro, fill = grade)) + geom_bar()</code></pre>
-<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-19-1.png" width="90%" /></p>
+<p><img src="strings_and_factors_files/figure-html/unnamed-chunk-20-1.png" width="90%" /></p>
 <p>Success!</p>
 </div>
 </div>

@@ -23,8 +23,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
@@ -37,10 +37,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -495,7 +497,7 @@ date: 2017-08-08</code></pre>
   html_document:
     toc: true
     toc_float: true</code></pre>
-<p>HTML documents are great because they allow interactivity in a way that static formats (PDF, Word) do not. For example, adding the subfield <code>code_folding: hide</code> under <code>html_document</code> will hide all the code in the document until the reader clicks to show it.</p>
+<p>HTML documents are great because they allow interactivity in a way that static formats (PDF, Word) do not. For example, adding the subfield <code>code_folding: hide</code> under <code>html_document</code> will hide all the code in the document until the reader clicks to show it (I almost always use this for collaborative reports).</p>
 <p>That said, some collaborators will need or prefer static documents. You can create these using the YAML snippet below, which will produce a PDF or a Word document when knitted.</p>
 <pre class="yaml"><code>output:
   pdf_document: default</code></pre>
@@ -511,11 +513,11 @@ date: 2017-08-08</code></pre>
 <ul>
 <li>Create a directory with a reasonable name and path (e.g. <code>~/Documents/School/DSI/Homework_2/</code>)</li>
 <li>Put an R Project in the directory</li>
-<li>Keep everything related to the analysis – data inputs, scripts, reports, output – in there, and use R Markdown as much as possible</li>
+<li>Keep everything related to the analysis – data inputs, scripts, reports, output – in there, <strong>and use R Markdown as much as possible</strong></li>
 <li>Periodically check for reproducibility of the analysis</li>
 </ul>
-<p>This should become your default behavior when starting any new project.</p>
-<p><strong><em>Learning assessment:</em></strong> Convert the scripts for exploring vector classes and producing basic plots (from <a href="best_practices.html">best practices</a>) to self-contained R Markdown files that produce PDF documents.</p>
+<p>The bold stuff is new; This should become your default behavior when starting any new project.</p>
+<p><strong><em>Learning assessment:</em></strong> Convert the scripts for exploring vector classes and producing basic plots (from <a href="best_practices.html">best practices</a>) to self-contained R Markdown files that produce HTML documents.</p>
 </div>
 <div id="other-materials" class="section level2">
 <h2>Other materials</h2>

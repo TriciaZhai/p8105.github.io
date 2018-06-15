@@ -104,7 +104,7 @@ output:
     toc: true
     toc_float: true
 ```
-HTML documents are great because they allow interactivity in a way that static formats (PDF, Word) do not. For example, adding the subfield `code_folding: hide` under `html_document` will hide all the code in the document until the reader clicks to show it. 
+HTML documents are great because they allow interactivity in a way that static formats (PDF, Word) do not. For example, adding the subfield `code_folding: hide` under `html_document` will hide all the code in the document until the reader clicks to show it (I almost always use this for collaborative reports). 
 
 That said, some collaborators will need or prefer static documents. You can create these using the YAML snippet below, which will produce a PDF or a Word document when knitted. 
 ```yaml
@@ -127,12 +127,12 @@ All of this suggests a slight modification to the previous workflow:
 
 * Create a directory with a reasonable name and path (e.g. `~/Documents/School/DSI/Homework_2/`)
 * Put an R Project in the directory
-* Keep everything related to the analysis -- data inputs, scripts, reports, output -- in there, and use R Markdown as much as possible
+* Keep everything related to the analysis -- data inputs, scripts, reports, output -- in there, **and use R Markdown as much as possible**
 * Periodically check for reproducibility of the analysis
 
-This should become your default behavior when starting any new project.
+The bold stuff is new; This should become your default behavior when starting any new project.
 
-**_Learning assessment:_** Convert the scripts for exploring vector classes and producing basic plots (from [best practices](best_practices.html)) to self-contained R Markdown files that produce PDF documents. 
+**_Learning assessment:_** Convert the scripts for exploring vector classes and producing basic plots (from [best practices](best_practices.html)) to self-contained R Markdown files that produce HTML documents. 
 
 ## Other materials
 

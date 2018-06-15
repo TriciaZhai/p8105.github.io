@@ -28,32 +28,46 @@ knitr::opts_chunk$set(
 
 ## Example
 
-I'll write code for today's content in a new R Markdown document called `strings_and_factors.Rmd`, and put it in the same directory / GitHub repo as `reading_data.Rmd`. I'm also going to load the usual packages, as well as `stringr` and `forcats`.
+I'll write code for today's content in a new R Markdown document called `strings_and_factors.Rmd`, and put it in the same directory / GitHub repo as `reading_data.Rmd`. 
 
 ```{r}
 library(tidyverse)
-library(janitor)
-library(haven)
 library(rvest)
-
-library(stringr)
-library(forcats)
 
 theme_set(theme_bw())
 theme_update(legend.position = "bottom")
 ```
 
+### Thoughts on factors
+
+Factors are maybe the least intuitive of `R`'s data types. They are very useful, but they also do things you don't expect; this is especially bad when you have factors but think you have characters -- which happens more than you'd expect, because R uses factors a lot ([mostly for historical reasons](https://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/)). Folks get pretty [riled](https://twitter.com/JennyBryan/status/630052228624068609/photo/1) [up](https://cran.r-project.org/web/packages/hellno/hellno.pdf) about factors.
+
+Factors are the way to store categorical variables in R. They can take on specific levels (e.g. male and female) which are usually presented as characters but are, in fact, stored by R as integers. These integer values are used by functions throughout R -- in making plots, in organizing tables, in determining the "reference" category -- but most of the time are hidden by easier-to-read character strings. 
+
+This is the kind of thing that can get you in trouble. 
+
+```{r}
+vec_sex = factor(c("male", "male", "female", "female"))
+as.numeric(vec_sex)
+
+vec_sex = relevel(vec_sex, ref = "male")
+vec_sex
+as.numeric(vec_sex)
+```
+
+The previous code also illustrates [_coersion_](http://r4ds.had.co.nz/vectors.html#coercion): forcing a variable from one type (e.g. factor) to another (e.g. numeric). Understanding how R coerces variables is important, because it sometimes happens unintentionally, can break your code, or impact your analyses. 
+
 ### PULSE data
 
 We'll start by revisiting a [dataset](./data/public_pulse_data.sas7bdat) we've seen a few times now. In [tidy data](tidy_data.html) we spent some time tidying the PULSE dataset; as part of that we used tools available to us at the time, but now we have some better tools. 
 
-The code below updates the data processing pipeline for the PULSE data using `strignr` and `forcats`. The result is the same, and the differences are pretty small, but this is a bit cleaner. 
+The code below updates the data processing pipeline for the PULSE data using `stringr` and `forcats`. The result is the same, and the differences are pretty small, but this is a bit cleaner. 
 
 ```{r}
-pulse_data = read_sas("./data/public_pulse_data.sas7bdat") %>%
-  clean_names() %>%
+pulse_data = haven::read_sas("./data/public_pulse_data.sas7bdat") %>%
+  janitor::clean_names() %>%
   gather(key = visit, value = bdi, bdi_score_bl:bdi_score_12m) %>%
-  mutate(visit = str_replace(visit, "bdiscore_", ""),
+  mutate(visit = str_replace(visit, "bdi_score_", ""),
          visit = str_replace(visit, "bl", "00m"),
          visit = fct_relevel(visit, str_c(c("00", "01", "06", "12"), "m"))) %>%
   arrange(id, visit)
