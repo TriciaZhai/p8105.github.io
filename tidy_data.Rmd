@@ -31,9 +31,7 @@ I'll keep using the same R Project as in [data import](data_import.html) and [da
 
 ```{r}
 library(tidyverse)
-library(haven)
 library(readxl)
-library(janitor)
 
 options(tibble.print_min = 5)
 ```
@@ -43,8 +41,8 @@ options(tibble.print_min = 5)
 In [data import](data_import.html), we used the `haven` package to load the PULSE biomarkers dataset from a .sas7bdat. Let's reload those data and take a closer look:
 
 ```{r}
-pulse_data = read_sas("./data/public_pulse_data.sas7bdat") %>%
-  clean_names()
+pulse_data = haven::read_sas("./data/public_pulse_data.sas7bdat") %>%
+  janitor::clean_names()
 pulse_data
 ```
 
@@ -68,23 +66,23 @@ Each BDI score column has a specific label in the SAS dataset; these don't match
 The other issue with the PULSE data, now, is `visit`. The original column names were informative but are not necessarily the format we would need for analysis. I'm going to split `visit` into two columns using `separate`:
 
 ```{r}
-separate(pulse_tidy_data, visit, into = c("remove", "visit"), sep = "_")
+separate(pulse_tidy_data, visit, into = c("remove_1", "remove_2", "visit"), sep = "_")
 ```
 
-This isn't really the optimal way to isolate "visit" because I now need an additional `select` step to remove the unnecessary character variable `remove`. However, it does illustrate the `separate` function, and we haven't yet learned about `str_replace` and other functions from the `stringr` package that are better suited to this problem, so ...
+This isn't really the optimal way to isolate "visit" because I now need an additional `select` step to remove the unnecessary character variables `remove_1` and `remove_2`. However, it does illustrate the `separate` function, and we haven't yet learned about `str_replace` and other functions from the `stringr` package that are better suited to this problem, so ...
 
 In the preceding I've saved intermediate datasets to make each step clear. While this can be a helpful crutch as you're trying out code, it is generally bad practice. There are also some additional transformations needed to wrap up the data wrangling process, like changing `bl` to `00m` for consistency across visits and converting `visit` to a factor variable. (It's possible that you would want `visit` to be a numeric variable instead, which could be done with a different call to `mutate`.) Lastly, it's nice to organize the data into a reasonable order.
 
 Altogether, then, the code below will import, tidy, and transform the PULSE dataset into a usable format:
 
 ```{r}
-pulse_data = read_sas("./data/public_pulse_data.sas7bdat") %>%
-  clean_names() %>%
+pulse_data = haven::read_sas("./data/public_pulse_data.sas7bdat") %>%
+  janitor::clean_names() %>%
   gather(key = visit, value = bdi, bdi_score_bl:bdi_score_12m) %>%
-  separate(visit, into = c("remove", "visit"), sep = "_") %>%
-  select(id, visit, everything(), -remove) %>%
+  separate(visit, into = c("remove_1", "remove_2", "visit"), sep = "_") %>%
+  select(id, visit, everything(), -starts_with("remove")) %>%
   mutate(visit = replace(visit, visit == "bl", "00m"),
-         visit = factor(visit, levels = paste0(c("00", "01", "06", "12"), "m"))) %>%
+         visit = factor(visit, levels = str_c(c("00", "01", "06", "12"), "m"))) %>%
   arrange(id, visit)
 
 print(pulse_data, n = 12)
@@ -94,9 +92,8 @@ Before moving on, let's revisit the `group` variable in the litters dataset:
 
 ```{r}
 read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>% 
-  clean_names() %>%
-  pull(group) %>%
-  table()
+  janitor::clean_names() %>%
+  count(group) 
 ```
 
 These data are also untidy: `group` encodes both dose and day of treatment! Time to fix that ...
@@ -104,7 +101,7 @@ These data are also untidy: `group` encodes both dose and day of treatment! Time
 ```{r}
 litters_data = 
   read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>% 
-  clean_names() %>%
+  janitor::clean_names() %>%
   separate(group, into = c("dose", "day_of_tx"), sep = 3) %>%
   mutate(dose = tolower(dose),
          wt_gain = gd18_weight - gd0_weight) %>%
@@ -113,7 +110,7 @@ litters_data =
 litters_data
 ```
 
-Now we're in pretty good shape :-).
+Now we're in pretty okay shape :-).
 
 **_Learning Assessment:_** In the litters data, the variables `gd0_weight` and `gd18_weight` give the weight of the mother mouse on gestational days 0 and 18. Write a data cleaning chain that retains only `litter_number` and these columns; produces new variables `gd` and `weight`; and makes `gd` a numeric variable taking values `0` and `18` (for the last part, you might want to use `recode` ...). Is this version "tidy"?
 
@@ -151,19 +148,19 @@ To produce the desired tidy dataset, we first need to read each table and do som
 
 ```{r}
 fellowship_ring = read_excel("./data/LotR_Words.xlsx", range = "B3:D6") %>%
-  clean_names() %>%
+  janitor::clean_names() %>%
   gather(key = sex, value = words, female:male) %>%
   mutate(race = tolower(race),
          movie = "Fellowship")
 
 two_towers = read_excel("./data/LotR_Words.xlsx", range = "F3:H6") %>%
-  clean_names() %>%
+  janitor::clean_names() %>%
   gather(key = sex, value = words, female:male) %>%
   mutate(race = tolower(race),
          movie = "Two Towers")
 
 return_king = read_excel("./data/LotR_Words.xlsx", range = "J3:L6") %>%
-  clean_names() %>%
+  janitor::clean_names() %>%
   gather(key = sex, value = words, female:male) %>%
   mutate(race = tolower(race),
          movie = "Return")
@@ -199,11 +196,11 @@ As an example, consider the data tables in `FAS_pups.csv` and `FAS_litters.csv`,
 
 ```{r}
 pup_data = read_csv("./data/FAS_pups.csv", col_types = "ciiiii") %>%
-  clean_names() %>%
+  janitor::clean_names() %>%
   mutate(sex = recode(sex, `1` = "male", `2` = "female")) 
 
 litter_data = read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
-  clean_names %>%
+  janitor::clean_names() %>%
   select(-pups_survive) %>%
   mutate(
     wt_gain = gd18_weight - gd0_weight,

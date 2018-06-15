@@ -11,3 +11,7 @@ bindrcpp
 readxl
 haven
 janitor
+stringr
+forcats
+ggridges
+ggthemes

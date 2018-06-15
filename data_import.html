@@ -385,15 +385,7 @@ div.tocify {
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>We’re going to figure out how to import the three datasets in <a href="./resources/data_import_examples.zip">this zip file</a>. First, create a directory for today’s work (I’m calling mine <code>data_wrangling_i</code>), add an R Project, move the data to your directory (perhaps in a sub-directory called <code>data</code>), and start an R Markdown file. We’re also going to be making extensive use of the <code>tidyverse</code> package, so go ahead and load that. Lastly, take a moment to install the packages <code>janitor</code>, <code>haven</code>, and <code>readxl</code>.</p>
-<pre class="r"><code>library(tidyverse)
-## ── Attaching packages ──────────────────────────────────────────────────────── tidyverse 1.2.1 ──
-## ✔ ggplot2 2.2.1     ✔ purrr   0.2.4
-## ✔ tibble  1.4.2     ✔ dplyr   0.7.5
-## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
-## ✔ readr   1.1.1     ✔ forcats 0.3.0
-## ── Conflicts ─────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(tidyverse)</code></pre>
 <div id="paths" class="section level3">
 <h3>Paths</h3>
 <p>We’ve mentioned paths and your working directory in passing (when talking about <a href="best_practices.html">best practices</a>). A firmer understanding is helpful when you start loading data into R, because to load data R will have to know where to find it.</p>
@@ -402,9 +394,10 @@ div.tocify {
 <li>Absolute: a file or folder’s “full address” on your computer</li>
 <li>Relative: directions to a file or folder from your current working directory</li>
 </ul>
-<p>Absolute paths are often easier, because you don’t really have to <em>think</em> about them – you’re just giving the complete address, starting from the root directory. These work from any current working directory on the machine. However, absolute paths can take up a lot of space if you use nested directories. And they aren’t portable: someone with the same directory and contents on their machine won’t have the same path to the directory. An absolute path example is below:</p>
-<pre><code>&quot;/Users/jeffgoldsmith/Dropbox/Work/Teaching/P8105/DSI/data/FAS_litters.csv&quot;</code></pre>
-<p>Relative paths, meanwhile, start from your current working directory. These are often much shorter, since the files you want to access are in subdirectories or at least not too far away. They also are portable, in that someone else with the same directory will have the same relative path to the related files. For both of these reasons, relative paths are preferred in almost every setting. The code below finds my current working directory:</p>
+<p>Absolute paths are often easier, because you don’t really have to <em>think</em> about them – you’re just giving the complete address, starting from the root directory. These work from any current working directory on the machine. However, absolute paths make your code extremely fragile: someone with the same directory and file on their machine won’t have the same <strong>absolute</strong> path to files in the directory, and your code won’t work.</p>
+<p>An absolute path example is below:</p>
+<pre><code>&quot;/Users/jeffgoldsmith/Dropbox/Work/Teaching/P8105/Fall_2018/p8105.github.io/data/FAS_litters.csv&quot;</code></pre>
+<p>Relative paths, meanwhile, start from your current working directory. Relative paths are portable, in that someone else with the same directory will have the same <strong>relative</strong> path to files in the directory. For both of these reasons, relative paths are preferred in almost every setting. The code below finds my current working directory:</p>
 <pre class="r"><code>getwd()
 ## [1] &quot;/Users/jeffgoldsmith/Dropbox/Work/Teaching/P8105/Fall_2018/p8105.github.io&quot;</code></pre>
 <p>A relative path to the same file as above is</p>
@@ -442,8 +435,8 @@ div.tocify {
 </div>
 <div id="importing-data-tables" class="section level3">
 <h3>Importing data tables</h3>
-<p>Now that we have paths handled, we can start loading data. We’re going to start with rectangular data tables (data in rows and columns, with data separated by a delimiter) saved in a plain text format. Of these, csv (comma separated value) files are most common, and others are handled in basically the same way. To import a csv, we’ll use a function from <code>readr</code>:</p>
-<pre class="r"><code>litters_data = readr::read_csv(file = &quot;./data/FAS_litters.csv&quot;)
+<p>Now that we have paths handled, we can start loading data. We’re going to start with rectangular data tables (data in rows and columns, with data separated by a delimiter) saved in a plain text format. Of these, csv (comma separated value) files are most common, and others are handled in basically the same way. To import a csv, we’ll use a function from <code>readr</code> (included in the tidyverse):</p>
+<pre class="r"><code>litters_data = read_csv(file = &quot;./data/FAS_litters.csv&quot;)
 ## Parsed with column specification:
 ## cols(
 ##   Group = col_character(),
@@ -465,6 +458,7 @@ litters_data = janitor::clean_names(litters_data)
 names(litters_data)
 ## [1] &quot;group&quot;           &quot;litter_number&quot;   &quot;gd0_weight&quot;      &quot;gd18_weight&quot;    
 ## [5] &quot;gd_of_birth&quot;     &quot;pups_born_alive&quot; &quot;pups_dead_birth&quot; &quot;pups_survive&quot;</code></pre>
+<p>The <code>package::function</code> syntax lets you use a function from a package without loading the whole library. That’s really helpful, because some packages have functions with the same name (e.g. <code>dplyr::filter</code> and <code>stats::filter</code>), and R has to choose which one you mean. In general, only load the packages you need to prevent this kind of confusion. You can even use the <a href="https://github.com/r-lib/conflicted"><code>conflicted</code></a> package if you want to force yourself into using good habits!</p>
 <p><strong><em>Learning Assessment:</em></strong> Make sure you are able to load the <code>FAS_litters.csv</code> dataset. Use both absolute and relative paths. Quit R Studio and move the directory containing your project, data, and R Markdown document. Repeat the previous data import process; do both absolute and relative paths still work?</p>
 </div>
 <div id="looking-at-data" class="section level3">

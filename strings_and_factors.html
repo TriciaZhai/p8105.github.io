@@ -386,24 +386,7 @@ div.tocify {
 <h2>Example</h2>
 <p>I’ll write code for today’s content in a new R Markdown document called <code>strings_and_factors.Rmd</code>, and put it in the same directory / GitHub repo as <code>reading_data.Rmd</code>.</p>
 <pre class="r"><code>library(tidyverse)
-## ── Attaching packages ─────────────────────────────────────────────────────── tidyverse 1.2.1 ──
-## ✔ ggplot2 2.2.1     ✔ purrr   0.2.4
-## ✔ tibble  1.4.2     ✔ dplyr   0.7.5
-## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
-## ✔ readr   1.1.1     ✔ forcats 0.3.0
-## ── Conflicts ────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
 library(rvest)
-## Loading required package: xml2
-## 
-## Attaching package: &#39;rvest&#39;
-## The following object is masked from &#39;package:purrr&#39;:
-## 
-##     pluck
-## The following object is masked from &#39;package:readr&#39;:
-## 
-##     guess_encoding
 
 theme_set(theme_bw())
 theme_update(legend.position = &quot;bottom&quot;)</code></pre>
@@ -500,30 +483,25 @@ urls = str_c(url_base, 1:5)
 read_html(urls[1]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;Wish the head of the toothbrush spun instead of just vibrating&quot;
-##  [2] &quot;Five Stars&quot;                                                    
-##  [3] &quot;Best toothbrush on the market&quot;                                 
+##  [1] &quot;Charge lasts a long time&quot;                                      
+##  [2] &quot;One Star&quot;                                                      
+##  [3] &quot;Wish the head of the toothbrush spun instead of just vibrating&quot;
 ##  [4] &quot;Five Stars&quot;                                                    
-##  [5] &quot;Five Stars&quot;                                                    
-##  [6] &quot;Best toothbrush I have ever owned&quot;                             
-##  [7] &quot;it’s terrible and that’s it&quot;                                   
-##  [8] &quot;Very poor packaging and advertising&quot;                           
-##  [9] &quot;Five Stars&quot;                                                    
-## [10] &quot;Five Stars&quot;
+##  [5] &quot;Best toothbrush on the market&quot;                                 
+##  [6] &quot;Five Stars&quot;                                                    
+##  [7] &quot;Five Stars&quot;                                                    
+##  [8] &quot;Best toothbrush I have ever owned&quot;                             
+##  [9] &quot;it’s terrible and that’s it&quot;                                   
+## [10] &quot;Very poor packaging and advertising&quot;
 
 read_html(urls[2]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;Four Stars&quot;                                          
-##  [2] &quot;Four Stars&quot;                                          
-##  [3] &quot;Love my tooth brush&quot;                                 
-##  [4] &quot;Great toothbrush! I love it&quot;                         
-##  [5] &quot;versatile&quot;                                           
-##  [6] &quot;Five Stars&quot;                                          
-##  [7] &quot;The BEST Toothbrush&quot;                                 
-##  [8] &quot;Five Stars&quot;                                          
-##  [9] &quot;It doesn&#39;t clean as good as the round spinning brush&quot;
-## [10] &quot;Five Stars&quot;</code></pre>
+##  [1] &quot;Five Stars&quot;                  &quot;Five Stars&quot;                 
+##  [3] &quot;Four Stars&quot;                  &quot;Four Stars&quot;                 
+##  [5] &quot;Love my tooth brush&quot;         &quot;Great toothbrush! I love it&quot;
+##  [7] &quot;versatile&quot;                   &quot;Five Stars&quot;                 
+##  [9] &quot;The BEST Toothbrush&quot;         &quot;Five Stars&quot;</code></pre>
 <p>It would get really tedious to try to scrape all (5000+) reviews by copying code over and over; before long we’ll learn about writing R functions to reuse code and make this much easier!</p>
 </div>
 <div id="biostat-methods-i-example" class="section level3">
