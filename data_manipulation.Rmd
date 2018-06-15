@@ -21,8 +21,8 @@ knitr::opts_chunk$set(
 
 ## Some slides
 
-<script async class="speakerdeck-embed" data-id="4e6375cc48814bd2b43b667180dbb31a" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
-<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-data-manipulation" title="Data Manipulation" target="_blank">Data Manipulation</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
+<script async class="speakerdeck-embed" data-id="3b324ada29974681999fe129bb08a3ce" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-data-manipulation" title="Data Manipulation" target="_blank">Data Manipulation</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
 
 
 ## Example
@@ -33,17 +33,16 @@ Once again we're going to be using the `tidyverse`, so we'll load that at the ou
 
 ```{r}
 library(tidyverse)
-library(janitor)
 
 options(tibble.print_min = 3)
 
 litters_data = read_csv("./data/FAS_litters.csv",
   col_types = "ccddiiii")
-litters_data = clean_names(litters_data)
+litters_data = janitor::clean_names(litters_data)
 
 pups_data = read_csv("./data/FAS_pups.csv",
   col_types = "ciiiii")
-pups_data = clean_names(pups_data)
+pups_data = janitor::clean_names(pups_data)
 ```
 
 ### `select`
@@ -160,7 +159,7 @@ The following is an example of the first option:
 ```{r}
 litters_data_raw = read_csv("./data/FAS_litters.csv",
   col_types = "ccddiiii")
-litters_data_clean_names = clean_names(litters_data_raw)
+litters_data_clean_names = janitor::clean_names(litters_data_raw)
 litters_data_selected_cols = select(litters_data_clean_names, -pups_survive)
 litters_data_with_vars = mutate(litters_data_selected_cols, 
   wt_gain = gd18_weight - gd0_weight,
@@ -174,7 +173,7 @@ Below, we try the second option:
 litters_data_clean = 
   mutate(
     select(
-      clean_names(
+      janitor::clean_names(
         read_csv("./data/FAS_litters.csv", col_types = "ccddiiii")
         ), 
     -pups_survive
@@ -192,7 +191,7 @@ Piping solves this problem. It allows you to turn the nested approach into a seq
 ```{r}
 litters_data = 
   read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
-  clean_names() %>%
+  janitor::clean_names() %>%
   select(-pups_survive) %>%
   mutate(
     wt_gain = gd18_weight - gd0_weight,
@@ -208,7 +207,7 @@ The functions in `dplyr` (and much of the `tidyverse`) are designed to work smoo
 ```{r}
 litters_data = 
   read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
-  clean_names(dat = .) %>%
+  janitor::clean_names(dat = .) %>%
   select(.data = ., -pups_survive) %>%
   mutate(.data = .,
     wt_gain = gd18_weight - gd0_weight,

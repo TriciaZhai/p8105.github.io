@@ -374,9 +374,9 @@ div.tocify {
 <p>This is the secode module in the <a href="topic_data_wrangling_i.html">Data Wrangling I</a> topic; the relevant slack channel is <a href="https://p8105-fall2017.slack.com/messages/C75HFE38U">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
-<script async class="speakerdeck-embed" data-id="4e6375cc48814bd2b43b667180dbb31a" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="3b324ada29974681999fe129bb08a3ce" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
 <div style="margin-bottom:5px">
-<strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-data-manipulation" title="Data Manipulation" target="_blank">Data Manipulation</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>.
+<strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-data-manipulation" title="Data Manipulation" target="_blank">Data Manipulation</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>.
 </div>
 <p><br></p>
 </div>
@@ -385,18 +385,30 @@ div.tocify {
 <p>Start by figuring out how this example fits in with what you’ve done and plan to do. I’d suggest adding a new R Markdown file to the project we started last time; that way you can load example data sets using the code we wrote last time.</p>
 <p>Once again we’re going to be using the <code>tidyverse</code>, so we’ll load that at the outset; I’ll also load the <code>janitor</code> package because I like clean names. We’re going to be looking at a lot of output, so I’ll print only three lines of each tibble by default. Lastly, we’ll focus on the data in <code>FAS_litters.csv</code> and <code>FAS_pups.csv</code>, so we’ll load those data and clean up the column names using what we learned in <a href="data_import.html">data import</a>.</p>
 <pre class="r"><code>library(tidyverse)
-library(janitor)
-## Warning: package &#39;janitor&#39; was built under R version 3.4.4
+## Warning: package &#39;tidyverse&#39; was built under R version 3.4.2
+## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ✔ ggplot2 2.2.1     ✔ purrr   0.2.4
+## ✔ tibble  1.4.2     ✔ dplyr   0.7.4
+## ✔ tidyr   0.8.0     ✔ stringr 1.3.0
+## ✔ readr   1.1.1     ✔ forcats 0.2.0
+## Warning: package &#39;tibble&#39; was built under R version 3.4.3
+## Warning: package &#39;tidyr&#39; was built under R version 3.4.3
+## Warning: package &#39;purrr&#39; was built under R version 3.4.2
+## Warning: package &#39;dplyr&#39; was built under R version 3.4.2
+## Warning: package &#39;stringr&#39; was built under R version 3.4.3
+## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
 
 options(tibble.print_min = 3)
 
 litters_data = read_csv(&quot;./data/FAS_litters.csv&quot;,
   col_types = &quot;ccddiiii&quot;)
-litters_data = clean_names(litters_data)
+litters_data = janitor::clean_names(litters_data)
 
 pups_data = read_csv(&quot;./data/FAS_pups.csv&quot;,
   col_types = &quot;ciiiii&quot;)
-pups_data = clean_names(pups_data)</code></pre>
+pups_data = janitor::clean_names(pups_data)</code></pre>
 <div id="select" class="section level3">
 <h3><code>select</code></h3>
 <p>For a given analysis, you may only need a subset of the columns in a data table; extracting only what you need can helpfully de-clutter, especially when you have large datasets. You can select columns using <code>select</code>.</p>
@@ -540,7 +552,7 @@ pups_data = clean_names(pups_data)</code></pre>
 <p>The following is an example of the first option:</p>
 <pre class="r"><code>litters_data_raw = read_csv(&quot;./data/FAS_litters.csv&quot;,
   col_types = &quot;ccddiiii&quot;)
-litters_data_clean_names = clean_names(litters_data_raw)
+litters_data_clean_names = janitor::clean_names(litters_data_raw)
 litters_data_selected_cols = select(litters_data_clean_names, -pups_survive)
 litters_data_with_vars = mutate(litters_data_selected_cols, 
   wt_gain = gd18_weight - gd0_weight,
@@ -558,7 +570,7 @@ litters_data_with_vars
 <pre class="r"><code>litters_data_clean = 
   mutate(
     select(
-      clean_names(
+      janitor::clean_names(
         read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;)
         ), 
     -pups_survive
@@ -579,7 +591,7 @@ litters_data_clean
 <p>Piping solves this problem. It allows you to turn the nested approach into a sequential chain by passing the result of one function call as an argument to the next function call:</p>
 <pre class="r"><code>litters_data = 
   read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;%
-  clean_names() %&gt;%
+  janitor::clean_names() %&gt;%
   select(-pups_survive) %&gt;%
   mutate(
     wt_gain = gd18_weight - gd0_weight,
@@ -598,7 +610,7 @@ litters_data
 <p>The functions in <code>dplyr</code> (and much of the <code>tidyverse</code>) are designed to work smoothly with the pipe operator. By default, the pipe will take the result of one function call and use that as the first argument of the next function call; by design, functions in <code>dplyr</code> will take a tibble as an input and return a tibble as a result. As a consequence, functions in <code>dplyr</code> are easy to connect in a data cleaning chain. You can make this more explicit by using <code>.</code> as a placeholder for the result of the preceding call:</p>
 <pre class="r"><code>litters_data = 
   read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;%
-  clean_names(dat = .) %&gt;%
+  janitor::clean_names(dat = .) %&gt;%
   select(.data = ., -pups_survive) %&gt;%
   mutate(.data = .,
     wt_gain = gd18_weight - gd0_weight,
