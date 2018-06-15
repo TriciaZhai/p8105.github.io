@@ -71,7 +71,9 @@ dirpath_shortcuts <- data.frame(abbr = c("`~`", "`.`", "`..`", "`../..`"),
 knitr::kable(dirpath_shortcuts, col.names = c("Shorthand", "Meaning"))
 ```
 
-One note: autocomplete in RStudio works with both absolute and relative paths. 
+Tabbed autocomplete in RStudio works with both absolute and relative paths. 
+
+One note: R Markdown files treat whatever directory they're in as the starting point for relative paths. For now, putting your R Markdown file in the same directory as you .RProj file will save a lot of headaches -- the same path will work when you knit the document and when you write / edit code interactive in the console. For larger projects, you might want to have a separate directory with several R Markdown files. In that case using [`here::here`](https://github.com/jennybc/here_here) to identify and navigate from the _project_ top-level directory is great, but you need a pretty firm understanding of paths before jumping into that. 
 
 One caveat: if you're going to both share code and use confidential data, you have to take extra steps to ensure data security. That can mean storing data outside of your shared project directory and using absolute paths. In these cases, set a "parent directory" at the outset of your code and using relative paths subsequently.
 
