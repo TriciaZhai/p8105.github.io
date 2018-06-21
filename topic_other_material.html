@@ -11,7 +11,7 @@
 
 
 
-<title>Instacart</title>
+<title>Other material</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,9 +19,6 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-1.1/highlight.js"></script>
@@ -169,101 +166,6 @@ $(document).ready(function () {
 
 
 
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
 
 
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
@@ -368,47 +270,25 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Instacart</h1>
+<h1 class="title toc-ignore">Other material</h1>
 
 </div>
 
 
-<p>“The Instacart Online Grocery Shopping Dataset 2017”, Accessed from <a href="https://www.instacart.com/datasets/grocery-shopping-2017" class="uri">https://www.instacart.com/datasets/grocery-shopping-2017</a> on June 24, 2017.</p>
-<p>The version of the Instacart data that we will use in this class can be found <a href="./data/instacart_train_data.csv.zip">here</a>.</p>
-<div id="context" class="section level2">
-<h2>Context</h2>
-<p><a href="https://www.instacart.com/">Instacart</a> is an online grocery service that allows you to shop online from local stores. In New York City, partner stores include Whole Foods, Fairway, and The Food Emporium. Instacart offers same-day delivery, and items that users purchase are delivered within 2 hours.</p>
-<p>“The Instacart Online Grocery Shopping Dataset 2017” is an anonymized dataset with over 3 million online grocery orders from more than 200,000 Instacart users. However the dataset does not represent a random sampling of products, users, or purchases. Therefore, while the data allow examination of trends in online grocery purchasing, the results may not be generalizable to Instacart users more broadly.</p>
-<p>“The Instacart Online Grocery Shopping Dataset 2017” <a href="https://tech.instacart.com/3-million-instacart-orders-open-sourced-d40d29ead6f2">website</a> provides some summary results of interesting findings, including:</p>
+<p>Previous iterations of this course have covered other topics: over time we’ve added somethings at the expense of others. The collection below may be helpful for self-study.</p>
+<p>The lecture below is a quick introduction to writing Shiny Apps, and dovetails with other interactive approaches:</p>
 <ul>
-<li>Fruits are reordered more frequently than vegetables</li>
-<li>Soups and baking ingredients are least likely to be reordered</li>
-<li>Healthier snacks and staples tend to be purchased earlier in the day</li>
-<li>Ice cream and frozen pizza are the most frequently ordered products late at night</li>
+<li><a href="shiny.html">Shiny</a></li>
 </ul>
-</div>
-<div id="data-description" class="section level2">
-<h2>Data description</h2>
-<p>The original data is quite extensive, and the data linked to at the top of this page for use in the class represents a cleaned and limited version of the data. The dataset contains 1,384,617 observations of 131,209 unique users, where each row in the dataset is a product from an order. There is a single order per user in this dataset.</p>
-<p>There are 15 variables in this dataset:</p>
+<p>Some material on Tidy Text and text analysis extends ideas in Data Wrangling II:</p>
 <ul>
-<li><code>order_id</code>: order identifier</li>
-<li><code>product_id</code>: product identifier</li>
-<li><code>add_to_cart_order</code>: order in which each product was added to cart</li>
-<li><code>reordered</code>: 1 if this prodcut has been ordered by this user in the past, 0 otherwise</li>
-<li><code>user_id</code>: customer identifier</li>
-<li><code>eval_set</code>: which evaluation set this order belongs in (<em>Note that the data for use in this class is exclusively from the “train” <code>eval_set</code></em>)</li>
-<li><code>order_number</code>: the order sequence number for this user (1=first, n=nth)</li>
-<li><code>order_dow</code>: the day of the week on which the order was placed</li>
-<li><code>order_hour_of_day</code>: the hour of the day on which the order was placed</li>
-<li><code>days_since_prior_order</code>: days since the last order, capped at 30, NA if <code>order_number</code>=1</li>
-<li><code>product_name</code>: name of the product</li>
-<li><code>aisle_id</code>: aisle identifier</li>
-<li><code>department_id</code>: department identifier</li>
-<li><code>aisle</code>: the name of the aisle</li>
-<li><code>department</code>: the name of the department</li>
+<li><a href="tidy_text.html">Tidy Text</a></li>
 </ul>
-</div>
+<p>There are two lectures on Writing R Packages that are relevant once you know how to write R functions:</p>
+<ul>
+<li>Writing R Packages: <a href="writing_r_packages_i.html">Part I</a></li>
+<li>Writing R Packages: <a href="writing_r_packages_ii.html">Part II</a></li>
+</ul>
 
 <br><br>
 <footer>
@@ -418,8 +298,6 @@ div.tocify {
 </footer>
 
 
-</div>
-</div>
 
 </div>
 

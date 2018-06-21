@@ -23,8 +23,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
 <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
@@ -37,12 +37,10 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs) {
-  hljs.configure({languages: []});
-  hljs.initHighlightingOnLoad();
-  if (document.readyState && document.readyState === "complete") {
-    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
-  }
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
 }
 </script>
 
@@ -317,6 +315,9 @@ div.tocify {
     <li>
       <a href="topic_linear_models.html">Linear Models</a>
     </li>
+    <li>
+      <a href="topic_other_material.html">Other Materials</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -461,10 +462,11 @@ iris %&gt;%
 <p>I’ll detach both packages (and first detach <code>janitor</code>, since having it loaded prevents me from detaching <code>dplyr</code>), then reverse the order in which I attach them and try again.</p>
 <pre class="r"><code>detach(&quot;package:dplyr&quot;, unload = TRUE)
 ## Warning: &#39;dplyr&#39; namespace cannot be unloaded:
-##   namespace &#39;dplyr&#39; is imported by &#39;tidytext&#39;, &#39;plotly&#39;, &#39;broom&#39; so cannot be unloaded
+##   namespace &#39;dplyr&#39; is imported by &#39;tidytext&#39;, &#39;plotly&#39;, &#39;skimr&#39;, &#39;broom&#39; so cannot be unloaded
 detach(&quot;package:MASS&quot;, unload = TRUE)
 
 library(dplyr)
+## Warning: package &#39;dplyr&#39; was built under R version 3.4.2
 ## 
 ## Attaching package: &#39;dplyr&#39;
 ## The following objects are masked from &#39;package:stats&#39;:
@@ -494,11 +496,11 @@ iris %&gt;%
 ## # A tibble: 150 x 1
 ##   sepal_length
 ##          &lt;dbl&gt;
-## 1          5.1
-## 2          4.9
-## 3          4.7
-## 4          4.6
-## 5          5  
+## 1         5.10
+## 2         4.90
+## 3         4.70
+## 4         4.60
+## 5         5.00
 ## # ... with 145 more rows</code></pre>
 <p>The command that just uses <code>select</code> produces an error, because it’s using (implicitly) <code>MASS::select()</code>; the second is clear about using <code>dplyr::select</code> and works as desired.</p>
 <p>As you work more in R you will run into search path issues (if you haven’t already), and understanding how attaching packages affects the search path will help you resolve this. This discussion also ilustrates why it’s best to only attach the packages you need, and to use <code>package::function()</code> notation in cases where a package isn’t used repeatedly.</p>

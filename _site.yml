@@ -23,6 +23,8 @@ navbar:
       href: topic_resampling.html
     - text: Linear Models
       href: topic_linear_models.html
+    - text: Other Materials
+      href: topic_other_material.html
   - text: Datasets
     menu:
     - text: Airbnb
