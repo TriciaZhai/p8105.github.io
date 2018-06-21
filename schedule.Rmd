@@ -3,21 +3,21 @@ title: "Schedule"
 ---
 
 | Date          | Topic                 | Lecture | Slides                                                                     |  Slack                                          | HW  |  Project |
-|:------------- |:--------------------- |--------:| --------------------------------------------------------------------------:| -----------------------------------------------:| ----:| -----:|
+|:------------- |:--------------------- |--------:|:--------------------------------------------------------------------------:|:-----------------------------------------------:|:----:| -----:|
 | Tues Sept 4   | What is Data Science? |         | [<i class="fas fa-desktop fa-lg"></i>](slides/what_is_data_science_i.pdf)  | [<i class="fab fa-slack fa-lg"></i>](link)      | [<i class="far fa-file-code fa-lg"></i>](link)  |     |
 | Thur Sept 6   | Building blocks       |         | [<i class="fas fa-desktop fa-lg"></i>](slides/best_practices.pdf)          | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
 | Tues Sept 11  | Building blocks       |         | [<i class="fas fa-desktop fa-lg"></i>](slides/writing_with_data.pdf)       | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
-| Thur Sept 13  | Building blocks       |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      | [<i class="far fa-file-code fa-lg"></i>](link)  |     |
+| Thur Sept 13  | Building blocks       |         | [<i class="fas fa-desktop fa-lg"></i>](slides/git.pdf)                     | [<i class="fab fa-slack fa-lg"></i>](link)      | [<i class="far fa-file-code fa-lg"></i>](link)  |     |
 | Tues Sept 18  | Data Wrangling I      |         | [<i class="fas fa-desktop fa-lg"></i>](slides/data_import.pdf)             | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
 | Thur Sept 20  | Data Wrangling I      |         | [<i class="fas fa-desktop fa-lg"></i>](slides/data_manipulation.pdf)       | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
-| Tues Sept 25  | Data Wrangling I      |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      | [<i class="far fa-file-code fa-lg"></i>](link) |     |
-| Thur Sept 27  | Viz + EDA             |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
+| Tues Sept 25  | Data Wrangling I      |         | [<i class="fas fa-desktop fa-lg"></i>](slides/tidy_data.pdf)               | [<i class="fab fa-slack fa-lg"></i>](link)      | [<i class="far fa-file-code fa-lg"></i>](link) |     |
+| Thur Sept 27  | Viz + EDA             |         | [<i class="fas fa-desktop fa-lg"></i>](slides/visualization.pdf)           | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
 | Tues Oct 2    | Viz + EDA             |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
-| Thur Oct 4    | Viz + EDA             |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      | [<i class="far fa-file-code fa-lg"></i>](link)  |     |
+| Thur Oct 4    | Viz + EDA             |         | [<i class="fas fa-desktop fa-lg"></i>](slides/exploratory_analysis.pdf)    | [<i class="fab fa-slack fa-lg"></i>](link)      | [<i class="far fa-file-code fa-lg"></i>](link)  |     |
 | Tues Oct 9    | Data Wrangling II     |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
-| Thur Oct 11   | Data Wrangling II     |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
+| Thur Oct 11   | Data Wrangling II     |         | [<i class="fas fa-desktop fa-lg"></i>](slides/strings_and_factors.pdf)     | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
 | Tues Oct 16   | Data Wrangling II     |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      |      | MT  |
-| Thur Oct 18   | Interactivity         |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
+| Thur Oct 18   | Interactivity         |         | [<i class="fas fa-desktop fa-lg"></i>](slides/making_websites.pdf)         | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
 | Tues Oct 23   | Interactivity         |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      |      | FP  |
 | Thur Oct 25   | Resampling            |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
 | Tues Oct 30   | Resampling            |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
