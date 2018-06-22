@@ -29,12 +29,12 @@ You can add an R Project to this directory as well; in this case it's not _criti
 
 ### Basic elements
 
-Copy the files in [this website template](resources/Website_Template.zip) into your new directory. You can also start "from scratch" but a useful template goes a long way.
+Copy the files in [this website template](resources/website_template.zip) into your new directory. You can also start "from scratch" but a useful template goes a long way.
 
 All websites have an `index.html` file -- it's the most common name for the default page and gets served up whenever someone shows up at your site. We'll build that using the `index.Rmd` file, which is shown below.
 
 ```{r, echo = FALSE, comment = ""}
-cat(htmltools::includeText("resources/Website_Template/index.Rmd"))
+cat(htmltools::includeText("resources/website_template/index.Rmd"))
 ```
 
 This has usual RMD stuff: a title, some headings, some content. Anything you could put in any other RMD file, you can put in here, too. Then, as usual, you can knit to create `index.html`; you should get something like the following.
