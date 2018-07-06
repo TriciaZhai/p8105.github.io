@@ -23,8 +23,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
@@ -37,10 +37,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -470,8 +472,8 @@ names(litters_data)
 ##    group litter_number  gd0_weight gd18_weight gd_of_birth pups_born_alive
 ##    &lt;chr&gt; &lt;chr&gt;               &lt;dbl&gt;       &lt;dbl&gt;       &lt;int&gt;           &lt;int&gt;
 ##  1 Con7  #85                  19.7        34.7          20               3
-##  2 Con7  #1/2/95/2            27.0        42.0          19               8
-##  3 Con7  #5/5/3/83/3-3        26.0        41.4          19               6
+##  2 Con7  #1/2/95/2            27          42            19               8
+##  3 Con7  #5/5/3/83/3-3        26          41.4          19               6
 ##  4 Con7  #5/4/2/95/2          28.5        44.1          19               5
 ##  5 Con7  #4/2/95/3-3          NA          NA            20               6
 ##  6 Con7  #2/2/95/3-2          NA          NA            20               6
@@ -485,33 +487,42 @@ tail(litters_data, 5)
 ## # A tibble: 5 x 8
 ##   group litter_number gd0_weight gd18_weight gd_of_birth pups_born_alive
 ##   &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;       &lt;int&gt;           &lt;int&gt;
-## 1 Low8  #100                20.0        39.2          20               8
+## 1 Low8  #100                20          39.2          20               8
 ## 2 Low8  #4/84               21.8        35.2          20               4
 ## 3 Low8  #108                25.6        47.5          20               8
-## 4 Low8  #99                 23.5        39.0          20               6
+## 4 Low8  #99                 23.5        39            20               6
 ## 5 Low8  #110                25.5        42.7          20               7
 ## # ... with 2 more variables: pups_dead_birth &lt;int&gt;, pups_survive &lt;int&gt;</code></pre>
 <p>Another tool that I use often is `<code>skimr::skim</code>. The output is too wide to render well here, but is pretty slick! Note this isn’t available from CRAN, so installation is a bit more <a href="https://github.com/ropenscilabs/skimr">involved</a>.</p>
 <pre class="r"><code>skimr::skim(litters_data)
-## Numeric Variables
-## # A tibble: 6 x 13
-##   var       type  missing complete     n   mean    sd   min `25% quantile`
-##   &lt;chr&gt;     &lt;chr&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;          &lt;dbl&gt;
-## 1 gd_of_bi… inte…      0.      49.   49. 19.7   0.481 19.0           19.0 
-## 2 gd0_weig… nume…     15.      34.   49. 24.4   3.28  17.0           22.3 
-## 3 gd18_wei… nume…     17.      32.   49. 41.5   4.05  33.4           38.9 
-## 4 pups_bor… inte…      0.      49.   49.  7.35  1.76   3.00           6.00
-## 5 pups_dea… inte…      0.      49.   49.  0.327 0.747  0.             0.  
-## 6 pups_sur… inte…      0.      49.   49.  6.41  2.05   1.00           5.00
-## # ... with 4 more variables: median &lt;dbl&gt;, `75% quantile` &lt;dbl&gt;,
-## #   max &lt;dbl&gt;, hist &lt;chr&gt;
+## Skim summary statistics
+##  n obs: 49 
+##  n variables: 8 
 ## 
-## Character Variables
-## # A tibble: 2 x 9
-##   var           type     complete missing empty     n   min   max n_unique
-##   &lt;chr&gt;         &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-## 1 group         charact…      49.      0.    0.   49.    4.    4.       6.
-## 2 litter_number charact…      49.      0.    0.   49.    3.   15.      49.</code></pre>
+## Variable type: character 
+##       variable missing complete  n min max empty n_unique
+##          group       0       49 49   4   4     0        6
+##  litter_number       0       49 49   3  15     0       49
+## 
+## Variable type: integer 
+##         variable missing complete  n  mean   sd p0 p25 p50 p75 p100
+##      gd_of_birth       0       49 49 19.65 0.48 19  19  20  20   20
+##  pups_born_alive       0       49 49  7.35 1.76  3   6   8   8   11
+##  pups_dead_birth       0       49 49  0.33 0.75  0   0   0   0    4
+##     pups_survive       0       49 49  6.41 2.05  1   5   7   8    9
+##      hist
+##  ▅▁▁▁▁▁▁▇
+##  ▂▂▃▃▇▅▁▁
+##  ▇▂▁▁▁▁▁▁
+##  ▂▂▃▃▅▇▇▅
+## 
+## Variable type: numeric 
+##     variable missing complete  n  mean   sd   p0   p25   p50   p75 p100
+##   gd0_weight      15       34 49 24.38 3.28 17   22.3  24.1  26.67 33.4
+##  gd18_weight      17       32 49 41.52 4.05 33.4 38.88 42.25 43.8  52.7
+##      hist
+##  ▁▃▇▇▇▆▁▁
+##  ▂▃▃▇▆▂▁▁</code></pre>
 </div>
 <div id="arguments-to-read_" class="section level3">
 <h3>Arguments to <code>read_*</code></h3>
@@ -540,7 +551,7 @@ head(litters_data)
 ##   X1    X2                 X3    X4    X5    X6    X7    X8
 ##   &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
 ## 1 Con8  #3/5/2/2/95      28.5    NA    20     8     0     8
-## 2 Con8  #5/4/3/83/3      28.0    NA    19     9     0     8
+## 2 Con8  #5/4/3/83/3      28      NA    19     9     0     8
 ## 3 Con8  #1/6/2/2/95-2    NA      NA    20     7     0     6
 ## 4 Con8  #3/5/3/83/3-3-2  NA      NA    20     8     0     8
 ## 5 Con8  #2/2/95/2        NA      NA    19     5     0     4
@@ -569,10 +580,10 @@ tail(litters_data)
 ##   Group `Litter Number` `GD0 weight` `GD18 weight` `GD of Birth`
 ##   &lt;chr&gt; &lt;chr&gt;                  &lt;dbl&gt;         &lt;dbl&gt;         &lt;int&gt;
 ## 1 Low8  #79                     25.4          43.8            19
-## 2 Low8  #100                    20.0          39.2            20
+## 2 Low8  #100                    20            39.2            20
 ## 3 Low8  #4/84                   21.8          35.2            20
 ## 4 Low8  #108                    25.6          47.5            20
-## 5 Low8  #99                     23.5          39.0            20
+## 5 Low8  #99                     23.5          39              20
 ## 6 Low8  #110                    25.5          42.7            20
 ## # ... with 3 more variables: `Pups born alive` &lt;int&gt;, `Pups dead @
 ## #   birth` &lt;int&gt;, `Pups survive` &lt;int&gt;</code></pre>
@@ -585,8 +596,8 @@ litters_data
 ##    Group `Litter Number` `GD0 weight` `GD18 weight` `GD of Birth`
 ##    &lt;chr&gt; &lt;chr&gt;                  &lt;dbl&gt;         &lt;dbl&gt;         &lt;int&gt;
 ##  1 Con7  #85                     19.7          34.7            20
-##  2 Con7  #1/2/95/2               27.0          42.0            19
-##  3 Con7  #5/5/3/83/3-3           26.0          41.4            19
+##  2 Con7  #1/2/95/2               27            42              19
+##  3 Con7  #5/5/3/83/3-3           26            41.4            19
 ##  4 Con7  #5/4/2/95/2             28.5          44.1            19
 ##  5 Con7  #4/2/95/3-3             NA            NA              20
 ##  6 Con7  #2/2/95/3-2             NA            NA              20
@@ -604,32 +615,29 @@ litters_data
 <p>CSV format is great, but you’ll encounter a lot of Excel files too. Although you can export these to a csv, don’t – use the <code>readxl</code> package instead! This is part of the tidyverse but you’ll have to download and install it separately. The <code>read_excel</code> function in this package has many of the same arguments as <code>read_csv</code>, including <code>col_names</code>, <code>na</code>, <code>skip</code>, and <code>col_types</code>, and can be used in basically the same way. There is also a <code>sheet</code> option (useful when there are multiple sheets in the Excel file) and the <code>range</code> option (when you want to read in a specific data rectangle). Lastly, in RStudio you can use File &gt; Import Dataset &gt; From Excel for a GUI interface. The code below illustrates <code>read_excel</code>.</p>
 <pre class="r"><code>library(readxl)
 mlb11_data = read_excel(&quot;data/mlb11.xlsx&quot;, n_max = 20)
-## Warning in strptime(x, format, tz = tz): unknown timezone &#39;zone/tz/2018c.
-## 1.0/zoneinfo/America/New_York&#39;
 head(mlb11_data, 5)
 ## # A tibble: 5 x 12
 ##   team   runs at_bats  hits homeruns bat_avg strikeouts stolen_bases  wins
 ##   &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;
-## 1 Texa…  855.   5659. 1599.     210.   0.283       930.         143.   96.
-## 2 Bost…  875.   5710. 1600.     203.   0.280      1108.         102.   90.
-## 3 Detr…  787.   5563. 1540.     169.   0.277      1143.          49.   95.
-## 4 Kans…  730.   5672. 1560.     129.   0.275      1006.         153.   71.
-## 5 St. …  762.   5532. 1513.     162.   0.273       978.          57.   90.
+## 1 Texa…   855    5659  1599      210   0.283        930          143    96
+## 2 Bost…   875    5710  1600      203   0.28        1108          102    90
+## 3 Detr…   787    5563  1540      169   0.277       1143           49    95
+## 4 Kans…   730    5672  1560      129   0.275       1006          153    71
+## 5 St. …   762    5532  1513      162   0.273        978           57    90
 ## # ... with 3 more variables: new_onbase &lt;dbl&gt;, new_slug &lt;dbl&gt;,
 ## #   new_obs &lt;dbl&gt;</code></pre>
 <p>The last tidyverse package for data import we’ll note is <code>haven</code>, which is used to import into R data files from SAS, Stata, and SPSS. An example for reading data from SAS follows.</p>
 <pre class="r"><code>library(haven)
-## Warning: package &#39;haven&#39; was built under R version 3.4.3
 pulse_data = read_sas(&quot;./data/public_pulse_data.sas7bdat&quot;)
 head(pulse_data, 5)
 ## # A tibble: 5 x 7
-##       ID   age Sex   BDIScore_BL BDIScore_01m BDIScore_06m BDIScore_12m
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
-## 1 10003.  48.0 male           7.           1.           2.           0.
-## 2 10015.  72.5 male           6.          NA           NA           NA 
-## 3 10022.  58.5 male          14.           3.           8.          NA 
-## 4 10026.  72.7 male          20.           6.          18.          16.
-## 5 10035.  60.4 male           4.           0.           1.           2.</code></pre>
+##      ID   age Sex   BDIScore_BL BDIScore_01m BDIScore_06m BDIScore_12m
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+## 1 10003  48.0 male            7            1            2            0
+## 2 10015  72.5 male            6           NA           NA           NA
+## 3 10022  58.5 male           14            3            8           NA
+## 4 10026  72.7 male           20            6           18           16
+## 5 10035  60.4 male            4            0            1            2</code></pre>
 <p>You can read in data that isn’t coming as a flat file, but it’s beyond the scope of this course.</p>
 </div>
 <div id="comparison-with-base-r" class="section level3">

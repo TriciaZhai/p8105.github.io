@@ -23,8 +23,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
@@ -37,10 +37,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -424,20 +426,20 @@ as.numeric(vec_sex)
 
 print(pulse_data, n = 12)
 ## # A tibble: 4,348 x 5
-##        id   age sex   visit   bdi
-##     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;fct&gt; &lt;dbl&gt;
-##  1 10003.  48.0 male  00m      7.
-##  2 10003.  48.0 male  01m      1.
-##  3 10003.  48.0 male  06m      2.
-##  4 10003.  48.0 male  12m      0.
-##  5 10015.  72.5 male  00m      6.
-##  6 10015.  72.5 male  01m     NA 
-##  7 10015.  72.5 male  06m     NA 
-##  8 10015.  72.5 male  12m     NA 
-##  9 10022.  58.5 male  00m     14.
-## 10 10022.  58.5 male  01m      3.
-## 11 10022.  58.5 male  06m      8.
-## 12 10022.  58.5 male  12m     NA 
+##       id   age sex   visit   bdi
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;fct&gt; &lt;dbl&gt;
+##  1 10003  48.0 male  00m       7
+##  2 10003  48.0 male  01m       1
+##  3 10003  48.0 male  06m       2
+##  4 10003  48.0 male  12m       0
+##  5 10015  72.5 male  00m       6
+##  6 10015  72.5 male  01m      NA
+##  7 10015  72.5 male  06m      NA
+##  8 10015  72.5 male  12m      NA
+##  9 10022  58.5 male  00m      14
+## 10 10022  58.5 male  01m       3
+## 11 10022  58.5 male  06m       8
+## 12 10022  58.5 male  12m      NA
 ## # ... with 4,336 more rows</code></pre>
 </div>
 <div id="nsduh" class="section level3">
@@ -484,30 +486,30 @@ urls = str_c(url_base, 1:5)
 read_html(urls[1]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;Not great, but better than Oral B. Try an upgraded model.&quot;
-##  [2] &quot;I really like philips products&quot;                           
-##  [3] &quot;It seems to be doing great, but our checkups will tell&quot;   
-##  [4] &quot;Nice&quot;                                                     
-##  [5] &quot;Works great!&quot;                                             
-##  [6] &quot;Five Stars&quot;                                               
-##  [7] &quot;Five Stars&quot;                                               
-##  [8] &quot;Just okay toothbrush&quot;                                     
-##  [9] &quot;HAD A VERSION OF THIS FOR OVER 20+ YEARS. ...&quot;            
-## [10] &quot;great toothbrush&quot;
+##  [1] &quot;Five Stars&quot;                                                    
+##  [2] &quot;Love it&quot;                                                       
+##  [3] &quot;Best tooth brush ever&quot;                                         
+##  [4] &quot;Sonicare electric toothbrush&quot;                                  
+##  [5] &quot;Five Stars&quot;                                                    
+##  [6] &quot;Only lasted 1 year&quot;                                            
+##  [7] &quot;Makes my mouth happy&quot;                                          
+##  [8] &quot;Nice quality&quot;                                                  
+##  [9] &quot;really good product solid does a good job cleaning and had ...&quot;
+## [10] &quot;It worked fine until it broke down after 1 year of use&quot;
 
 read_html(urls[2]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;but overall it is a good brush.&quot;                               
-##  [2] &quot;Five Stars&quot;                                                    
-##  [3] &quot;Quiet, nice waterproof design&quot;                                 
-##  [4] &quot;Five Stars&quot;                                                    
-##  [5] &quot;Lesser quality&quot;                                                
-##  [6] &quot;Old model&quot;                                                     
-##  [7] &quot;Good product, slow charge&quot;                                     
-##  [8] &quot;Charge lasts a long time&quot;                                      
-##  [9] &quot;One Star&quot;                                                      
-## [10] &quot;Wish the head of the toothbrush spun instead of just vibrating&quot;</code></pre>
+##  [1] &quot;Great value, paid lover $100 years ago for this ...&quot;   
+##  [2] &quot;Five Stars&quot;                                            
+##  [3] &quot;She is satisfied.&quot;                                     
+##  [4] &quot;Five Stars&quot;                                            
+##  [5] &quot;Have to clean it after every few uses...very annoying.&quot;
+##  [6] &quot;Good&quot;                                                  
+##  [7] &quot;Good buy&quot;                                              
+##  [8] &quot;Awesome&quot;                                               
+##  [9] &quot;It has really good for tooth health&quot;                   
+## [10] &quot;Works great&quot;</code></pre>
 <p>It would get really tedious to try to scrape all (5000+) reviews by copying code over and over; before long we’ll learn about writing R functions to reuse code and make this much easier!</p>
 </div>
 <div id="biostat-methods-i-example" class="section level3">

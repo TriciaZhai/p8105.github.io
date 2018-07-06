@@ -23,8 +23,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-1.1/default.css" rel="stylesheet" />
-<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
@@ -37,10 +37,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -375,6 +377,14 @@ div.tocify {
 
 <p>Good visualization is a critical step in data analysis.</p>
 <p>This is the first module in the <a href="topic_visualization_and_eda.html">Visualization and EDA</a> topic; the relevant slack channel is <a href="https://p8105-fall2017.slack.com/messages/C7CGD92CX">here</a>.</p>
+<pre><code>## ── Attaching packages ──────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.4
+## ✔ tibble  1.4.2     ✔ dplyr   0.7.5
+## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
+## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
+<pre><code>## ── Conflicts ─────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
 <script async class="speakerdeck-embed" data-id="7272d2325e0d4f27a6bca25afbf149ce" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
@@ -388,6 +398,11 @@ div.tocify {
 <p>I’ll start by creating a directory for this topic, adding an R Project, and opening a new R Markdown document for visualizations. I’ll also load the <code>tidyverse</code> package and a couple of others.</p>
 <pre class="r"><code>library(tidyverse)
 library(ggridges)
+## 
+## Attaching package: &#39;ggridges&#39;
+## The following object is masked from &#39;package:ggplot2&#39;:
+## 
+##     scale_discrete_manual
 library(ggthemes)</code></pre>
 <p>We’ll be working with NOAA weather data, which is downloaded using <code>rnoaa::meteo_pull_monitors</code> function in the code chunk below; similar code underlies the weather dataset used elsewhere in the course. Because this process can take some time, I’ll cache the code chunk.</p>
 <pre class="r"><code>library(rnoaa)
@@ -448,7 +463,7 @@ p</code></pre>
 <pre class="r"><code>ggplot(weather, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) +
   geom_smooth(se = FALSE)
-## `geom_smooth()` using method = &#39;gam&#39;
+## `geom_smooth()` using method = &#39;gam&#39; and formula &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;
 ## Warning: Removed 15 rows containing non-finite values (stat_smooth).
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
 <p><img src="visualization_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
@@ -457,7 +472,7 @@ p</code></pre>
   geom_point(alpha = .5) +
   geom_smooth(se = FALSE) + 
   facet_grid(. ~ name)
-## `geom_smooth()` using method = &#39;loess&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
 ## Warning: Removed 15 rows containing non-finite values (stat_smooth).
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
 <p><img src="visualization_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
@@ -466,7 +481,7 @@ p</code></pre>
   geom_point(aes(size = prcp), alpha = .5) +
   geom_smooth(se = FALSE) + 
   facet_grid(. ~ name)
-## `geom_smooth()` using method = &#39;loess&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
 ## Warning: Removed 3 rows containing non-finite values (stat_smooth).
 ## Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
 <p><img src="visualization_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
@@ -478,14 +493,13 @@ p</code></pre>
 <p>There are lots of ways you can mix and match elements, depending on your goals. I don’t like the following plot as much (it doesn’t show the data and omits precipitation), but it illustrates that you have lots of freedom in determining which geoms to include and how to compare your groups. If nothing else, you should be starting to get a sense for why you create way more plots for yourself than for others.</p>
 <pre class="r"><code>ggplot(weather, aes(x = date, y = tmax, color = name)) + 
   geom_smooth(se = FALSE) 
-## `geom_smooth()` using method = &#39;loess&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
 ## Warning: Removed 3 rows containing non-finite values (stat_smooth).</code></pre>
 <p><img src="visualization_files/figure-html/unnamed-chunk-10-1.png" width="90%" /></p>
 <p>When you’re making a scatterplot with lots of data, there’s a limit to how much you can avoid overplotting using alpha levels and transparency. In these cases <code>geom_hex()</code>, <code>geom_bin2d()</code>, or <code>geom_density2d()</code> can be handy:</p>
 <pre class="r"><code>ggplot(weather, aes(x = tmax, y = tmin)) + 
   geom_hex()
-## Warning: Removed 15 rows containing non-finite values (stat_binhex).
-## Warning: package &#39;hexbin&#39; was built under R version 3.4.3</code></pre>
+## Warning: Removed 15 rows containing non-finite values (stat_binhex).</code></pre>
 <p><img src="visualization_files/figure-html/unnamed-chunk-11-1.png" width="90%" /></p>
 <p>There are lots of aesthetics, and these depend to some extent on the geom – <code>color</code> worked for both <code>geom_point()</code> and <code>geom_smooth()</code>, but <code>shape</code> only applies to points. The help page for each geom includes a list of understood aesthetics.</p>
 <p><strong><em>Learning Assessment:</em></strong> In the preceding, we set the alpha aesthetic “by hand” instead of mapping it to a variable. This is possible for other aesthetics too. To check your understanding of this point, try to explain why the two lines below don’t produce the same result:</p>
