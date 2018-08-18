@@ -26,6 +26,13 @@ knitr::opts_chunk$set(
 
 ## Example
 
+### A bit of advice
+
+You've probably been using computers for as long as you can remember, but now is a good time to develop intentionality in how you use a computer for work. In the context of this class, and in your professional life more broadly, a computer is the tool you use to execute specific tasks; the more skilled you are in using a computer as a tool, the better off you'll be. 
+
+Today we're going to talk a lot about using R and being organized. Beyond that, getting in the habit of using an application launcher / productivity application (like [Alfred](https://www.alfredapp.com) for OSX or maybe [Launchy](https://www.launchy.net) for Windows 10) will help you quickly navigate on your machine, saving time and effort.
+
+
 ### Get started
 
 Launch R Studio and take stock -- find the Console, the Environment/History, and the Files/Plots/Packages/Help. This is also a good time to set some preferences -- I like to turn off saving the workspace and history, and also turn on a lot of the R code diagnostics.
