@@ -9,6 +9,8 @@ output:
 
 All homework assignments are covered by the course [policy on collaboration](policy_on_collaboration.html). 
 
+In addition to grading for content, we reserve the right to deduct points for stylistic elements (e.g. proper spacing and indentation; relevant variable names; etc). Having code that runs and answers the questions doesn't mean you have **good** code!
+
 |               | Available  | Due               | Assignment                                     | Solution |
 |:------------- |:---------- |:----------------- | :---------------------------------------------:| :----------------------------------------------:|
 | Homework 0    | Sept 4     | Sept 6 by 10:00am | [<i class="far fa-file-code fa-lg"></i>](link) | [<i class="fas fa-check fa-lg"></i>](link)      |
