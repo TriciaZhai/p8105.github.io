@@ -12,7 +12,7 @@ Your final project in this course will be a collaborative that uses each element
 
 ### Team 
 
-You will work closely with other classmates in a team of 4 on this project, and are free to form teams of your choosing. If you can't find a team, or wish to form a team of a different size, please reach out to the instructor. In general, we do not anticipate that the grades for each group member will be different. We do, however, reserve the right to assign different grades to each group member based on peer assessments or public records of contribution (e.g. through commit histories).
+You will work closely with other classmates in a team of 4-5 on this project, and are free to form teams of your choosing. If you can't find a team, or wish to form a team of a different size, please reach out to the instructor. In general, we do not anticipate that the grades for each group member will be different. We do, however, reserve the right to assign different grades to each group member based on peer assessments or public records of contribution (e.g. through commit histories).
 
 ### Due dates
 
@@ -20,10 +20,10 @@ Date                  | Description                         | Deliverable
 --------------------- | ----------------------------------- | -----------------------------------
 November 6 by 1:00    | Form a team and submit a proposal   | Written proposal document
 November 12-16        | Project review meeting              | In person meeting -- no "deliverable"
-December 5 by 4:00    | R Markdown and HTML                 | Written report giving detail project description (as a GitHub repo)
+December 6 by 4:00    | Report                              | Written report giving detailed project description (as a GitHub repo)
 December 6 by 4:00    | Webpage and screencast              | Webpage overview of project, with short explanatory video (published online)
-December 6 by 4:00    | Peer assessment                     | Brief assessment of your teammates contributions (as a short document)
-December 11           | "In class"" discussion of projects     | Enjoy hearing about projects!
+December 6 by 8:00    | Peer assessment                     | Brief assessment of your teammates contributions (as a short document)
+December 11           | "In class" discussion of projects   | Enjoy hearing about projects! (Also get hex stickers...)
 
 
 ## Deliverables
@@ -40,15 +40,15 @@ First, you will define your teams and propose a project. This proposal should in
 * The planned analyses / visualizations / coding challenges
 * The planned timeline
 
-There should be one proposal per group, written collaboratively using google docs. Conceptually, this is a 10% review.
+There should be one proposal per group, written collaboratively using google docs. Conceptually, this is intended to review a project that is 10% complete.
 
 ### Project review meeting
 
 Based on the topic of your proposal, you will work a member of the teaching team; this person will be your primary resource and will guide you through the rest of the project. In particular, you will schedule a project review meeting with your teaching team leader to discuss the proposal, anticipated stumbling blocks, and preliminary work. All team members are required to be present for the meeting. Conceptually, the project review meeting is a 30% review.
 
-### R Markdown and HTML
+### Report
 
-The R Markdown and HTML files produced by your team are central to this project. These files will detail how you completed your project, and should cover data collection and cleaning, exploratory analyses, alternative strategies, descriptions of approaches, and a discussion of results. We anticipate that your project will change somewhat over time; these changes and the reasons for them should be documented! You should write one R Markdown document per group, and be sure to include all group member names in the document.
+The written report (e.g. R Markdown and HTML files) produced by your team are central to this project. This will detail how you completed your project, and should cover data collection and cleaning, exploratory analyses, alternative strategies, descriptions of approaches, and a discussion of results. We anticipate that your project will change somewhat over time; these changes and the reasons for them should be documented! You should write one report document per group, and be sure to include all group member names in the document.
 
 Your R Markdown should include the following topics. Depending on your project type the amount of discussion you devote to each of them will vary:
 
@@ -60,13 +60,13 @@ Your R Markdown should include the following topics. Depending on your project t
 * Additional analysis: If you undertake formal statistical analyses, describe these in detail
 * Discussion: What were your findings? Are they what you expect? What insights into the data can you make?
 
-As this will be your only chance to describe your project in detail make sure that your RMarkdown file and compiled HTML file are standalone documents that fully describes your process and results. We also expect you to write high-quality code that is understandable to an outside reader. Coding collaboratively and actively reviewing code within the team will help with this!
+As this will be your only chance to describe your project in detail, make sure that your report is a standalone document that fully describes your process and results. We also expect you to write high-quality code that is understandable to an outside reader. Coding collaboratively and actively reviewing code within the team will help with this!
 
-Your R Markdown document and HTML file should be included in a GitHub repository, along with the data used for the analysis. If the data are too big to fit in the repository, make the data accessible somewhere online (e.g. google drive or a downloadable link). Inside the RMarkdown file at the top, include instructions on where to access the data. If we cannot access your work or links because these directions are not followed correctly, we will not grade your work.
+Your report should be developed in a GitHub repository. Data should not be included in the repo; make the data accessible somewhere online (e.g. google drive or a downloadable link) and, in the report, include instructions on where to access the data. If we cannot access your work or links because these directions are not followed correctly, we will not grade your work.
 
 ### Webpage and screencast
 
-You will create a webpage summarizing your project. This should not be as detailed as your submitted R Markdown and HTML files, but should give a overview of the project scope, data, approaches, visualizations, and other results. You should include a link to the GitHub repository containing your R Markdown document. 
+You will create a webpage summarizing your project. This should not be as detailed as your submitted report, but should give a overview of the project scope, data, approaches, visualizations, and other results. You should also link to the full report and repo. 
 
 You will also create a two-minute narrated screencast illustrating your project (screencasts are videos of your computer screen with spoken audio explaining what is shown on the screen -- see the [RStudio webinar page](https://www.rstudio.com/resources/webinars/) for some examples). You may use slides, demonstrations, or any other content that is relevant to your project. Publish your screencast on youtube, vimeo, or another online platform, and embed the screencast in your website. The two-minute limit will be strictly enforced.
 
@@ -80,7 +80,6 @@ It is important to provide positive feedback to people who worked hard for the g
 * Contribution - did they contribute productively to the team discussion and work?
 * Respect - did they encourage others to contribute their ideas, and provide feedback in a constructive way?
 * Flexibility - were they flexible when disagreements occurred?
-
 
 ### Examples
 
