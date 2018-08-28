@@ -25,7 +25,9 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -97,6 +99,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -409,7 +414,6 @@ div.tocify {
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0
-## Warning: package &#39;dplyr&#39; was built under R version 3.5.1
 ## ── Conflicts ─────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
@@ -429,15 +433,15 @@ x + y
 <p>When making assignments, R assumes you don’t want to see the result. If you do want to see the result, you’ll have to ask for it. You can also apply <strong>functions</strong> to objects.</p>
 <pre class="r"><code>x = runif(20)
 x
-##  [1] 0.25522448 0.31044939 0.84657555 0.31784100 0.09202791 0.63011193
-##  [7] 0.76161108 0.42960671 0.95984277 0.59520577 0.94131107 0.65182496
-## [13] 0.20807155 0.93904079 0.23423374 0.57319588 0.73993850 0.97365145
-## [19] 0.75043112 0.13079084
+##  [1] 0.70009700 0.57989712 0.56986921 0.87343462 0.71659557 0.80874479
+##  [7] 0.38948526 0.12335702 0.11004489 0.10511108 0.57462066 0.34787784
+## [13] 0.09092650 0.88685490 0.39035302 0.07565792 0.29058873 0.03483852
+## [19] 0.27871240 0.82261657
 
 mean(x)
-## [1] 0.5670493
+## [1] 0.4384842
 var(x)
-## [1] 0.08890717</code></pre>
+## [1] 0.08791895</code></pre>
 <p>We’ve created two variables, <code>x</code> and <code>y</code> – these now exist in the <strong>environment</strong>. You can see everything in the environment using <code>ls()</code> on the command line, or check out the environment pane in RStudio.</p>
 </div>
 <div id="data-frames" class="section level3">
