@@ -1,0 +1,30 @@
+---
+title: "Midterm project"
+output:
+  html_document: 
+    toc: true
+    toc_float: true
+---
+
+### Context
+
+At this point, we've covered [Building Blocks](topic_building_blocks.html), [Data Wrangling I](topic_data_wrangling_i.html), [Visualization and EDA](topic_visualization_and_eda.html), and [Data Wrangling II](topic_data_wrangling_ii.html). These three topics give a broad introduction into the commonly-used tools of data science, and are the main focus of this project.
+
+### Independence
+
+In contrast to Homework assignments, you must work completely independently on this project -- do not discuss your approach, your code, or your results with any other students, and do not use the discussion board for questions related to this project. If questions do arise, please email the instructor.
+
+### Due date
+
+Due: October 26 at 5:00pm. 
+
+### Data
+
+
+### Reproducibility
+
+
+
+### Problem
+
+
