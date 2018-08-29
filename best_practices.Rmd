@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 ## Some slides
 
-<script async class="speakerdeck-embed" data-id="39618f30472e4cac9659ce4f21a98aa6" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="39618f30472e4cac9659ce4f21a98aa6" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
 <div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-best-practices-1" title="Best Practices" target="_blank">Best Practices</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
 
 ## Example
@@ -48,7 +48,7 @@ Create a new R script using File > New File > R Script. Write a short comment se
 ##################################################################
 ```
 
-As part of [Homework 0](homework_0.html), we installed a lot of packages. You don't need to re-install those each time you need them, but you do need to load them using the `library` function. Although we won't use it yet, I'm going to load the `tidyverse` package now. 
+As part of [Homework 0](homework_0.html), we installed a lot of packages. You don't need to re-install those each time you need them, but you do need to load packages you want to use with the `library` function. Although we won't use it yet, I'm going to load the `tidyverse` package now. 
 
 ```{r}
 library(tidyverse)
@@ -98,7 +98,7 @@ example_df = tibble(
 )
 
 class(example_df$vec_numeric)
-class(example_df$factor)
+class(example_df$vec_factor)
 ```
 
 We're going to spend a lot of time talking about data frames over the course of the semester, starting in [Data Wrangling I](topic_data_wrangling_i.html). For now, just think of it as a rectangle that holds data you care about. 
@@ -127,7 +127,7 @@ We'll go through plotting in detail in [Visualization and EDA](topic_visualizati
 
 ### Organizing code into readable scripts
 
-You should _always_ keep the complete code that was used for an analysis or project, no matter how brief. Your scripts should be self-contained -- they should include everything you did to produce what you wanted to produce. The two scripts below repeat content from above. 
+You should _always_ keep the complete code that was used for an analysis or project, no matter how brief. Your code should be self-contained -- it should include everything you did to produce what you wanted to produce. The two scripts below repeat content from above. 
 
 First, data frames and variable classes.
 
@@ -192,7 +192,7 @@ The scripts above illustrate some "best practices" that you should adopt:
 
 The organization of code into self-contained scripts is itself part of a bigger picture. Rather than focusing on the variables (or plots, or even complete analyses), focus on the code that produces them. Given whatever inputs you have (none for now, although later there will be data), your code should reliably produce whatever outputs you want. 
 
-To check how "real" your scripts are, clear out your workspace using `rm(list = ls())` and re-run everything. If everything works, great; if not, address the issue by editing your script. Do this frequently!
+To check how "real" your scripts are, clear out your workspace using `rm(list = ls())` or restart your R Session (Session > Restart R) and re-run everything. If everything works, great; if not, address the issue by editing your script. Do this frequently!
 
 R will, by default, save everything in your workspace. I strongly suggest you turn this behavior off (Preferences > General > Save Workspace: Never). First, doing so will remove a crutch early on and help you focus on your scripts. Second, saving your workspace automatically and doing so in the background can get you in trouble if (or when) you deal with patient data. 
 
@@ -223,7 +223,7 @@ ggplot(plot_df, aes(x = x, y = y)) + geom_point()
 ggsave("scatter_plot.pdf", height = 4, width = 6)
 ```
 
-With larger projects, it can be useful to create sub-directories for your project (e.g. `data` and `results`) -- you don't need to worry about that for now, but when you do this use relative paths to keep everything self-contained.
+With larger projects, it can be useful to create sub-directories for your project (e.g. `data` and `results`) -- you don't need to worry about that for now, but when you do this you should use relative paths to keep everything self-contained.
 
 Note that we exported a figure using a command, rather than clicking the Export in the Plots tab. This is intentional -- whatever your script produces, it should do so exclusively from the code you've written.
 
@@ -232,7 +232,7 @@ Note that we exported a figure using a command, rather than clicking the Export 
 
 All this together suggests a workflow. For every new project (and I mean _every new project_), do the following:
 
-* Create a directory with a reasonable name and path (e.g. `~/Documents/School/DSI/Homework_2/`)
+* Create a directory with a reasonable name and path (e.g. `~/Documents/School/P8105/Homework_2/`)
 * Put an R Project in the directory
 * Keep everything related to the analysis -- data inputs, scripts, reports, output -- in there
 * Periodically check for reproducibility of the analysis

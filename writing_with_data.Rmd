@@ -92,21 +92,24 @@ You'll need to refer to this list (or to similar resources) pretty often at firs
 The YAML header controls global features of the document. I generally will include both the `author` and `date` in each document I produce.
 ```yaml
 author: "Jeff Goldsmith"
-date: 2017-08-08
+date: 2018-08-08
 ```
 
 We're mostly concerned with the output format, which is controlled through the `output:` field. 
 
 The snippet below will produce an HTML document. Notice that this has subfields to add a table of contents, and float that table alongside the content. These lines are used throughout the course website. 
+
 ```yaml
 output:
   html_document:
     toc: true
     toc_float: true
 ```
+
 HTML documents are great because they allow interactivity in a way that static formats (PDF, Word) do not. For example, adding the subfield `code_folding: hide` under `html_document` will hide all the code in the document until the reader clicks to show it (I almost always use this for collaborative reports). 
 
-That said, some collaborators will need or prefer static documents. You can create these using the YAML snippet below, which will produce a PDF or a Word document when knitted. 
+That said, some collaborators will need or prefer static documents. You can create these using the YAML snippet below, which will produce a PDF or a Word document when knitted. These require extra software (LaTeX and Word, respectively).
+
 ```yaml
 output:
   pdf_document: default
@@ -119,13 +122,13 @@ output:
 
 The formatting for both PDF and Word documents can be controlled through options as well, although these can be tricky to control (especially for Word documents).
 
-Later in the course we'll talk about some other output formats, especially dashboards and websites, and will introduce other YAML options as needed.
+Soon we'll see the `github_document` format, and later in the course we'll talk about some other output formats -- especially dashboards and websites -- introducing other YAML options as needed.
 
 ## New workflow
 
 All of this suggests a slight modification to the previous workflow:
 
-* Create a directory with a reasonable name and path (e.g. `~/Documents/School/DSI/Homework_2/`)
+* Create a directory with a reasonable name and path (e.g. `~/Documents/School/P8105/Homework_2/`)
 * Put an R Project in the directory
 * Keep everything related to the analysis -- data inputs, scripts, reports, output -- in there, **and use R Markdown as much as possible**
 * Periodically check for reproducibility of the analysis

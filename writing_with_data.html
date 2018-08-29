@@ -25,7 +25,9 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -97,6 +99,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -493,7 +498,7 @@ Content Cell  | Content Cell</code></pre>
 <h3>YAML and output formats</h3>
 <p>The YAML header controls global features of the document. I generally will include both the <code>author</code> and <code>date</code> in each document I produce.</p>
 <pre class="yaml"><code>author: &quot;Jeff Goldsmith&quot;
-date: 2017-08-08</code></pre>
+date: 2018-08-08</code></pre>
 <p>We’re mostly concerned with the output format, which is controlled through the <code>output:</code> field.</p>
 <p>The snippet below will produce an HTML document. Notice that this has subfields to add a table of contents, and float that table alongside the content. These lines are used throughout the course website.</p>
 <pre class="yaml"><code>output:
@@ -501,20 +506,20 @@ date: 2017-08-08</code></pre>
     toc: true
     toc_float: true</code></pre>
 <p>HTML documents are great because they allow interactivity in a way that static formats (PDF, Word) do not. For example, adding the subfield <code>code_folding: hide</code> under <code>html_document</code> will hide all the code in the document until the reader clicks to show it (I almost always use this for collaborative reports).</p>
-<p>That said, some collaborators will need or prefer static documents. You can create these using the YAML snippet below, which will produce a PDF or a Word document when knitted.</p>
+<p>That said, some collaborators will need or prefer static documents. You can create these using the YAML snippet below, which will produce a PDF or a Word document when knitted. These require extra software (LaTeX and Word, respectively).</p>
 <pre class="yaml"><code>output:
   pdf_document: default</code></pre>
 <pre class="yaml"><code>output:
   word_document: default</code></pre>
 <p>The formatting for both PDF and Word documents can be controlled through options as well, although these can be tricky to control (especially for Word documents).</p>
-<p>Later in the course we’ll talk about some other output formats, especially dashboards and websites, and will introduce other YAML options as needed.</p>
+<p>Soon we’ll see the <code>github_document</code> format, and later in the course we’ll talk about some other output formats – especially dashboards and websites – introducing other YAML options as needed.</p>
 </div>
 </div>
 <div id="new-workflow" class="section level2">
 <h2>New workflow</h2>
 <p>All of this suggests a slight modification to the previous workflow:</p>
 <ul>
-<li>Create a directory with a reasonable name and path (e.g. <code>~/Documents/School/DSI/Homework_2/</code>)</li>
+<li>Create a directory with a reasonable name and path (e.g. <code>~/Documents/School/P8105/Homework_2/</code>)</li>
 <li>Put an R Project in the directory</li>
 <li>Keep everything related to the analysis – data inputs, scripts, reports, output – in there, <strong>and use R Markdown as much as possible</strong></li>
 <li>Periodically check for reproducibility of the analysis</li>

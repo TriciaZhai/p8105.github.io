@@ -24,12 +24,13 @@ title: "Schedule"
 | Thur Nov 1    | Resampling            | [listcols and Bootstrapping](listcols_and_bootstrapping.html) | [<i class="fas fa-desktop fa-lg"></i>](slides/listcols_and_bootstrapping.pdf) | [<i class="fab fa-slack fa-lg"></i>](link)      | [<i class="far fa-file-code fa-lg"></i>](homework_5.html)  |                                 |
 | Tues Nov 6    | -Election day-        |                                                               |                                                                               |                                                 |                                                            |                                 |
 | Thur Nov 8    | Linear models         |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
-| Tues Nov 13   | Linear models         |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      |      | FP- meeting   |
-| Thur Nov 15   | Linear models         |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      | [<i class="far fa-file-code fa-lg"></i>](homework_6.html)  | FP- meeting   |
+| Tues Nov 13   | Linear models         |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      |      |    |
+| Thur Nov 15   | Linear models         |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      | [<i class="far fa-file-code fa-lg"></i>](homework_6.html)  |    |
 | Tues Nov 20   | -Thanksgiving-        |         |                                               |                                                 |      |     |
 | Thur Nov 22   | -Thanksgiving-        |         |                                               |                                                 |      |     |
 | Tues Nov 27   | Extra topics          |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      |      |     |
-| Thur Nov 29   | Extra topics          |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      | [<i class="far fa-file-code fa-lg"></i>](homework_7.html)  | FP- report   |
-| Tues Dec 4    | -Final Project Week-  |         |                                               |                                                 |      | FP- screencast   |
+| Thur Nov 29   | Extra topics          |         | [<i class="fas fa-desktop fa-lg"></i>](link)  | [<i class="fab fa-slack fa-lg"></i>](link)      | [<i class="far fa-file-code fa-lg"></i>](homework_7.html)  |    |
+| Tues Dec 4    | -Final Project Week-  |         |                                               |                                                 |      |    |
 | Thur Dec 6    | -Final Project Week-  |         |                                               |                                                 |      |     |
+| Tues Dec 11   | Final Projects!  |         |                                               |                                                 |      |     |
 

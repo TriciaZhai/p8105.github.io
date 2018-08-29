@@ -384,7 +384,7 @@ div.tocify {
 <p>This is the first module in the <a href="topic_building_blocks.html">Building Blocks</a> topic; the relevant slack channel is <a href="">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
-<script async class="speakerdeck-embed" data-id="39618f30472e4cac9659ce4f21a98aa6" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="39618f30472e4cac9659ce4f21a98aa6" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
 <div style="margin-bottom:5px">
 <strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-best-practices-1" title="Best Practices" target="_blank">Best Practices</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>.
 </div>
@@ -407,14 +407,14 @@ div.tocify {
 #
 # Script for exploring R!
 ##################################################################</code></pre>
-<p>As part of <a href="homework_0.html">Homework 0</a>, we installed a lot of packages. You don’t need to re-install those each time you need them, but you do need to load them using the <code>library</code> function. Although we won’t use it yet, I’m going to load the <code>tidyverse</code> package now.</p>
+<p>As part of <a href="homework_0.html">Homework 0</a>, we installed a lot of packages. You don’t need to re-install those each time you need them, but you do need to load packages you want to use with the <code>library</code> function. Although we won’t use it yet, I’m going to load the <code>tidyverse</code> package now.</p>
 <pre class="r"><code>library(tidyverse)
-## ── Attaching packages ──────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0
-## ── Conflicts ─────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <p>You can do basic computations in R, either on the command line (in the console) or by writing things in the script and executing the code in the console. Note that you can execute commands (e.g. the line with the cursor or highlighted code) in the console from a script using Command+Enter (Mac) or Ctrl+Enter (Windows).</p>
@@ -433,15 +433,15 @@ x + y
 <p>When making assignments, R assumes you don’t want to see the result. If you do want to see the result, you’ll have to ask for it. You can also apply <strong>functions</strong> to objects.</p>
 <pre class="r"><code>x = runif(20)
 x
-##  [1] 0.70009700 0.57989712 0.56986921 0.87343462 0.71659557 0.80874479
-##  [7] 0.38948526 0.12335702 0.11004489 0.10511108 0.57462066 0.34787784
-## [13] 0.09092650 0.88685490 0.39035302 0.07565792 0.29058873 0.03483852
-## [19] 0.27871240 0.82261657
+##  [1] 0.55870550 0.74901242 0.19993866 0.24863209 0.34360478 0.05948902
+##  [7] 0.18759115 0.33033858 0.36087367 0.89918768 0.74090931 0.13952600
+## [13] 0.19264906 0.88801178 0.36007924 0.23937174 0.85836337 0.09214065
+## [19] 0.78487121 0.95412536
 
 mean(x)
-## [1] 0.4384842
+## [1] 0.4593711
 var(x)
-## [1] 0.08791895</code></pre>
+## [1] 0.09536416</code></pre>
 <p>We’ve created two variables, <code>x</code> and <code>y</code> – these now exist in the <strong>environment</strong>. You can see everything in the environment using <code>ls()</code> on the command line, or check out the environment pane in RStudio.</p>
 </div>
 <div id="data-frames" class="section level3">
@@ -456,9 +456,8 @@ var(x)
 
 class(example_df$vec_numeric)
 ## [1] &quot;integer&quot;
-class(example_df$factor)
-## Warning: Unknown or uninitialised column: &#39;factor&#39;.
-## [1] &quot;NULL&quot;</code></pre>
+class(example_df$vec_factor)
+## [1] &quot;factor&quot;</code></pre>
 <p>We’re going to spend a lot of time talking about data frames over the course of the semester, starting in <a href="topic_data_wrangling_i.html">Data Wrangling I</a>. For now, just think of it as a rectangle that holds data you care about.</p>
 </div>
 <div id="basic-plots" class="section level3">
@@ -481,7 +480,7 @@ ggplot(plot_df, aes(x = x)) + geom_histogram()
 </div>
 <div id="organizing-code-into-readable-scripts" class="section level3">
 <h3>Organizing code into readable scripts</h3>
-<p>You should <em>always</em> keep the complete code that was used for an analysis or project, no matter how brief. Your scripts should be self-contained – they should include everything you did to produce what you wanted to produce. The two scripts below repeat content from above.</p>
+<p>You should <em>always</em> keep the complete code that was used for an analysis or project, no matter how brief. Your code should be self-contained – it should include everything you did to produce what you wanted to produce. The two scripts below repeat content from above.</p>
 <p>First, data frames and variable classes.</p>
 <pre class="r"><code>##################################################################
 # June 14, 2018
@@ -536,7 +535,7 @@ ggplot(plot_df, aes(x = x, y = y)) + geom_point()</code></pre>
 <li>The code iteslf is easy-to-read – adequate spacing within and between lines of code. (Turn on code diagnositics if you haven’t already; this can be found in Preferences &gt; Code &gt; Diagnostics.)</li>
 </ul>
 <p>The organization of code into self-contained scripts is itself part of a bigger picture. Rather than focusing on the variables (or plots, or even complete analyses), focus on the code that produces them. Given whatever inputs you have (none for now, although later there will be data), your code should reliably produce whatever outputs you want.</p>
-<p>To check how “real” your scripts are, clear out your workspace using <code>rm(list = ls())</code> and re-run everything. If everything works, great; if not, address the issue by editing your script. Do this frequently!</p>
+<p>To check how “real” your scripts are, clear out your workspace using <code>rm(list = ls())</code> or restart your R Session (Session &gt; Restart R) and re-run everything. If everything works, great; if not, address the issue by editing your script. Do this frequently!</p>
 <p>R will, by default, save everything in your workspace. I strongly suggest you turn this behavior off (Preferences &gt; General &gt; Save Workspace: Never). First, doing so will remove a crutch early on and help you focus on your scripts. Second, saving your workspace automatically and doing so in the background can get you in trouble if (or when) you deal with patient data.</p>
 <p>A final word about scripts – not every line of code you write will (or should) make it to your scripts. It can take a few attempts to get code you like, and you don’t need to save the intermediate stuff. You also don’t need to save every bit of exploratory analysis you do – keep the stuff that improved your understanding, but discard the rest.</p>
 </div>
@@ -553,14 +552,14 @@ ggplot(plot_df, aes(x = x, y = y)) + geom_point()</code></pre>
 <p>If you’ve opened your R Project, that should be your working directory. That’s great! Another bit of encouragement to keep your stuff organized. This means that anything you output will be written to this directory:</p>
 <pre class="r"><code>ggplot(plot_df, aes(x = x, y = y)) + geom_point()
 ggsave(&quot;scatter_plot.pdf&quot;, height = 4, width = 6)</code></pre>
-<p>With larger projects, it can be useful to create sub-directories for your project (e.g. <code>data</code> and <code>results</code>) – you don’t need to worry about that for now, but when you do this use relative paths to keep everything self-contained.</p>
+<p>With larger projects, it can be useful to create sub-directories for your project (e.g. <code>data</code> and <code>results</code>) – you don’t need to worry about that for now, but when you do this you should use relative paths to keep everything self-contained.</p>
 <p>Note that we exported a figure using a command, rather than clicking the Export in the Plots tab. This is intentional – whatever your script produces, it should do so exclusively from the code you’ve written.</p>
 </div>
 <div id="workflow" class="section level3">
 <h3>Workflow</h3>
 <p>All this together suggests a workflow. For every new project (and I mean <em>every new project</em>), do the following:</p>
 <ul>
-<li>Create a directory with a reasonable name and path (e.g. <code>~/Documents/School/DSI/Homework_2/</code>)</li>
+<li>Create a directory with a reasonable name and path (e.g. <code>~/Documents/School/P8105/Homework_2/</code>)</li>
 <li>Put an R Project in the directory</li>
 <li>Keep everything related to the analysis – data inputs, scripts, reports, output – in there</li>
 <li>Periodically check for reproducibility of the analysis</li>
