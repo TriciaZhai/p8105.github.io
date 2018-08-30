@@ -20,9 +20,16 @@ Sign up for the course Slack workspace [here](https://join.slack.com/t/p8105-fal
 
 ### Office hours
 
-In addition to the resources above, in-person office hours will be held every day:
+In addition to the resources above, in-person office hours will be held every day in ARB 627:
 
-SCHEDULE TBD 
+| Day       | Time        |
+|:--------- |:----------- |
+| Monday    | 11:30-12:50 |
+| Tuesday   | 4:00-5:20   |
+| Wednesday | 11:30-12:50 |
+| Thursday  | 4:00-5:20   |
+| Friday    | 12:00-1:00  |
+
 
 ### Email
 
