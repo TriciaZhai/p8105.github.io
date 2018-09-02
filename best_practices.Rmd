@@ -8,7 +8,7 @@ output:
 
 We'll going to get up-to-speed on the basic tools in R. As part of that, we'll define and establish some good habits.
 
-This is the first module in the [Building Blocks](topic_building_blocks.html) topic; the relevant slack channel is [here]().
+This is the first module in the [Building Blocks](topic_building_blocks.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCATLJG67).
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
 
 You've probably been using computers for as long as you can remember, but now is a good time to develop intentionality in how you use a computer for work. In the context of this class, and in your professional life more broadly, a computer is the tool you use to execute specific tasks; the more skilled you are in using a computer as a tool, the better off you'll be. 
 
-Today we're going to talk a lot about using R and being organized. Beyond that, getting in the habit of using an application launcher / productivity application (like [Alfred](https://www.alfredapp.com) for OSX or maybe [Launchy](https://www.launchy.net) for Windows 10) will help you quickly navigate on your machine, saving time and effort.
+Today we're going to talk a lot about using R and being organized. Beyond that, getting in the habit of using an application launcher / productivity application (like [Alfred](https://www.alfredapp.com) for OSX or maybe [Launchy](https://www.launchy.net) for Windows 10) will help you quickly navigate on your machine, saving time and effort. You should also get in the habit of using keyboard shortcuts, both in RStudio and elsewhere on your machine.
 
 
 ### Get started
@@ -41,7 +41,7 @@ Create a new R script using File > New File > R Script. Write a short comment se
 
 ```{r}
 ##################################################################
-# June 2, 2017
+# Sept 4, 2018
 # Jeff Goldsmith
 #
 # Script for exploring R!
@@ -133,7 +133,7 @@ First, data frames and variable classes.
 
 ```{r, eval = FALSE}
 ##################################################################
-# June 14, 2018
+# Sept 4, 2018
 # Jeff Goldsmith
 #
 # Script exploring vector classes
@@ -158,7 +158,7 @@ Second, simple plots.
 
 ```{r, eval = FALSE}
 ##################################################################
-# June 14, 2018
+# Sept 4, 2018
 # Jeff Goldsmith
 #
 # Script producing basic plots

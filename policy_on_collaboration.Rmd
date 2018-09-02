@@ -4,6 +4,8 @@ output:
   html_document
 ---
 
+The following course policy on collaboration applies to homework assignments. The midterm, in contrast, is expected to be completed wholly independently and without collaboration of any sort.
+
 The goal of this course is for students to learn the tools, approaches, and perspectives necessary to be a data scientist. We recognize that learning rarely happens in isolation, and encourage students to collaborate in a way that improves their understanding of material. Several course resources, including the disucssion board and Slack channels, exist to encourage peer-to-peer engagement. 
 
 The assessment of student performance is important in any course: these assessments make it possible to measure each student's understanding of the course material. For assessments to be fair, submitted work must reflect the submitter's efforts.
