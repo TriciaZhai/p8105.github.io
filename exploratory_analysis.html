@@ -25,7 +25,9 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -97,6 +99,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -614,14 +619,14 @@ weather
   mutate(temp_change = tmax - lag(tmax))
 ## # A tibble: 1,098 x 8
 ## # Groups:   name [3]
-##   name           id    date       month       prcp  tmax  tmin temp_change
-##   &lt;chr&gt;          &lt;chr&gt; &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
-## 1 CentralPark_NY USW0… 2016-01-01 2016-01-01     0   5.6   1.1       NA   
-## 2 CentralPark_NY USW0… 2016-01-02 2016-01-01     0   4.4   0         -1.20
-## 3 CentralPark_NY USW0… 2016-01-03 2016-01-01     0   7.2   1.7        2.8 
-## 4 CentralPark_NY USW0… 2016-01-04 2016-01-01     0   2.2  -9.9       -5   
-## 5 CentralPark_NY USW0… 2016-01-05 2016-01-01     0  -1.6 -11.6       -3.8 
-## 6 CentralPark_NY USW0… 2016-01-06 2016-01-01     0   5    -3.8        6.6 
+##   name        id       date       month       prcp  tmax  tmin temp_change
+##   &lt;chr&gt;       &lt;chr&gt;    &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
+## 1 CentralPar… USW0009… 2016-01-01 2016-01-01     0   5.6   1.1       NA   
+## 2 CentralPar… USW0009… 2016-01-02 2016-01-01     0   4.4   0         -1.20
+## 3 CentralPar… USW0009… 2016-01-03 2016-01-01     0   7.2   1.7        2.8 
+## 4 CentralPar… USW0009… 2016-01-04 2016-01-01     0   2.2  -9.9       -5   
+## 5 CentralPar… USW0009… 2016-01-05 2016-01-01     0  -1.6 -11.6       -3.8 
+## 6 CentralPar… USW0009… 2016-01-06 2016-01-01     0   5    -3.8        6.6 
 ## # ... with 1,092 more rows</code></pre>
 <p>This kind of variable might be used to quantify the day-by-day variability in max temperature, or to identify the largest one-day increase:</p>
 <pre class="r"><code>weather %&gt;%

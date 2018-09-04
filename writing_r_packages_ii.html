@@ -25,7 +25,9 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -97,6 +99,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -464,7 +469,7 @@ iris %&gt;%
 <p>I’ll detach both packages (and first detach <code>janitor</code>, since having it loaded prevents me from detaching <code>dplyr</code>), then reverse the order in which I attach them and try again.</p>
 <pre class="r"><code>detach(&quot;package:dplyr&quot;, unload = TRUE)
 ## Warning: &#39;dplyr&#39; namespace cannot be unloaded:
-##   namespace &#39;dplyr&#39; is imported by &#39;tidytext&#39;, &#39;plotly&#39;, &#39;broom&#39; so cannot be unloaded
+##   namespace &#39;dplyr&#39; is imported by &#39;broom&#39;, &#39;tidytext&#39;, &#39;plotly&#39; so cannot be unloaded
 detach(&quot;package:MASS&quot;, unload = TRUE)
 
 library(dplyr)

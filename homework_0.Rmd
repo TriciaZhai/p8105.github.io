@@ -24,7 +24,7 @@ Install several packages (and their dependencies) using the code below:
 install.packages(c("tidyverse", "janitor", "broom", "here", "shiny", "readxl", "haven", "ggridges", "viridis", "skimr", "rvest", "httr", "flexdashboard", "devtools", "rmarkdown", "googlesheets", "modelr"))
 ```
 
-Upload a screenshot of RStudio thats show you can successfully load the packages `tidyverse` and `knitr`, includes , and include your UNI on the command line. Here's an example "solution":
+Upload a screenshot of RStudio thats show you can successfully load the packages `tidyverse` and `knitr`, and include your UNI on the command line. Here's an example "solution":
 
 <img src="images/homework_0_r.png" style="width:90%">
 

@@ -25,7 +25,9 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -97,6 +99,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -601,14 +606,14 @@ weather_nest
 
 weather_analysis
 ## # A tibble: 6 x 7
-##   name           id          term   estimate std.error statistic   p.value
-##   &lt;chr&gt;          &lt;chr&gt;       &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 CentralPark_NY USW00094728 (Inte…    7.78     0.221       35.2 3.88e-119
-## 2 CentralPark_NY USW00094728 tmin      1.04     0.0164      63.8 1.23e-199
-## 3 Waikiki_HA     USC00519397 (Inte…   22.5      0.541       41.6 2.13e-140
-## 4 Waikiki_HA     USC00519397 tmin      0.326    0.0248      13.2 1.29e- 32
-## 5 Waterhole_WA   USS0023B17S (Inte…    6.85     0.143       47.8 4.95e-159
-## 6 Waterhole_WA   USS0023B17S tmin      1.24     0.0286      43.5 3.86e-146</code></pre>
+##   name         id         term      estimate std.error statistic   p.value
+##   &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 CentralPark… USW000947… (Interce…    7.78     0.221       35.2 3.88e-119
+## 2 CentralPark… USW000947… tmin         1.04     0.0164      63.8 1.23e-199
+## 3 Waikiki_HA   USC005193… (Interce…   22.5      0.541       41.6 2.13e-140
+## 4 Waikiki_HA   USC005193… tmin         0.326    0.0248      13.2 1.29e- 32
+## 5 Waterhole_WA USS0023B1… (Interce…    6.85     0.143       47.8 4.95e-159
+## 6 Waterhole_WA USS0023B1… tmin         1.24     0.0286      43.5 3.86e-146</code></pre>
 <p>This is, for sure, a fairly complex bit of code, but in just a few lines we’re able to fit separate linear models to each of our stations and extract the results. And, once you get used to list columns, <code>map</code>, and the rest of it, these lines of code are pretty clear.</p>
 <p>I should note that this isn’t, generally speaking, the best way to analyze data like these. We have datasets nested within stations – for that kind of “multilevel” data, a hierarchical or random effects model is more appropriate. But this is a quick and easy way to get useful answers in an exploratory context.</p>
 </div>
@@ -637,14 +642,14 @@ weather_analysis
 
 instacart
 ## # A tibble: 1,384,617 x 15
-##   order_id product_id add_to_cart_order reordered user_id eval_set
-##      &lt;int&gt;      &lt;int&gt;             &lt;int&gt;     &lt;int&gt;   &lt;int&gt; &lt;chr&gt;   
-## 1        1      49302                 1         1  112108 train   
-## 2        1      11109                 2         1  112108 train   
-## 3        1      10246                 3         0  112108 train   
-## 4        1      49683                 4         0  112108 train   
-## 5        1      43633                 5         1  112108 train   
-## 6        1      13176                 6         0  112108 train   
+##   order_id product_id add_to_cart_ord… reordered user_id eval_set
+##      &lt;int&gt;      &lt;int&gt;            &lt;int&gt;     &lt;int&gt;   &lt;int&gt; &lt;chr&gt;   
+## 1        1      49302                1         1  112108 train   
+## 2        1      11109                2         1  112108 train   
+## 3        1      10246                3         0  112108 train   
+## 4        1      49683                4         0  112108 train   
+## 5        1      43633                5         1  112108 train   
+## 6        1      13176                6         0  112108 train   
 ## # ... with 1.385e+06 more rows, and 9 more variables: order_number &lt;int&gt;,
 ## #   order_dow &lt;int&gt;, order_hour_of_day &lt;int&gt;,
 ## #   days_since_prior_order &lt;int&gt;, product_name &lt;chr&gt;, aisle_id &lt;int&gt;,

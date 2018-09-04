@@ -25,7 +25,9 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -97,6 +99,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -486,30 +491,30 @@ urls = str_c(url_base, 1:5)
 read_html(urls[1]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;Five Stars&quot;                                                    
-##  [2] &quot;Love it&quot;                                                       
-##  [3] &quot;Best tooth brush ever&quot;                                         
-##  [4] &quot;Sonicare electric toothbrush&quot;                                  
-##  [5] &quot;Five Stars&quot;                                                    
-##  [6] &quot;Only lasted 1 year&quot;                                            
-##  [7] &quot;Makes my mouth happy&quot;                                          
-##  [8] &quot;Nice quality&quot;                                                  
-##  [9] &quot;really good product solid does a good job cleaning and had ...&quot;
-## [10] &quot;It worked fine until it broke down after 1 year of use&quot;
+##  [1] &quot;It’s worthy&quot;                                               
+##  [2] &quot;Five Stars&quot;                                                
+##  [3] &quot;No complaints&quot;                                             
+##  [4] &quot;Five Stars&quot;                                                
+##  [5] &quot;Nothing beats a Sonicare for thorough but gentle cleaning.&quot;
+##  [6] &quot;Five Stars&quot;                                                
+##  [7] &quot;Good quality and price&quot;                                    
+##  [8] &quot;Highly Recommended&quot;                                        
+##  [9] &quot;Very happy with this tootbrush&quot;                            
+## [10] &quot;Read before you buy.&quot;
 
 read_html(urls[2]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;Great value, paid lover $100 years ago for this ...&quot;   
-##  [2] &quot;Five Stars&quot;                                            
-##  [3] &quot;She is satisfied.&quot;                                     
-##  [4] &quot;Five Stars&quot;                                            
-##  [5] &quot;Have to clean it after every few uses...very annoying.&quot;
-##  [6] &quot;Good&quot;                                                  
-##  [7] &quot;Good buy&quot;                                              
-##  [8] &quot;Awesome&quot;                                               
-##  [9] &quot;It has really good for tooth health&quot;                   
-## [10] &quot;Works great&quot;</code></pre>
+##  [1] &quot;Please help&quot;                                                                   
+##  [2] &quot;3-4 stars at best. Practical use 6-7/10. Not the most comfortable tooth brush.&quot;
+##  [3] &quot;Love it&quot;                                                                       
+##  [4] &quot;On time&quot;                                                                       
+##  [5] &quot;Boo&quot;                                                                           
+##  [6] &quot;nice but it shorts out&quot;                                                        
+##  [7] &quot;Good product&quot;                                                                  
+##  [8] &quot;Battery never lasted more than one brush!!!&quot;                                   
+##  [9] &quot;Five Stars&quot;                                                                    
+## [10] &quot;Work Well&quot;</code></pre>
 <p>It would get really tedious to try to scrape all (5000+) reviews by copying code over and over; before long we’ll learn about writing R functions to reuse code and make this much easier!</p>
 </div>
 <div id="biostat-methods-i-example" class="section level3">

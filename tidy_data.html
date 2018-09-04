@@ -25,7 +25,9 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 <script defer src="https://use.fontawesome.com/releases/v5.0.3/js/all.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/v4-shims.js"></script>
@@ -97,6 +99,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -511,13 +516,13 @@ print(pulse_data, n = 12)
 
 litters_data
 ## # A tibble: 49 x 10
-##   dose  day_of_tx litter_number   gd0_weight gd18_weight gd_of_birth
-##   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;                &lt;dbl&gt;       &lt;dbl&gt;       &lt;int&gt;
-## 1 con   7         #1/2/95/2               27        42            19
-## 2 con   7         #1/5/3/83/3-3/2         NA        NA            20
-## 3 con   8         #1/6/2/2/95-2           NA        NA            20
-## 4 mod   7         #1/82/3-2               NA        NA            19
-## 5 low   8         #100                    20        39.2          20
+##   dose  day_of_tx litter_number gd0_weight gd18_weight gd_of_birth
+##   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;       &lt;int&gt;
+## 1 con   7         #1/2/95/2             27        42            19
+## 2 con   7         #1/5/3/83/3-…         NA        NA            20
+## 3 con   8         #1/6/2/2/95-2         NA        NA            20
+## 4 mod   7         #1/82/3-2             NA        NA            19
+## 5 low   8         #100                  20        39.2          20
 ## # ... with 44 more rows, and 4 more variables: pups_born_alive &lt;int&gt;,
 ## #   pups_dead_birth &lt;int&gt;, pups_survive &lt;int&gt;, wt_gain &lt;dbl&gt;</code></pre>
 <p>Now we’re in pretty okay shape :-).</p>
