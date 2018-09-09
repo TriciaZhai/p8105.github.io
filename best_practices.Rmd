@@ -151,7 +151,7 @@ example_df = tibble(
 
 ## examine classes
 class(example_df$vec_numeric)
-class(example_df$factor)
+class(example_df$vec_factor)
 ```
 
 Second, simple plots. 
