@@ -1,8 +1,8 @@
 Text formatting 
 ------------------------------------------------------------
 
-*italic*  or _italic_
-**bold**   __bold__
+*italic*  or  _italic_
+**bold**  or  __bold__
 `code`
 superscript^2^ and subscript~2~
 

@@ -384,7 +384,7 @@ div.tocify {
 <p>This is the second module in the <a href="topic_building_blocks.html">Building blocks</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCATLJG67">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
-<script async class="speakerdeck-embed" data-id="f1ca5d878d3f429692f3350bd4ef8f77" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="f1ca5d878d3f429692f3350bd4ef8f77" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
 <div style="margin-bottom:5px">
 <strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-writing-with-data" title="Writing with data" target="_blank">Writing with data</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>.
 </div>
@@ -392,10 +392,10 @@ div.tocify {
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>Before jumping in, one short note about the default RStudio treatment of R Markdown documents – it behaves like a “notebook” and shows output mixed in with the code, rather than in the console or viewer. I don’t like this (and I don’t think I’m the <a href="https://twitter.com/hspter/status/793552089771233280">only one</a>), but I might just be old and set in my ways. These can be turned off using preferences &gt; R Markdown &gt; Show output inline.</p>
+<p>Before jumping in, one short note about the default RStudio treatment of R Markdown documents: it behaves like a “notebook” and shows output mixed in with the code, rather than in the console or viewer. I don’t like this, and I’m definitely not the only one. I might just be old and set in my ways, but there are <a href="https://docs.google.com/presentation/d/1n2RlMdmv1p25Xy5thJUhkKGvjtV-dkAIsUXP-AL4ffI/preview?slide=id.g362da58057_0_1">good reasons</a> to <a href="https://twitter.com/hspter/status/1034511875499732993">avoid notebooks</a>. These can be turned off using Preferences &gt; R Markdown &gt; Show output inline.</p>
 <div id="basic-rmd" class="section level3">
 <h3>Basic RMD</h3>
-<p>Below is a first RMD file. To follow along, create a .Rmd file using File &gt; New File &gt; R Markdown; replace the default text with what’s below, and save the file somewhere that makes sense (e.g. in a new directory).</p>
+<p>Below is a first RMD file. To follow along, <a href="resources/template.Rmd">download the file</a> and save it somewhere that makes sense. Alternatively, create a .Rmd file using File &gt; New File &gt; R Markdown, and replace the default text with what’s below.</p>
 <pre><code>---
 title: &quot;Simple document&quot;
 output: html_document
@@ -444,7 +444,27 @@ The mean is `r mean(samp)`.</code></pre>
 <p>Use these options to be judicious about what you include in your report. Remember to keep your audience in mind: how much do they want or need to see?</p>
 <p>You can also cache the results of a code chunk, but we will largely avoid this. Caching can save time by saving the results of a code chunk instead of re-executing when the document is knit. However, you have to be careful when using this option since downstream code can depend on upstream changes. Controlling this behavior through the <code>dependson</code> option can help, but if you cache code you’ll want to periodically clear you cache to ensure you’re getting reproducible results.</p>
 <p>Inserting brief code snippets inline is often helpful; I frequently use these to give the sample size or summary statistics in text. You can insert code inline using <code>`r `</code>, often in conjunction with the <code>format()</code> function to clean up your output.</p>
-<p><strong><em>Learning assessment:</em></strong> Write a named code chunk that creates a variable containing a sample of size 500 from a random normal variable, takes the absolute value, and produces a histogram of the resulting variable. Add an inline summary giving the median value rounded to two decimal places. What happens if you set <code>eval = FALSE</code> to the code chunk? What about <code>echo = FALSE</code>?</p>
+<p><strong><em>Learning assessment:</em></strong> Write a named code chunk that creates a variable containing a sample of size 500 from a random normal variable, computes the absolute value of each element, and produces a histogram of the result. Add an inline summary giving the median value rounded to two decimal places. What happens if you set <code>eval = FALSE</code> to the code chunk? What about <code>echo = FALSE</code>?</p>
+<p><details> <summary> Solution </summary></p>
+<p>The snippet below shows the relevant section of an R Markdown document.</p>
+<pre><code>The chunk below creates a dataframe containing a sample of size 500 from a 
+random normal variable and the absolute value of each element of that sample, 
+and produces a histogram of the absolute value.
+
+```{r learning_assessment_1}
+library(tidyverse)
+
+la_df = tibble(
+  norm_samp = rnorm(500),
+  abs_norm_samp = abs(norm_samp)
+)
+
+ggplot(la_df, aes(x = abs_norm_samp)) + geom_histogram()
+```
+
+The median of the variable containing absolute values is 
+`r round(median(la_df$abs_norm_samp), digits = 2)`.</code></pre>
+<p></details></p>
 </div>
 <div id="formatting-text" class="section level3">
 <h3>Formatting text</h3>
@@ -452,8 +472,8 @@ The mean is `r mean(samp)`.</code></pre>
 <pre><code>Text formatting 
 ------------------------------------------------------------
 
-*italic*  or _italic_
-**bold**   __bold__
+*italic*  or  _italic_
+**bold**  or  __bold__
 `code`
 superscript^2^ and subscript~2~
 
@@ -492,13 +512,19 @@ First Header  | Second Header
 Content Cell  | Content Cell
 Content Cell  | Content Cell</code></pre>
 <p>You’ll need to refer to this list (or to similar resources) pretty often at first, but most of it will become second-nature after you’ve written a few documents.</p>
-<p><strong><em>Learning assessment:</em></strong> After the previous code chunk, write a bullet list given the mean, median, and standard deviation of your random sample.</p>
+<p><strong><em>Learning assessment:</em></strong> After the previous code chunk, write a bullet list given the mean, median, and standard deviation of the original random sample.</p>
+<p><details> <summary> Solution </summary></p>
+<p>The snippet below shows the relevant section of an R Markdown document.</p>
+<pre><code>* The mean of the sample is `r mean(ls_df$norm_samp)`
+* The median of the sample is `r median(ls_df$norm_samp)`
+* The median of the sample is `r median(ls_df$norm_samp)`</code></pre>
+<p></details></p>
 </div>
 <div id="yaml-and-output-formats" class="section level3">
 <h3>YAML and output formats</h3>
 <p>The YAML header controls global features of the document. I generally will include both the <code>author</code> and <code>date</code> in each document I produce.</p>
 <pre class="yaml"><code>author: &quot;Jeff Goldsmith&quot;
-date: 2018-08-08</code></pre>
+date: 2018-09-11</code></pre>
 <p>We’re mostly concerned with the output format, which is controlled through the <code>output:</code> field.</p>
 <p>The snippet below will produce an HTML document. Notice that this has subfields to add a table of contents, and float that table alongside the content. These lines are used throughout the course website.</p>
 <pre class="yaml"><code>output:
@@ -521,11 +547,15 @@ date: 2018-08-08</code></pre>
 <ul>
 <li>Create a directory with a reasonable name and path (e.g. <code>~/Documents/School/P8105/Homework_2/</code>)</li>
 <li>Put an R Project in the directory</li>
-<li>Keep everything related to the analysis – data inputs, scripts, reports, output – in there, <strong>and use R Markdown as much as possible</strong></li>
+<li>Keep everything related to the analysis – data inputs, scripts / <strong>R Markdown files</strong>, reports, output – in there, <strong>and use R Markdown as much as possible</strong></li>
 <li>Periodically check for reproducibility of the analysis</li>
 </ul>
 <p>The bold stuff is new; This should become your default behavior when starting any new project.</p>
+<p>A last note about reproducibility: each time you knit an R Markdown file, <code>knitr</code> uses a new R session to run the included code. As a result, knitting is a great way to make sure your analysis is self-contained and you should knit frequently!</p>
 <p><strong><em>Learning assessment:</em></strong> Convert the scripts for exploring vector classes and producing basic plots (from <a href="best_practices.html">best practices</a>) to self-contained R Markdown files that produce HTML documents.</p>
+<p><details> <summary> Solution </summary></p>
+<p><a href="resources/rmd_vec_classes.Rmd">Here</a> is a R Markdown file for vector classes, and <a href="resources/rmd_basic_plots.Rmd">here</a>’s one for basic plots.</p>
+<p></details></p>
 </div>
 <div id="other-materials" class="section level2">
 <h2>Other materials</h2>
