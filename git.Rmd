@@ -10,79 +10,93 @@ This is the third module in the [Building blocks](topic_building_blocks.html) to
 
 ## Some slides
 
-<script async class="speakerdeck-embed" data-id="b1f65532f0644b8fb5301f8fd6934b01" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="b1f65532f0644b8fb5301f8fd6934b01" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
 <div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-git-and-github" title="Git and GitHub" target="_blank">Git and GitHub</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div>
 
 ## Example
 
-In the following, I'm skipping past some important set-up steps. To follow along, you'll first need to install relevant software (Git and a Git Client -- I use [Sourcetree](https://www.sourcetreeapp.com)), connected Git with RStudio, and created a GitHub account. Instructions for doing all that can be found in Chapters 4-9 of [this book](http://happygitwithr.com) by Jenny Bryan (note -- all the rest of those chapters are also great).
+In the following, I'm assuming some important set-up steps are already done -- if you were successful in [Homework 0](homework_0.html), you should be fine. To follow along, you'll need to have git installed and a GitHub account. In some places I prefer to use a stand-alone git client (my preference is [Sourcetree](https://www.sourcetreeapp.com)), but you can get by pretty well with RStudio's built-in tools. Help for git installation and troubleshooting can be found in Chapters 4-9 of [this book](http://happygitwithr.com) by Jenny Bryan (note -- all the rest of those chapters are also great).
 
-For this example, I'm going to re-do the example from [What is Data Science: Part II](what_is_ds_ii.html), starting from [this outline](resources/nyc_airbnb_outline.Rmd).
+For this example, I'm going to re-do stuff from [Writing with Data](writing_with_data.html).
 
-### New workflow
 
-The last time we talked about a good workflow was in [writing with data](writing_with_data.html); we'd introduced R Projects and R Markdown, and focused on working as a lone analyst. We're shifting version control using git; this is useful by itself, and also a popular approach to collaboration. Our new workflow will be:
+### New workflow -- GitHub first
 
-* Create a directory with a reasonable name and path (e.g. `~/Documents/School/DSI/Homework_2/`)
-* Put an R Project in the directory
-* **Turn on version control for the project using git**
-* **Add the directory to your git client (and, optionally, create remote repository)**
+We talked about a good workflow in [Writing with Data](writing_with_data.html), with a focus on R Projects for orangization and R Markdown for reproducibility. We're adding version control using git to that workflow; git is useful by itself, and is also a popular tool to collaboration. There are a couple of ways include git in our workflow, but the one we'll start with is:
+
+* **Create a GitHub rep with an informative name**
+* Create a linked R Project using File > New Project **> Version Control**
 * Keep everything related to the analysis -- data inputs, scripts, reports, output -- in the directory, and use R Markdown as much as possible
-* **Keep track of changes using version control**
+* **Keep track of changes using version control (save, commit, push)**
 * Periodically check for reproducibility of the analysis
 
 The bold steps are new. 
 
-To turn on version control in an R Project through R Studio, use Tools > Version Control > Project setup. 
+Walking through step-by-step, create a new GitHub repo online:
 
-<img src="images/git_project_setup.png" style="width:50%">
+<img src="images/git_add_gh_repo.png" style="width:80%">
 
-Select Git.
+On the next page, choose your repo name, set to "Public", initialize with a README, and create the repo
 
-<img src="images/git_version_control_system.png" style="width:50%">
+<img src="images/git_create_gh_repo.png" style="width:70%">
 
-Once you've done this, a few things will happen. Most obviously, you now have a `.gitignore` file in your project; by default, this will ignore `.Rproj.user`, `.Rhistory`, `.RData`, and `.Ruserdata`. You can add other things to be ignored if you want. Less obviously, git is now watching your directory and will keep track of changes across versions of your work.
+Once you have your GH repo, find the link to clone:
 
-Next I'll add the R Project to my git client. You can at this stage also create a remote repository, but I'll hold off for a while. 
+<img src="images/git_repo_url.png" style="width:80%">
 
-<img src="images/git_add_to_client.png" style="width:80%">
+Now, in RStudio, start a new Project using File > New Project > Version Control. 
 
-You don't _have_ to initialize git through RStudio; you could use your git client. I prefer to do it this way because RStudio will create a useful `.gitignore` file in your directory. You also don't have to add your directory to your git client -- RStudio has a bare-bones client built in, and I often use this for short-term projects. 
+* Provide the repository URL (copy from GitHub)
+* Assign the Project a name (usually the same as the GH repo)
+* Put the Project in a reasonable place on your computer
+
+Once you've done this, a few things will happen. Most obviously, you now have a Project with the name you chose, and that project contains the .Rproj file, your README.md from GitHub, and a `.gitignore` file (by default, this will ignore `.Rproj.user`, `.Rhistory`, `.RData`, and `.Ruserdata`). Less obviously, git is now watching your directory and will keep track of changes across versions of your work, and there's a new "Git" tab in the top-right RStudio pane. 
+
+Optionally, you can add the R Project to a separate git client. 
 
 
 ### Commit to git
 
-At this point, I haven't done much "work" -- I've created a directory, launched a project, initialized a git repo, and added it to my client. Although I haven't really done much yet, I'm going to make an initial commit for the project, sort of as a starting point.
+At this point, I haven't done much "work" -- I've created a repo and set up a project. Although I haven't really done much yet I'm going to make an initial commit with the Project set-up, which is a nice starting point.
 
 <img src="images/git_initial_commit.png" style="width:80%">
 
-Now I'll start actually doing stuff. As I noted above, I'm going to repeat the analysis we did in [What is Data Science: Part II](what_is_ds_ii.html) -- my goal is to focus on the git side of things without distractions from new code. As a first step, I'll add the outline of the analysis and commit.
+Now I'll start actually doing stuff. As I noted above, I'm going to repeat some of [Writing with Data](writing_with_data.html) -- my goal is to focus on the git side of things without distractions from new code. As a first step, I'll add an R Markdown file, knit it, and commit.
 
-<img src="images/git_outline_commit.png" style="width:80%">
+<img src="images/git_second_commit.png" style="width:80%">
 
-Next I'll add my [data file](data/nyc_airbnb.zip) and commit.
+Next I'll add an R Markdown file looking at [basic plots](resources/rmd_basic_plots.Rmd) and commit.
 
-<img src="images/git_data_commit.png" style="width:80%">
+<img src="images/git_third_commit.png" style="width:80%">
 
-Next I'll add a code chunk doing the data cleaning. And commit.
+Next I'll update my README.md file. And commit.
 
-<img src="images/git_wrangling_commit.png" style="width:80%">
+<img src="images/git_fourth_commit.png" style="width:80%">
 
-How frequently you commit is, to some extent, a matter of taste. Roughly speaking, I commit after changes that are big enough to that I'd want a reminder about them in six months. Also, after a while, committing becomes almost second-nature (or at least isn't something that takes a lot of time or energy) and that makes it easier to commit often.
+How frequently you commit is, to some extent, a matter of taste. Roughly speaking, I commit after changes that are big enough to that I'd want a reminder about what they contain in six months. Also, after a while, committing becomes almost second-nature (or at least isn't something that takes a lot of time or energy) and that makes it easier to commit often.
+
+The commit messages and git diffs are key features, and will help you understand (or remember) what changed at each stage -- commit messages should summarize main changes (and maybe give some details), and git diffs will show what files were added / edited and what the line-by-line changes were.
+
 
 ### GitHub
 
-Git is useful all by itself in directories that exist only on your computer, but it is especially powerful when combined with GitHub. This combination relies on pairing your "local repository" with a "remote repository" -- local is on your computer, remote is in the cloud / on GitHub's servers.
-
-So, I'll create a remote repo that is paired with my local repo. I often do this via the git client, using Right-click > Publish to remote. Alternatively, you can ask your client to create a remote repository when you add the local repository at the outset of the project.
-
-<img src="images/git_create_remote.png" style="width:80%">
-
-Once you've done that, you'll be asked if you want to "push" to remote. This step drives home the difference between local and remote repositories: you can make local changes and commits, but the remote repository won't know about them until you push. 
-
-To illustrate, I'll add some code to do data inspection, commit, and push; I can double check that this appears on [GitHub](https://github.com/jeff-goldsmith/git_example).
+Git is useful as a version control system all by itself, but it is especially powerful when combined with GitHub. This combination relies on pairing your "local repository" with a "remote repository" -- local is on your computer, remote is in the cloud (i.e. on GitHub's servers). Fortunately, in the "GitHub First" workflow, the local / remote pairing is basically done for you. So, the next step is to "push to remote", a step that drives home the difference between local and remote repositories: you can make local changes and commits, but the remote repository won't know about them until you push. 
 
 <img src="images/git_push_to_remote.png" style="width:80%">
+
+Once you've pushed, all your commits are viewable on GitHub.
+
+<img src="images/git_gh_after_push.png" style="width:80%">
+
+GitHub has a lot of features that help as projects grow: issue trackers function as collaborative "to-do" lists, the built-in message system helps coordinate with collaborators, and others. You can also see what other people are working on, follow repos or developers, create your own versions of existing repos, and do other exciting stuff!
+
+
+### .md Files on GitHub
+
+Markdown files (not *R* Markdown, just .md files) are rendered in an HTML-like way on GitHub. We already took advantage of this, in fact, in the README.md file -- this has particular prominence on a repo's GH page, but other .md files are rendered similarly. 
+
+Our use of R Markdown to write reproducible reports makes the treatment of .md files on GH especially nice. Recall that we used `knitr::knit` to render a .Rmd file to a .md file, which in turn was rendered to another format (.html, .pdf, .docx). By using the `github_document` output format, we can instead produce .md files (there are, of course, other ways to achieve the same end). This is great, because the report -- including text, code results, and figures -- can be produced in a way that is easily viewable on GitHub!
+
 
 ### Collaborating via GitHub
 
@@ -93,21 +107,22 @@ Sharing repositories via GitHub makes it possible to collaborate in a clear, rig
 
 This is great if you're working in a team, or if you are considering future-you as a collaborator.
 
-For the repository holding this example, I'll add Julia as a collaborator. Once she's been added, she's going to answer "Does rating vary by neighborhood, room type, or both?" in our analysis outline. She'll commit and push; I'll relax until she's done, then pull her changes from the remote repository to my local repository. Those changes will appear in my local repository, and a summary of the changes are in my git client. 
+For the repository holding this example, I'll add Erin as a collaborator. Once she's been added, she's going to add a histogram of `y` to our basic plot RMD. She'll commit and push; I'll relax until she's done, then pull her changes from the remote repository to my local repository. Those changes will appear in my local repository, and a summary of the changes are in my git history. 
 
 <img src="images/git_collab_commit.png" style="width:80%">
 
-Of course, team members may want to work in parallel. As an example -- I'll tackle "Where are rentals located?" and Julia will address "Do hosts with more listings have higher or lower ratings?". Once I've written my code, I'm going to commit; pull to see if there are any changes in the remote repository; and then push everything.
+Of course, team members may want to work in parallel. As an example, I'll edit the README a bit and Erin will add the RMD file for vector classes. Once I've written my code, I'm going to commit; pull to see if there are any changes in the remote repository; and then push everything.
 
 <img src="images/git_parallel_code.png" style="width:80%">
 
 This process (commit > pull > push) can help keep you out of trouble, although other approaches are possible.
 
+
 ### Conflicts
 
-When we're working in parallel on non-overlapping elements, everything is pretty smooth. I can edit and commit, and so can Julia; as we cycle through the commit > pull > push, git knows we're not editing the same stuff and keeps track of the changes. 
+When we're working in parallel on non-overlapping elements, everything is pretty smooth. I can edit and commit, and so can Erin; as we cycle through the commit > pull > push cycle, git knows we're not editing the same stuff and keeps track of the changes. 
 
-We can run into issues when we both edit the same thing -- suppose, for example, we both try to add the discussion. If she commits and pushes before I do, when I commit and pull I'll see the following:
+We can run into issues when we both edit the same thing -- suppose, for example, we both try to update the line describing the purpose of `basic_plots.Rmd`. If she commits and pushes before I do, when I commit and pull I'll see the following:
 
 <img src="images/git_conflict_notice.png" style="width:50%">
 
@@ -119,13 +134,31 @@ After resolving conflicts, we should commit the changes and push the new unified
 
 <img src="images/git_conflict_resolved.png" style="width:80%">
 
+Merge conflicts are a fact of life in collaborative work, and your probably run into them more often than you'd like to admit (e.g. "Jeff's Conflicted Copy" in Dropbox, or parallel versions of Word documents). Git can seem like it makes this worse, but that's mostly because it forces you to address them as they arise in a structured way rather than ignoring issues / managing them in an ad-hoc way. 
+
+That said, try to coordinate with teammates so it's clear who is working on what and when they're doing it. 
+
+
+### New workflow -- Project first
+
+The "GitHub first" workflow works well, but it's not the only way to add version control to an R Project. An alternative is "Project first":
+
+* Create an R Project with a reasonable name and path
+* **Turn on version control for the project using git**
+* **Optionally, create remote repository**
+* Keep everything related to the analysis -- data inputs, scripts, reports, output -- in the directory, and use R Markdown as much as possible
+* **Keep track of changes using version control (save, commit, push)**
+* Periodically check for reproducibility of the analysis
+
+Bold steps are new with respect to the workflow in [Writing with Data](writing_with_data.html). This workflow is useful if you don't intend for your repo to end up "in the cloud", whic his sometimes the case, but means you have to take steps to create the remote repository.
+
 
 ## Other materials
 
 There's a lot of stuff to help with git in general, and with git for R in particular. This is a non-exhaustive list:
 
 * Jenny Bryan's [article](https://peerj.com/preprints/3159/) "Excuse me, do you have a moment to talk about version control?" is excellent
-* Jenny Bryan's [book](http://happygitwithr.com) (same as the link above)
+* Jenny Bryan's [book](http://happygitwithr.com) (same as the link above) is really helpful, and has chapters on several workflows
 * The [GitHub](https://guides.github.com/activities/hello-world/) guide
 * Version control with [RStudio](https://support.rstudio.com/hc/en-us/articles/200532077-Version-Control-with-Git-and-SVN)
 
