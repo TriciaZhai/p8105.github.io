@@ -54,6 +54,7 @@ Once you've done this, a few things will happen. Most obviously, you now have a 
 
 Optionally, you can add the R Project to a separate git client. 
 
+**_Learning Assessment:_** Follow the process above to create your own repo on GH and clone it as an R Project using RStudio.
 
 ### Commit to git
 
@@ -77,6 +78,8 @@ How frequently you commit is, to some extent, a matter of taste. Roughly speakin
 
 The commit messages and git diffs are key features, and will help you understand (or remember) what changed at each stage -- commit messages should summarize main changes (and maybe give some details), and git diffs will show what files were added / edited and what the line-by-line changes were.
 
+**_Learning Assessment:_** Make some changes to your repo (edit your README, add a file, etc) and commit those changes. 
+
 
 ### GitHub
 
@@ -89,6 +92,8 @@ Once you've pushed, all your commits are viewable on GitHub.
 <img src="images/git_gh_after_push.png" style="width:80%">
 
 GitHub has a lot of features that help as projects grow: issue trackers function as collaborative "to-do" lists, the built-in message system helps coordinate with collaborators, and others. You can also see what other people are working on, follow repos or developers, create your own versions of existing repos, and do other exciting stuff!
+
+**_Learning Assessment:_** Make sure you can push your commits to remote!
 
 
 ### .md Files on GitHub
