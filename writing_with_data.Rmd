@@ -55,13 +55,13 @@ R Markdown documents are rendered to produce complete reports with text, formatt
 
 We'll start with code chunks, since these are the distinguishing feature of R Markdown documents. The code chunks take the place of scripts in that they hold the code you use to produce your results. However, they tend to be briefer and more self-contained: you're nestling these bits of code among the text the supports them and the results they produce. You can still execute code in chunks using Cmd/Ctrl + Enter, and you will still develop code by writing and refining until you have something you're happy with.
 
-Although the benefits will mostly become apparently later, I recommend you get in the habit of naming your code chunks now using ` {r chunk_name} `. 
+Although the benefits will mostly become apparently later, I recommend you get in the habit of naming your code chunks now using ` {r chunk_name} `. I also recommend inserting code chunks using hotkeys (Opt + Cmd + I for Mac, Ctrl + Alt + I for Windows).
 
 Beyond the name, you can customize the behavior of your code chunk via options defined in the chunk header. Some common options are:
 
 * `eval = FALSE`: code will be displayed but not executed; results are not included. 
 * `echo = FALSE`: code will be executed but not displayed; results are included. 
-* `include = FALSE`: code will not be executed or displayed; results are not included.
+* `include = FALSE`: code will be executed but not displayed; results are not included.
 * `message = FALSE` and `warning = FALSE`: prevents messages and warnings from being displayed.
 * `results = hide` and `fig.show = hide`: prevents results and figures from being shown, respectively.
 * `collapse = TRUE`: output will be collapsed into a single block at shown at the end of the chunk.
