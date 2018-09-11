@@ -33,7 +33,7 @@ Before jumping in, one short note about the default RStudio treatment of R Markd
 
 ### Basic RMD
 
-Below is a first RMD file. To follow along, <a href="resources/template.Rmd" download>download the file</a> and save it somewhere that makes sense. Alternatively, create a .Rmd file using File > New File > R Markdown, and replace the default text with what's below. 
+Below is a first RMD file. To follow along, [download the file](https://raw.githubusercontent.com/p8105/p8105.github.io/master/resources/template.Rmd) and save it somewhere that makes sense. Alternatively, create a .Rmd file using File > New File > R Markdown, and replace the default text with what's below. 
 
 ```{r, echo = FALSE, comment = ""}
 cat(htmltools::includeText("resources/template.Rmd"))
