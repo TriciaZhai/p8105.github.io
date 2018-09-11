@@ -33,7 +33,7 @@ Before jumping in, one short note about the default RStudio treatment of R Markd
 
 ### Basic RMD
 
-Below is a first RMD file. To follow along, <a href "https://raw.githubusercontent.com/p8105/p8105.github.io/master/resources/template.Rmd" download>download the file</a> and save it somewhere that makes sense. Alternatively, create a .Rmd file using File > New File > R Markdown, and replace the default text with what's below. 
+Below is a first RMD file. To follow along, create a .Rmd file using File > New File > R Markdown, and replace the default text with what's below. 
 
 ```{r, echo = FALSE, comment = ""}
 cat(htmltools::includeText("resources/template.Rmd"))
@@ -164,7 +164,7 @@ A last note about reproducibility: each time you knit an R Markdown file, `knitr
 <details>
 <summary> Solution </summary>
 
-[Here](resources/rmd_vec_classes.Rmd) is a R Markdown file for vector classes, and [here](resources/rmd_basic_plots.Rmd)'s one for basic plots.
+ <a href "https://raw.githubusercontent.com/p8105/p8105.github.io/master/resources/rmd_vec_classes.Rmd">Here</a> is a R Markdown file for vector classes, and <a href "https://raw.githubusercontent.com/p8105/p8105.github.io/master/resources/rmd_basic_plots.Rmd">here</a>'s one for basic plots.
 
 </details>
 
