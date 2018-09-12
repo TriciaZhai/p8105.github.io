@@ -11,7 +11,7 @@
 
 
 
-<title>Homework and projects</title>
+<title>Homework 1</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,6 +19,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -173,6 +176,101 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
 
 
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
@@ -277,112 +375,79 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Homework and projects</h1>
+<h1 class="title toc-ignore">Homework 1</h1>
 
 </div>
 
 
-<div id="homework" class="section level3">
-<h3>Homework</h3>
-<p>All homework assignments are covered by the course <a href="policy_on_collaboration.html">policy on collaboration</a>.</p>
-<p>In addition to grading for content, we reserve the right to deduct points for stylistic elements (e.g. proper spacing and indentation; relevant variable names; etc). Having code that runs and answers the questions doesn’t mean you have <strong>good</strong> code!</p>
-<table>
-<thead>
-<tr class="header">
-<th align="left"></th>
-<th align="left">Available</th>
-<th align="left">Due</th>
-<th align="center">Assignment</th>
-<th align="center">Solution</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">Homework 0</td>
-<td align="left">Sept 4</td>
-<td align="left">Sept 6 by 10:00am</td>
-<td align="center"><a href="homework_0.html"><i class="far fa-file-code fa-lg"></i></a></td>
-<td align="center"><a href="link"><i class="fas fa-check fa-lg"></i></a></td>
-</tr>
-<tr class="even">
-<td align="left">Homework 1</td>
-<td align="left">Sept 13</td>
-<td align="left">Sept 21 by 4:00pm</td>
-<td align="center"><a href="homework_1.html"><i class="far fa-file-code fa-lg"></i></a></td>
-<td align="center"><a href="link"><i class="fas fa-check fa-lg"></i></a></td>
-</tr>
-<tr class="odd">
-<td align="left">Homework 2</td>
-<td align="left">Sept 25</td>
-<td align="left">Oct 5 by 4:00pm</td>
-<td align="center"><a href="link"><i class="far fa-file-code fa-lg"></i></a></td>
-<td align="center"><a href="link"><i class="fas fa-check fa-lg"></i></a></td>
-</tr>
-<tr class="even">
-<td align="left">Homework 3</td>
-<td align="left">Oct 4</td>
-<td align="left">Oct 12 by 4:00pm</td>
-<td align="center"><a href="link"><i class="far fa-file-code fa-lg"></i></a></td>
-<td align="center"><a href="link"><i class="fas fa-check fa-lg"></i></a></td>
-</tr>
-<tr class="odd">
-<td align="left">Homework 4</td>
-<td align="left">Oct 23</td>
-<td align="left">Nov 2 by 4:00pm</td>
-<td align="center"><a href="link"><i class="far fa-file-code fa-lg"></i></a></td>
-<td align="center"><a href="link"><i class="fas fa-check fa-lg"></i></a></td>
-</tr>
-<tr class="even">
-<td align="left">Homework 5</td>
-<td align="left">Nov 1</td>
-<td align="left">Nov 9 by 4:00pm</td>
-<td align="center"><a href="link"><i class="far fa-file-code fa-lg"></i></a></td>
-<td align="center"><a href="link"><i class="fas fa-check fa-lg"></i></a></td>
-</tr>
-<tr class="odd">
-<td align="left">Homework 6</td>
-<td align="left">Nov 15</td>
-<td align="left">Nov 23 by 4:00pm</td>
-<td align="center"><a href="link"><i class="far fa-file-code fa-lg"></i></a></td>
-<td align="center"><a href="link"><i class="fas fa-check fa-lg"></i></a></td>
-</tr>
-<tr class="even">
-<td align="left">Homework 7</td>
-<td align="left">Nov 29</td>
-<td align="left">Dec 7 by 4:00pm</td>
-<td align="center"><a href="link"><i class="far fa-file-code fa-lg"></i></a></td>
-<td align="center"><a href="link"><i class="fas fa-check fa-lg"></i></a></td>
-</tr>
-</tbody>
-</table>
+<div id="context" class="section level3">
+<h3>Context</h3>
+<p>This assignment reinforces ideas in the <a href="topic_building_blocks.html">building blocks</a> topic.</p>
 </div>
-<div id="midterm" class="section level3">
-<h3>Midterm</h3>
-<p>The midterm project is not covered by the course policy on collaboration – you are expected to work independently.</p>
-<table>
-<thead>
-<tr class="header">
-<th align="left"></th>
-<th align="left">Available</th>
-<th align="left">Due</th>
-<th align="center">Assignment</th>
-<th align="center">Solution</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">Midterm Project</td>
-<td align="left">Oct 16</td>
-<td align="left">Oct 26 at 4:00pm</td>
-<td align="center"><a href="midterm_project.html"><i class="far fa-file-code fa-lg"></i></a></td>
-<td align="center"><a href="link"><i class="fas fa-check fa-lg"></i></a></td>
-</tr>
-</tbody>
-</table>
+<div id="due-date-and-submission." class="section level3">
+<h3>Due date and submission.</h3>
+<p>Due: September 21 at 4:00pm.</p>
+<p>Please submit (via courseworks) the web address of the GitHub repo containing your work for this assignment; git commits after the due date will cause the assignment to be considered late.</p>
 </div>
-<div id="final" class="section level3">
-<h3>Final</h3>
-<p>The final project differs substantially from both homework assignments and the midterm project. Detailed instructions, including deliverables and due dates, are <a href="final_project.html">here</a>.</p>
+<div id="points" class="section level3">
+<h3>Points</h3>
+<ul>
+<li>Problem 0.1: 25 points</li>
+<li>Problem 0.2: 25 points</li>
+<li>Problem 1: 25 points</li>
+<li>Problem 2: 25 points</li>
+</ul>
+</div>
+<div id="problem-0.1" class="section level3">
+<h3>Problem 0.1</h3>
+<p>This “problem” focuses on the use of R Markdown to write reproducible reports, GitHub for version control, and R Projects to organize your work.</p>
+<p>To that end:</p>
+<ul>
+<li>create a public GitHub repo + local R Project; we suggest naming this repo / directory <code>p8105_hw1_YOURUNI</code> (e.g. <code>p8105_hw1_ajg2202</code> for Jeff), but that’s not required</li>
+<li>create a single .Rmd file named <code>p8105_hw1_YOURUNI.Rmd</code> that renders to <code>github_document</code></li>
+</ul>
+<p>Your solutions to Problems 1 and 2 should be implemented in your .Rmd file, and your git commit history should reflect the process you used to solve these Problems.</p>
+<p>For this Problem, we will assess adherence to the instructions above regarding repo structure, git commit history, and whether we are able to knit your .Rmd to ensure that your work is reproducible.</p>
+</div>
+<div id="problem-0.2" class="section level3">
+<h3>Problem 0.2</h3>
+<p>This “problem” focuses on correct styling for your solutions to Problems 1 and 2. We will look for:</p>
+<ul>
+<li>meaningful variable / object names</li>
+<li>readable code (one command per line; adequate whitespace and indentation; etc)</li>
+<li>clearly-written text to explain code and results</li>
+<li>a lack of superfluous code (e.g. no unused variables are defined)</li>
+</ul>
+</div>
+<div id="problem-1" class="section level3">
+<h3>Problem 1</h3>
+<p>This problem focuses on variable types and coercion.</p>
+<p>Create a data frame comprised of:</p>
+<ul>
+<li>A random sample of size 10 from a uniform[0, 5] distribution</li>
+<li>A logical vector indicating whether elements of the sample are greater than 2</li>
+<li>A (length-10) character vector</li>
+<li>A (length-10) factor vector</li>
+</ul>
+<p>Try to take the mean of each variable in your dataframe. What works and what doesn’t? Why?</p>
+<p>In some cases, you can explicitly convert variables from one type to another. Write a code chunk that applies the <code>as.numeric</code> function to the logical, character, and factor variables (please show this chunk but not the output). What happens? In a second code chunk, convert your character variable from character to factor to numeric; similarly, convert your factor variable from factor to character to numeric. What happens?</p>
+</div>
+<div id="problem-2" class="section level3">
+<h3>Problem 2</h3>
+<p>This problem focuses on plotting and the use of inline R code.</p>
+<ul>
+<li>Create a data frame comprised of:
+<ul>
+<li><code>x</code>: a random sample of size 1000 from a standard Normal distribution</li>
+<li><code>y</code>: a random sample of size 1000 from a standard Normal distribution</li>
+<li>A logical vector indicating whether the <code>x + y &gt; 0</code></li>
+<li>A numeric vector created by coercing the above logical vector</li>
+<li>A factor vector created by coercing the above logical vector</li>
+</ul></li>
+</ul>
+<p>Write a short description of your vector using inline R code, including: * the size of the dataset * the mean and median of <code>x</code> * the proportion of cases for which the logical vector is <code>TRUE</code></p>
+<p>Make a scatterplot of <code>y</code> vs <code>x</code>; color points using the logical variable (adding <code>color = ...</code> inside of <code>aes</code> in your ggplot code should help). Make a second and third scatterplot that color points using the numeric and factor variables, respectively, and comment on the color scales.</p>
+<p>Export your first scatterplot to your project directory using <code>ggsave</code>.</p>
 </div>
 
 <br><br>
@@ -393,6 +458,8 @@ $(document).ready(function () {
 </footer>
 
 
+</div>
+</div>
 
 </div>
 
