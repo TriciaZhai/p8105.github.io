@@ -22,7 +22,7 @@ For this example, I'm going to re-do stuff from [Writing with Data](writing_with
 
 ### New workflow -- GitHub first
 
-We talked about a good workflow in [Writing with Data](writing_with_data.html), with a focus on R Projects for orangization and R Markdown for reproducibility. We're adding version control using git to that workflow; git is useful by itself, and is also a popular tool to collaboration. There are a couple of ways include git in our workflow, but the one we'll start with is:
+We talked about a good workflow in [Writing with Data](writing_with_data.html), with a focus on R Projects for organization and R Markdown for reproducibility. We're adding version control using git to that workflow; git is useful by itself, and is also a popular tool to collaboration. There are a couple of ways include git in our workflow, but the one we'll start with is:
 
 * **Create a GitHub rep with an informative name**
 * Create a linked R Project using File > New Project **> Version Control**
@@ -129,15 +129,13 @@ When we're working in parallel on non-overlapping elements, everything is pretty
 
 We can run into issues when we both edit the same thing -- suppose, for example, we both try to update the line describing the purpose of `basic_plots.Rmd`. If she commits and pushes before I do, when I commit and pull I'll see the following:
 
-<img src="images/git_conflict_notice.png" style="width:50%">
+<img src="images/git_conflict_notice.png" style="width:80%">
 
 We've both written text in the same place, and have to make a decision about which to keep. We can do this with the help of a merge tool, which will show where differences are and allow us to make a choice about which to keep. 
 
 <img src="images/git_conflict_tool.png" style="width:80%">
 
 After resolving conflicts, we should commit the changes and push the new unified version to the remote repository.
-
-<img src="images/git_conflict_resolved.png" style="width:80%">
 
 Merge conflicts are a fact of life in collaborative work, and your probably run into them more often than you'd like to admit (e.g. "Jeff's Conflicted Copy" in Dropbox, or parallel versions of Word documents). Git can seem like it makes this worse, but that's mostly because it forces you to address them as they arise in a structured way rather than ignoring issues / managing them in an ad-hoc way. 
 
