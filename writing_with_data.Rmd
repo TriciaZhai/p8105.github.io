@@ -164,7 +164,16 @@ A last note about reproducibility: each time you knit an R Markdown file, `knitr
 <details>
 <summary> Solution </summary>
 
- [Here](https://raw.githubusercontent.com/p8105/p8105.github.io/master/resources/rmd_vec_classes.Rmd) is a R Markdown file for vector classes, and [here](https://raw.githubusercontent.com/p8105/p8105.github.io/master/resources/rmd_basic_plots.Rmd)'s one for basic plots.
+Here is a R Markdown file for vector classes:
+```{r, echo = FALSE, comment = ""}
+cat(htmltools::includeText("resources/rmd_vec_classes.Rmd"))
+```
+And here's one for basic plots:
+
+```{r, echo = FALSE, comment = ""}
+cat(htmltools::includeText("resources/rmd_basic_plots.Rmd"))
+```
+
 
 </details>
 
