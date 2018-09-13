@@ -409,12 +409,12 @@ div.tocify {
 ##################################################################</code></pre>
 <p>As part of <a href="homework_0.html">Homework 0</a>, we installed a lot of packages. You don’t need to re-install those each time you need them, but you do need to load packages you want to use with the <code>library</code> function. Although we won’t use it yet, I’m going to load the <code>tidyverse</code> package now.</p>
 <pre class="r"><code>library(tidyverse)
-## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ──────────────────────────────────────────────── tidyverse 1.2.1 ──
 ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0
-## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ─────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <p>You can do basic computations in R, either on the command line (in the console) or by writing things in the script and executing the code in the console. Note that you can execute commands (e.g. the line with the cursor or highlighted code) in the console from a script using Command+Enter (Mac) or Ctrl+Enter (Windows).</p>
@@ -433,15 +433,15 @@ x + y
 <p>When making assignments, R assumes you don’t want to see the result. If you do want to see the result, you’ll have to ask for it. You can also apply <strong>functions</strong> to objects.</p>
 <pre class="r"><code>x = runif(20)
 x
-##  [1] 0.33179011 0.32455916 0.33419064 0.30324575 0.94967243 0.79981555
-##  [7] 0.80905685 0.98247112 0.20241469 0.33536426 0.05547410 0.27392839
-## [13] 0.28444751 0.05927134 0.15662378 0.65080939 0.27819233 0.33725795
-## [19] 0.45001295 0.77324371
+##  [1] 0.40258811 0.64256652 0.95808073 0.69289714 0.14124171 0.63177587
+##  [7] 0.58721128 0.31487393 0.89830635 0.54281588 0.16381701 0.06886176
+## [13] 0.99706409 0.26783104 0.18237986 0.67428406 0.65886330 0.28100502
+## [19] 0.72624805 0.53917259
 
 mean(x)
-## [1] 0.4345921
+## [1] 0.5185942
 var(x)
-## [1] 0.08203567</code></pre>
+## [1] 0.07765413</code></pre>
 <p>We’ve created two variables, <code>x</code> and <code>y</code> – these now exist in the <strong>environment</strong>. You can see everything in the environment using <code>ls()</code> on the command line, or check out the environment pane in RStudio.</p>
 </div>
 <div id="data-frames" class="section level3">
@@ -592,6 +592,7 @@ ggsave(&quot;scatter_plot.pdf&quot;, height = 4, width = 6)</code></pre>
 <li>Andrew Jaffe and John Muschelli’s <a href="http://aejaffe.com/summerR_2016/">Introduction to R for Public Health Researchers</a></li>
 <li>Cosma Shalizi and Andrew Thomas’ <a href="https://www.stat.cmu.edu/~cshalizi/statcomp/14/">Statistical Computing 36-350: Beginning to Advanced Techniques in R</a></li>
 </ul>
+<p>The code that I produced working examples in lecture is <a href="https://github.com/p8105/building_blocks">here</a>.</p>
 </div>
 
 <br><br>
