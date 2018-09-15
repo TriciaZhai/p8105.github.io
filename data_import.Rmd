@@ -8,7 +8,7 @@ output:
 
 Importing is the first step in wrangling.
 
-This is the first module in the [Data Wrangling I](topic_data_wrangling_i.html) topic; the relevant slack channel is [here](https://p8105-fall2017.slack.com/messages/C75HFE38U).
+This is the first module in the [Data Wrangling I](topic_data_wrangling_i.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCAEZLU49).
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 
 ## Example
 
-We're going to figure out how to import the three datasets in [this zip file](./resources/data_import_examples.zip). First, create a directory for today's work (I'm calling mine `data_wrangling_i`), add an R Project, move the data to your directory (perhaps in a sub-directory called `data`), and start an R Markdown file. We're also going to be making extensive use of the `tidyverse` package, so go ahead and load that. Lastly, take a moment to install the packages `janitor`, `haven`, and `readxl`. 
+We're going to figure out how to import the datasets in [this zip file](./resources/data_import_examples.zip). First, create a GitHub repo + local R project for today's work (I'm calling mine `data_wrangling_i`). Move the datasets to your repo / directory (perhaps in a sub-directory called `data`), and start an R Markdown file. We're also going to be making extensive use of the `tidyverse` package, so go ahead and load that in a "setup" code chunk. 
 
 ```{r}
 library(tidyverse)
@@ -42,7 +42,7 @@ There are two kinds of paths:
 * Absolute: a file or folder's "full address" on your computer
 * Relative: directions to a file or folder from your current working directory
 
-Absolute paths are often easier, because you don't really have to _think_ about them -- you're just giving the complete address, starting from the root directory. These work from any current working directory on the machine. However, absolute paths make your code extremely fragile: someone with the same directory and file on their machine won't have the same **absolute** path to files in the directory, and your code won't work. 
+Absolute paths are often conceptually easier, because you don't really have to _think_ about them -- you're just giving the complete address, starting from the root directory. These work from any current working directory on the machine. However, absolute paths make your code extremely fragile: if you move your directory, or share your project with someone else, the **absolute** path to files will change and your code won't work. 
 
 An absolute path example is below:
 
@@ -50,13 +50,17 @@ An absolute path example is below:
 "/Users/jeffgoldsmith/Dropbox/Work/Teaching/P8105/Fall_2018/p8105.github.io/data/FAS_litters.csv"
 ```
 
-Relative paths, meanwhile, start from your current working directory. Relative paths are portable, in that someone else with the same directory will have the same **relative** path to files in the directory. For both of these reasons, relative paths are preferred in almost every setting. The code below finds my current working directory:
+Relative paths, meanwhile, navigate from your current working directory. Relative paths are portable, in that if you move your directory or share it with someone else, the **relative** path to files in the directory will stay the same and your code will work. For both of these reasons, relative paths are preferred in almost every setting. 
+
+(Hint: if you ever use `setwd()`, you're using absolute paths and [taking big risks](https://twitter.com/hadleywickham/status/940021008764846080)...)
+
+The code below finds my current working directory:
 
 ```{r}
 getwd()
 ```
 
-A relative path to the same file as above is
+A relative path to the same file as the absolute path above is
 
 ```
 "./data/FAS_litters.csv"
@@ -77,7 +81,7 @@ Tabbed autocomplete in RStudio works with both absolute and relative paths.
 
 One note: R Markdown files treat whatever directory they're in as the starting point for relative paths. For now, putting your R Markdown file in the same directory as you .RProj file will save a lot of headaches -- the same path will work when you knit the document and when you write / edit code interactive in the console. For larger projects, you might want to have a separate directory with several R Markdown files. In that case using [`here::here`](https://github.com/jennybc/here_here) to identify and navigate from the _project_ top-level directory is great, but you need a pretty firm understanding of paths before jumping into that. 
 
-One caveat: if you're going to both share code and use confidential data, you have to take extra steps to ensure data security. That can mean storing data outside of your shared project directory and using absolute paths. In these cases, set a "parent directory" at the outset of your code and using relative paths subsequently.
+One caveat: if you're going to both share code and use confidential data, you have to take extra steps to ensure data security. That can mean storing data outside of your shared project directory (especially if that directory lives on GitHub), but there are ways to make you paths "stable" even in this setting.
 
 ### Importing data tables
 
@@ -103,14 +107,15 @@ The `package::function` syntax lets you use a function from a package without lo
 
 ### Looking at data
 
-The first thing to do after importing the data (unless `read_csv` gives warnings) is to look at it. If there are unexpected results during data import, you'll catch a lot of them here. In addition to printing the data, I often use `str`, `head`, and `tail`:
+The first thing to do after importing the data (unless `read_csv` gives warnings) is to look at it. If there are unexpected results during data import, you'll catch a lot of them here. In addition to printing the data, I often use `View`, `str`, `head`, and `tail`:
 
 ```{r}
 litters_data
 tail(litters_data, 5)
 ```
 
-Another tool that I use often is ``skimr::skim`. The output is too wide to render well here, but is pretty slick! Note this isn't available from CRAN, so installation is a bit more [involved](https://github.com/ropenscilabs/skimr).
+Another tool that I use often is ``skimr::skim`. The output is too wide to render well here, but is pretty slick! 
+
 ```{r}
 skimr::skim(litters_data)
 ```
@@ -124,6 +129,7 @@ In the best case, the data are stored in the csv without any weirdness -- there 
 * `skip`: number of rows to skip before reading data.
 
 For example, the call below will skip the first 50 lines of data and not assume the first row are variable names:
+
 ```{r}
 litters_data = read_csv(file = "./data/FAS_litters.csv",
   skip = 10, col_names = FALSE)
@@ -184,7 +190,8 @@ pulse_data = read_sas("./data/public_pulse_data.sas7bdat")
 head(pulse_data, 5)
 ```
 
-You can read in data that isn't coming as a flat file, but it's beyond the scope of this course. 
+You can read in data that isn't coming as a flat file, but it's beyond our current scope. 
+
 
 ### Comparison with Base R
 
@@ -197,10 +204,12 @@ The functions in `readr` are relatively new, and can be used in place of base R'
 
 As a final point, you will sometimes need to export data after you have imported and cleaned it. The `write_*` functions in `readr` address this problem.
 
+
 ## Other materials
 
 The content in this page draws heavily from several sources; each of the things below goes into more detail in one way or another.
 
+* If you haven't already, read up on a [project-oriented workflow](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/) 
 * You can learn more about tibbles from [R for Data Science](http://r4ds.had.co.nz/tibbles.html) or the tidyverse [page](http://tibble.tidyverse.org/index.html)
 * R for Data Science has a chapter on [data import](http://r4ds.had.co.nz/data-import.html)
 * R Programming for Data Science gives more detail on data import in [base R](https://bookdown.org/rdpeng/rprogdatascience/getting-data-in-and-out-of-r.html) with some information about [readr](https://bookdown.org/rdpeng/rprogdatascience/using-the-readr-package.html)
