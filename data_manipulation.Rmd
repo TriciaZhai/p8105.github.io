@@ -8,7 +8,7 @@ output:
 
 Once you've imported data, you're going to need to do some cleaning up.
 
-This is the secode module in the [Data Wrangling I](topic_data_wrangling_i.html) topic; the relevant slack channel is [here](https://p8105-fall2017.slack.com/messages/C75HFE38U).
+This is the secode module in the [Data Wrangling I](topic_data_wrangling_i.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCAEZLU49).
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -27,9 +27,9 @@ knitr::opts_chunk$set(
 
 ## Example
 
-Start by figuring out how this example fits in with what you've done and plan to do. I'd suggest adding a new R Markdown file to the project we started last time; that way you can load example data sets using the code we wrote last time.
+For this example, I'll a new R Markdown file to the repo / project I started for the [Data Wrangling I](topic_data_wrangling_i.html) topic; this will make it easy to load example data sets using the code I wrote in [data import](data_import.html).
 
-Once again we're going to be using the `tidyverse`, so we'll load that at the outset; I'll also load the `janitor` package because I like clean names. We're going to be looking at a lot of output, so I'll print only three lines of each tibble by default. Lastly, we'll focus on the data in `FAS_litters.csv` and `FAS_pups.csv`, so we'll load those data and clean up the column names using what we learned in [data import](data_import.html).
+Once again we're going to be using the `tidyverse`, so we'll load that at the outset. We're going to be looking at a lot of output, so I'll print only three lines of each tibble by default. Lastly, we'll focus on the data in `FAS_litters.csv` and `FAS_pups.csv`, so we'll load those data and clean up the column names using what we learned in [data import](data_import.html).
 
 ```{r}
 library(tidyverse)
@@ -47,7 +47,7 @@ pups_data = janitor::clean_names(pups_data)
 
 ### `select`
 
-For a given analysis, you may only need a subset of the columns in a data table; extracting only what you need can helpfully de-clutter, especially when you have large datasets. You can select columns using `select`.
+For a given analysis, you may only need a subset of the columns in a data table; extracting only what you need can helpfully de-clutter, especially when you have large datasets. Select columns using `select`.
 
 You can specify the columns you want to keep by naming all of them:
 
@@ -90,6 +90,17 @@ Lastly, like other functions in `dplyr`, `select` will export a dataframe even i
 
 **_Learning Assessment:_** In the pups data, select the columns containing litter number, sex, and PD ears.
 
+<details>
+<summary> Solution </summary>
+
+The chunk below performs this action:
+
+```{r}
+select(pups_data, litter_number, sex, pd_ears)
+```
+
+</details>
+
 ### `filter`
 
 Some data tables will include rows you don't need for your current analysis. Although you could remove specific row numbers using base R, you shouldn't -- this might break if the raw data are updated, and the thought process isn't transparent. Instead, you should filter rows based on logical expressions using the `filter` function. Like `select`, the first argument to `filter` is the dataframe you're filtering; all subsequent arguments are logical expressions.
@@ -110,8 +121,20 @@ Filtering can be helpful for limiting a dataset to only those observations neede
 
 **_Learning Assessment:_** In the pups data: 
 
-* Filter the data to include only pups with sex 1
-* Filter the data to include only pups with PD walk less than 11 and sex 2
+* Filter to include only pups with sex 1
+* Filter to include only pups with PD walk less than 11 and sex 2
+
+<details>
+<summary> Solution </summary>
+
+The chunk below performs these actions:
+
+```{r}
+filter(pups_data, sex == 1)
+filter(pups_data, sex == 2, pd_walk < 11)
+```
+
+</details>
 
 ### `mutate`
 
@@ -140,9 +163,22 @@ Creating a new variable that does exactly what you need can be a challenge; the 
 * Create a variable that subtracts 7 from PD pivot
 * Create a variable that is the sum of all the PD variables
 
+<details>
+<summary> Solution </summary>
+
+The chunk below performs these actions:
+
+```{r}
+mutate(pups_data, pivot_minus7 = pd_pivot - 7)
+mutate(pups_data, pd_sum = pd_ears + pd_eyes + pd_pivot + pd_walk)
+```
+
+</details>
+
 ### `arrange`
 
 In comparison to the preceding, arranging is pretty straightforward. You can arrange the rows in your data according to the values in one or more columns:
+
 ```{r}
 head(arrange(litters_data, group, pups_born_alive), 10)
 ```
@@ -231,6 +267,21 @@ There are limitations to the pipe. You shouldn't have sequences that are too lon
 * filters the data to include only pups with sex 1
 * removes the PD ears variable
 * creates a variable that indicates whether PD pivot is 7 or more days
+
+<details>
+<summary> Solution </summary>
+
+The chunk below performs these actions:
+
+```{r}
+read_csv("./data/FAS_pups.csv", col_types = "ciiiii") %>%
+  janitor::clean_names() %>% 
+  filter(sex == 1) %>% 
+  select(-pd_ears) %>% 
+  mutate(pd_pivot_gt7 = pd_pivot > 7)
+```
+
+</details>
 
 ## Other materials
 

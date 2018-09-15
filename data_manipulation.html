@@ -381,7 +381,7 @@ div.tocify {
 
 
 <p>Once you’ve imported data, you’re going to need to do some cleaning up.</p>
-<p>This is the secode module in the <a href="topic_data_wrangling_i.html">Data Wrangling I</a> topic; the relevant slack channel is <a href="https://p8105-fall2017.slack.com/messages/C75HFE38U">here</a>.</p>
+<p>This is the secode module in the <a href="topic_data_wrangling_i.html">Data Wrangling I</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCAEZLU49">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
 <script async class="speakerdeck-embed" data-id="3b324ada29974681999fe129bb08a3ce" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
@@ -392,9 +392,17 @@ div.tocify {
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>Start by figuring out how this example fits in with what you’ve done and plan to do. I’d suggest adding a new R Markdown file to the project we started last time; that way you can load example data sets using the code we wrote last time.</p>
-<p>Once again we’re going to be using the <code>tidyverse</code>, so we’ll load that at the outset; I’ll also load the <code>janitor</code> package because I like clean names. We’re going to be looking at a lot of output, so I’ll print only three lines of each tibble by default. Lastly, we’ll focus on the data in <code>FAS_litters.csv</code> and <code>FAS_pups.csv</code>, so we’ll load those data and clean up the column names using what we learned in <a href="data_import.html">data import</a>.</p>
+<p>For this example, I’ll a new R Markdown file to the repo / project I started for the <a href="topic_data_wrangling_i.html">Data Wrangling I</a> topic; this will make it easy to load example data sets using the code I wrote in <a href="data_import.html">data import</a>.</p>
+<p>Once again we’re going to be using the <code>tidyverse</code>, so we’ll load that at the outset. We’re going to be looking at a lot of output, so I’ll print only three lines of each tibble by default. Lastly, we’ll focus on the data in <code>FAS_litters.csv</code> and <code>FAS_pups.csv</code>, so we’ll load those data and clean up the column names using what we learned in <a href="data_import.html">data import</a>.</p>
 <pre class="r"><code>library(tidyverse)
+## ── Attaching packages ──────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
+## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
+## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
+## ✔ readr   1.1.1     ✔ forcats 0.3.0
+## ── Conflicts ─────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
 
 options(tibble.print_min = 3)
 
@@ -407,7 +415,7 @@ pups_data = read_csv(&quot;./data/FAS_pups.csv&quot;,
 pups_data = janitor::clean_names(pups_data)</code></pre>
 <div id="select" class="section level3">
 <h3><code>select</code></h3>
-<p>For a given analysis, you may only need a subset of the columns in a data table; extracting only what you need can helpfully de-clutter, especially when you have large datasets. You can select columns using <code>select</code>.</p>
+<p>For a given analysis, you may only need a subset of the columns in a data table; extracting only what you need can helpfully de-clutter, especially when you have large datasets. Select columns using <code>select</code>.</p>
 <p>You can specify the columns you want to keep by naming all of them:</p>
 <pre class="r"><code>select(litters_data, group, litter_number, gd0_weight, pups_born_alive)
 ## # A tibble: 49 x 4
@@ -467,6 +475,17 @@ pups_data = janitor::clean_names(pups_data)</code></pre>
 <p>In larger datasets, I also use <code>starts_with()</code>, <code>ends_with()</code>, and <code>contains()</code> often.</p>
 <p>Lastly, like other functions in <code>dplyr</code>, <code>select</code> will export a dataframe even if you only select one column. Mostly this is fine, but sometimes you want the vector stored in the column. To pull a single variable, use <code>pull</code>.</p>
 <p><strong><em>Learning Assessment:</em></strong> In the pups data, select the columns containing litter number, sex, and PD ears.</p>
+<p><details> <summary> Solution </summary></p>
+<p>The chunk below performs this action:</p>
+<pre class="r"><code>select(pups_data, litter_number, sex, pd_ears)
+## # A tibble: 313 x 3
+##   litter_number   sex pd_ears
+##   &lt;chr&gt;         &lt;int&gt;   &lt;int&gt;
+## 1 #85               1       4
+## 2 #85               1       4
+## 3 #1/2/95/2         1       5
+## # ... with 310 more rows</code></pre>
+<p></details></p>
 </div>
 <div id="filter" class="section level3">
 <h3><code>filter</code></h3>
@@ -485,9 +504,28 @@ pups_data = janitor::clean_names(pups_data)</code></pre>
 <p>Filtering can be helpful for limiting a dataset to only those observations needed for an analysis. However, I recommend against the creation of many data subsets (e.g. one for each group). This can clutter up your workspace, and we’ll see good tools for the analysis of subsets before long.</p>
 <p><strong><em>Learning Assessment:</em></strong> In the pups data:</p>
 <ul>
-<li>Filter the data to include only pups with sex 1</li>
-<li>Filter the data to include only pups with PD walk less than 11 and sex 2</li>
+<li>Filter to include only pups with sex 1</li>
+<li>Filter to include only pups with PD walk less than 11 and sex 2</li>
 </ul>
+<p><details> <summary> Solution </summary></p>
+<p>The chunk below performs these actions:</p>
+<pre class="r"><code>filter(pups_data, sex == 1)
+## # A tibble: 155 x 6
+##   litter_number   sex pd_ears pd_eyes pd_pivot pd_walk
+##   &lt;chr&gt;         &lt;int&gt;   &lt;int&gt;   &lt;int&gt;    &lt;int&gt;   &lt;int&gt;
+## 1 #85               1       4      13        7      11
+## 2 #85               1       4      13        7      12
+## 3 #1/2/95/2         1       5      13        7       9
+## # ... with 152 more rows
+filter(pups_data, sex == 2, pd_walk &lt; 11)
+## # A tibble: 127 x 6
+##   litter_number   sex pd_ears pd_eyes pd_pivot pd_walk
+##   &lt;chr&gt;         &lt;int&gt;   &lt;int&gt;   &lt;int&gt;    &lt;int&gt;   &lt;int&gt;
+## 1 #1/2/95/2         2       4      13        7       9
+## 2 #1/2/95/2         2       4      13        7      10
+## 3 #1/2/95/2         2       5      13        8      10
+## # ... with 124 more rows</code></pre>
+<p></details></p>
 </div>
 <div id="mutate" class="section level3">
 <h3><code>mutate</code></h3>
@@ -518,6 +556,25 @@ pups_data = janitor::clean_names(pups_data)</code></pre>
 <li>Create a variable that subtracts 7 from PD pivot</li>
 <li>Create a variable that is the sum of all the PD variables</li>
 </ul>
+<p><details> <summary> Solution </summary></p>
+<p>The chunk below performs these actions:</p>
+<pre class="r"><code>mutate(pups_data, pivot_minus7 = pd_pivot - 7)
+## # A tibble: 313 x 7
+##   litter_number   sex pd_ears pd_eyes pd_pivot pd_walk pivot_minus7
+##   &lt;chr&gt;         &lt;int&gt;   &lt;int&gt;   &lt;int&gt;    &lt;int&gt;   &lt;int&gt;        &lt;dbl&gt;
+## 1 #85               1       4      13        7      11            0
+## 2 #85               1       4      13        7      12            0
+## 3 #1/2/95/2         1       5      13        7       9            0
+## # ... with 310 more rows
+mutate(pups_data, pd_sum = pd_ears + pd_eyes + pd_pivot + pd_walk)
+## # A tibble: 313 x 7
+##   litter_number   sex pd_ears pd_eyes pd_pivot pd_walk pd_sum
+##   &lt;chr&gt;         &lt;int&gt;   &lt;int&gt;   &lt;int&gt;    &lt;int&gt;   &lt;int&gt;  &lt;int&gt;
+## 1 #85               1       4      13        7      11     35
+## 2 #85               1       4      13        7      12     36
+## 3 #1/2/95/2         1       5      13        7       9     34
+## # ... with 310 more rows</code></pre>
+<p></details></p>
 </div>
 <div id="arrange" class="section level3">
 <h3><code>arrange</code></h3>
@@ -615,9 +672,11 @@ litters_data
 <pre class="r"><code>litters_data %&gt;%
   lm(wt_gain ~ pups_born_alive, data = .) %&gt;%
   broom::tidy()
-##              term   estimate std.error statistic      p.value
-## 1     (Intercept) 13.0833132 1.2707022 10.296128 3.390028e-11
-## 2 pups_born_alive  0.6050786 0.1732314  3.492892 1.553186e-03</code></pre>
+## # A tibble: 2 x 5
+##   term            estimate std.error statistic  p.value
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)       13.1       1.27      10.3  3.39e-11
+## 2 pups_born_alive    0.605     0.173      3.49 1.55e- 3</code></pre>
 <p>There are limitations to the pipe. You shouldn’t have sequences that are too long; there isn’t a great way to deal with multiple inputs and outputs; and (since it’s not base R) not everyone will know what <code>%&gt;%</code> means or does. That said, compared to days when R users only had the first two options, life is much better!</p>
 <p><strong><em>Learning Assessment:</em></strong> Write a chain of commands that:</p>
 <ul>
@@ -627,6 +686,21 @@ litters_data
 <li>removes the PD ears variable</li>
 <li>creates a variable that indicates whether PD pivot is 7 or more days</li>
 </ul>
+<p><details> <summary> Solution </summary></p>
+<p>The chunk below performs these actions:</p>
+<pre class="r"><code>read_csv(&quot;./data/FAS_pups.csv&quot;, col_types = &quot;ciiiii&quot;) %&gt;%
+  janitor::clean_names() %&gt;% 
+  filter(sex == 1) %&gt;% 
+  select(-pd_ears) %&gt;% 
+  mutate(pd_pivot_gt7 = pd_pivot &gt; 7)
+## # A tibble: 155 x 6
+##   litter_number   sex pd_eyes pd_pivot pd_walk pd_pivot_gt7
+##   &lt;chr&gt;         &lt;int&gt;   &lt;int&gt;    &lt;int&gt;   &lt;int&gt; &lt;lgl&gt;       
+## 1 #85               1      13        7      11 FALSE       
+## 2 #85               1      13        7      12 FALSE       
+## 3 #1/2/95/2         1      13        7       9 FALSE       
+## # ... with 152 more rows</code></pre>
+<p></details></p>
 </div>
 </div>
 <div id="other-materials" class="section level2">
