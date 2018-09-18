@@ -22,6 +22,7 @@ Please submit (via courseworks) the web address of the GitHub repo containing yo
 * Problem 0.2: 25 points
 * Problem 1: 25 points
 * Problem 2: 25 points
+* Problem 3: added late, no points
 
 
 ### Problem 0.1
@@ -85,4 +86,6 @@ Make a scatterplot of `y` vs `x`; color points using the logical variable (addin
 Export your first scatterplot to your project directory using `ggsave`. 
 
 
+### Problem 3 
 
+Please complete [this google form](https://docs.google.com/forms/d/e/1FAIpQLSfjuJzeKUHshu9_S6tr9PiRgrPXFMBMo284fI7WH3MechaUMw/viewform?usp=sf_link).
