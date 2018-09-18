@@ -103,7 +103,21 @@ names(litters_data)
 
 The `package::function` syntax lets you use a function from a package without loading the whole library. That's really helpful, because some packages have functions with the same name (e.g. `dplyr::filter` and `stats::filter`), and R has to choose which one you mean. In general, only load the packages you need to prevent this kind of confusion. You can even use the [`conflicted`](https://github.com/r-lib/conflicted) package if you want to force yourself into using good habits!
 
-**_Learning Assessment:_** Make sure you are able to load the `FAS_litters.csv` dataset. Use both absolute and relative paths. Quit R Studio and move the directory containing your project, data, and R Markdown document. Repeat the previous data import process; do both absolute and relative paths still work?
+**_Learning Assessment:_** Make sure you are able to load the `FAS_pups.csv` dataset. Use both absolute and relative paths. Quit R Studio and move the directory containing your project, data, and R Markdown document. Repeat the previous data import process; do both absolute and relative paths still work?
+
+<details>
+<summary> Solution </summary>
+
+For me, loading the data with absolute and relative paths might look like the following:
+
+```{r, eval = FALSE}
+pups_data = read_csv(file = "./data/FAS_pups.csv")
+pups_data = read_csv(file = "~/Desktop/data_wranging_i/data/FAS_litters.csv")
+```
+
+If I move the directory holding this example, the relatitve path works and the absolute path is broken.
+
+</details>
 
 ### Looking at data
 
@@ -169,6 +183,19 @@ litters_data
 
 **_Learning Assessment:_** Repeat the data import process above for the file `FAS_pups.csv`. Make sure the column names are reasonable, and take some quick looks at the dataset. What happens if your specifications for column parsing aren't reasonable (e.g. character instead of double, or vice versa)?
 
+<details>
+<summary> Solution </summary>
+
+After some tinkering, the code I'd use to import and view the pups dataset is below.
+
+```{r, eval = FALSE}
+pups_data = read_csv("./data/FAS_pups.csv", col_types = "ciiiii")
+skimr::skim(pups_data)
+```
+
+If I move the directory holding this example, the relatitve path works and the absolute path is broken.
+
+</details>
 
 ### Other file formats
 
@@ -197,8 +224,29 @@ You can read in data that isn't coming as a flat file, but it's beyond our curre
 
 The functions in `readr` are relatively new, and can be used in place of base R's `read.csv`, `read.table`, and so on. The base R versions tend to be slower (very noticeably for large datasets), and the default options can make less sense for modern datasets. Meanwhile, the `readr` functions export tibbles, and keep characters as characters (instead of converting to factors ...).
 
-**_Learning Assessment:_** Import the `FAS_litters.csv` dataset using `read.csv`. Compare the class of this dataset to the one produced by `read_csv`. Try printing both in the console -- what happens? After cleaning up the names, try accessing the `group` variable using `gr` (e.g., `litters_data$gr`). What happens?
+**_Learning Assessment:_** Import the `FAS_pups.csv` dataset using `read.csv`. Compare the class of this dataset to the one produced by `read_csv`. Try printing both in the console -- what happens? After cleaning up the names, try accessing the `Sex` variable using `S` (e.g., `pups_data$S`). What happens?
 
+<details>
+<summary> Solution </summary>
+
+The code below shows how I might load the dataset using different import functions, and how I might compare the results.
+
+```{r, eval = FALSE}
+pups_base = read.csv("./data/FAS_pups.csv")
+pups_readr = read_csv("./data/FAS_pups.csv")
+
+View(pups_base)
+View(pups_readr)
+
+pups_base
+pups_readr
+
+pups_base$S
+pups_readr$S
+```
+
+In short, `read_csv` produces tibbles which are very similar to the base R data frames produced by `read.csv`. However, tibbles have some features that can help prevent mistakes and unwanted behavior.
+</details>
 
 ### Exporting data
 

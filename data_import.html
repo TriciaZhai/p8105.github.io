@@ -394,12 +394,12 @@ div.tocify {
 <h2>Example</h2>
 <p>We’re going to figure out how to import the datasets in <a href="./resources/data_import_examples.zip">this zip file</a>. First, create a GitHub repo + local R project for today’s work (I’m calling mine <code>data_wrangling_i</code>). Move the datasets to your repo / directory (perhaps in a sub-directory called <code>data</code>), and start an R Markdown file. We’re also going to be making extensive use of the <code>tidyverse</code> package, so go ahead and load that in a “setup” code chunk.</p>
 <pre class="r"><code>library(tidyverse)
-## ── Attaching packages ──────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0
-## ── Conflicts ─────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="paths" class="section level3">
@@ -417,7 +417,7 @@ div.tocify {
 <p>(Hint: if you ever use <code>setwd()</code>, you’re using absolute paths and <a href="https://twitter.com/hadleywickham/status/940021008764846080">taking big risks</a>…)</p>
 <p>The code below finds my current working directory:</p>
 <pre class="r"><code>getwd()
-## [1] &quot;/Users/jeffgoldsmith/Dropbox/Work/Teaching/P8105/Fall_2018/p8105.github.io&quot;</code></pre>
+## [1] &quot;/Users/jeffgoldsmith 1/Dropbox/Work/Teaching/P8105/Fall_2018/p8105.github.io&quot;</code></pre>
 <p>A relative path to the same file as the absolute path above is</p>
 <pre><code>&quot;./data/FAS_litters.csv&quot;</code></pre>
 <p>The table below, copied from <a href="https://geanders.github.io/RProgrammingForResearch/entering-and-cleaning-data-1.html#file-and-directory-pathnames">R Programming for Research</a>, gives useful shorthand notation for relative pathnames.</p>
@@ -477,7 +477,13 @@ names(litters_data)
 ## [1] &quot;group&quot;           &quot;litter_number&quot;   &quot;gd0_weight&quot;      &quot;gd18_weight&quot;    
 ## [5] &quot;gd_of_birth&quot;     &quot;pups_born_alive&quot; &quot;pups_dead_birth&quot; &quot;pups_survive&quot;</code></pre>
 <p>The <code>package::function</code> syntax lets you use a function from a package without loading the whole library. That’s really helpful, because some packages have functions with the same name (e.g. <code>dplyr::filter</code> and <code>stats::filter</code>), and R has to choose which one you mean. In general, only load the packages you need to prevent this kind of confusion. You can even use the <a href="https://github.com/r-lib/conflicted"><code>conflicted</code></a> package if you want to force yourself into using good habits!</p>
-<p><strong><em>Learning Assessment:</em></strong> Make sure you are able to load the <code>FAS_litters.csv</code> dataset. Use both absolute and relative paths. Quit R Studio and move the directory containing your project, data, and R Markdown document. Repeat the previous data import process; do both absolute and relative paths still work?</p>
+<p><strong><em>Learning Assessment:</em></strong> Make sure you are able to load the <code>FAS_pups.csv</code> dataset. Use both absolute and relative paths. Quit R Studio and move the directory containing your project, data, and R Markdown document. Repeat the previous data import process; do both absolute and relative paths still work?</p>
+<p><details> <summary> Solution </summary></p>
+<p>For me, loading the data with absolute and relative paths might look like the following:</p>
+<pre class="r"><code>pups_data = read_csv(file = &quot;./data/FAS_pups.csv&quot;)
+pups_data = read_csv(file = &quot;~/Desktop/data_wranging_i/data/FAS_litters.csv&quot;)</code></pre>
+<p>If I move the directory holding this example, the relatitve path works and the absolute path is broken.</p>
+<p></details></p>
 </div>
 <div id="looking-at-data" class="section level3">
 <h3>Looking at data</h3>
@@ -514,12 +520,12 @@ tail(litters_data, 5)
 ##  n obs: 49 
 ##  n variables: 8 
 ## 
-## ── Variable type:character ──────────────────────────────────────────────────────────────────────────────
+## ── Variable type:character ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##       variable missing complete  n min max empty n_unique
 ##          group       0       49 49   4   4     0        6
 ##  litter_number       0       49 49   3  15     0       49
 ## 
-## ── Variable type:integer ────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:integer ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##         variable missing complete  n  mean   sd p0 p25 p50 p75 p100
 ##      gd_of_birth       0       49 49 19.65 0.48 19  19  20  20   20
 ##  pups_born_alive       0       49 49  7.35 1.76  3   6   8   8   11
@@ -531,7 +537,7 @@ tail(litters_data, 5)
 ##  ▇▂▁▁▁▁▁▁
 ##  ▂▂▃▃▅▇▇▅
 ## 
-## ── Variable type:numeric ────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:numeric ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##     variable missing complete  n  mean   sd   p0   p25   p50   p75 p100
 ##   gd0_weight      15       34 49 24.38 3.28 17   22.3  24.1  26.67 33.4
 ##  gd18_weight      17       32 49 41.52 4.05 33.4 38.88 42.25 43.8  52.7
@@ -623,6 +629,12 @@ litters_data
 ## # ... with 39 more rows, and 3 more variables: `Pups born alive` &lt;int&gt;,
 ## #   `Pups dead @ birth` &lt;int&gt;, `Pups survive` &lt;int&gt;</code></pre>
 <p><strong><em>Learning Assessment:</em></strong> Repeat the data import process above for the file <code>FAS_pups.csv</code>. Make sure the column names are reasonable, and take some quick looks at the dataset. What happens if your specifications for column parsing aren’t reasonable (e.g. character instead of double, or vice versa)?</p>
+<p><details> <summary> Solution </summary></p>
+<p>After some tinkering, the code I’d use to import and view the pups dataset is below.</p>
+<pre class="r"><code>pups_data = read_csv(&quot;./data/FAS_pups.csv&quot;, col_types = &quot;ciiiii&quot;)
+skimr::skim(pups_data)</code></pre>
+<p>If I move the directory holding this example, the relatitve path works and the absolute path is broken.</p>
+<p></details></p>
 </div>
 <div id="other-file-formats" class="section level3">
 <h3>Other file formats</h3>
@@ -658,7 +670,21 @@ head(pulse_data, 5)
 <div id="comparison-with-base-r" class="section level3">
 <h3>Comparison with Base R</h3>
 <p>The functions in <code>readr</code> are relatively new, and can be used in place of base R’s <code>read.csv</code>, <code>read.table</code>, and so on. The base R versions tend to be slower (very noticeably for large datasets), and the default options can make less sense for modern datasets. Meanwhile, the <code>readr</code> functions export tibbles, and keep characters as characters (instead of converting to factors …).</p>
-<p><strong><em>Learning Assessment:</em></strong> Import the <code>FAS_litters.csv</code> dataset using <code>read.csv</code>. Compare the class of this dataset to the one produced by <code>read_csv</code>. Try printing both in the console – what happens? After cleaning up the names, try accessing the <code>group</code> variable using <code>gr</code> (e.g., <code>litters_data$gr</code>). What happens?</p>
+<p><strong><em>Learning Assessment:</em></strong> Import the <code>FAS_pups.csv</code> dataset using <code>read.csv</code>. Compare the class of this dataset to the one produced by <code>read_csv</code>. Try printing both in the console – what happens? After cleaning up the names, try accessing the <code>Sex</code> variable using <code>S</code> (e.g., <code>pups_data$S</code>). What happens?</p>
+<p><details> <summary> Solution </summary></p>
+<p>The code below shows how I might load the dataset using different import functions, and how I might compare the results.</p>
+<pre class="r"><code>pups_base = read.csv(&quot;./data/FAS_pups.csv&quot;)
+pups_readr = read_csv(&quot;./data/FAS_pups.csv&quot;)
+
+View(pups_base)
+View(pups_readr)
+
+pups_base
+pups_readr
+
+pups_base$S
+pups_readr$S</code></pre>
+<p>In short, <code>read_csv</code> produces tibbles which are very similar to the base R data frames produced by <code>read.csv</code>. However, tibbles have some features that can help prevent mistakes and unwanted behavior. </details></p>
 </div>
 <div id="exporting-data" class="section level3">
 <h3>Exporting data</h3>
