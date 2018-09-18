@@ -248,6 +248,12 @@ pups_readr$S
 In short, `read_csv` produces tibbles which are very similar to the base R data frames produced by `read.csv`. However, tibbles have some features that can help prevent mistakes and unwanted behavior.
 </details>
 
+
+### Importing using File > Import
+
+You can open many data files using RStudio’s drop-down menus. To import an excel spreadsheet, for example, you can use File > Import Dataset > From Excel. This allows several import options, previews the data, and shows the code necessary for importing. Importing in this way will load the data into your current session, but you’ll have to copy the import code to your RMarkdown file to ensure reproducibility. This approach to importing data can be helpful when you’re getting started, but gaining proficiency with writing code directly will be helpful in the long term and is more consistent with the goals of the course.
+
+
 ### Exporting data
 
 As a final point, you will sometimes need to export data after you have imported and cleaned it. The `write_*` functions in `readr` address this problem.

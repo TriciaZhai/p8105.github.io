@@ -394,12 +394,12 @@ div.tocify {
 <h2>Example</h2>
 <p>We’re going to figure out how to import the datasets in <a href="./resources/data_import_examples.zip">this zip file</a>. First, create a GitHub repo + local R project for today’s work (I’m calling mine <code>data_wrangling_i</code>). Move the datasets to your repo / directory (perhaps in a sub-directory called <code>data</code>), and start an R Markdown file. We’re also going to be making extensive use of the <code>tidyverse</code> package, so go ahead and load that in a “setup” code chunk.</p>
 <pre class="r"><code>library(tidyverse)
-## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0
-## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ───────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="paths" class="section level3">
@@ -520,12 +520,12 @@ tail(litters_data, 5)
 ##  n obs: 49 
 ##  n variables: 8 
 ## 
-## ── Variable type:character ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:character ────────────────────────────────────────────────────────────────
 ##       variable missing complete  n min max empty n_unique
 ##          group       0       49 49   4   4     0        6
 ##  litter_number       0       49 49   3  15     0       49
 ## 
-## ── Variable type:integer ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:integer ──────────────────────────────────────────────────────────────────
 ##         variable missing complete  n  mean   sd p0 p25 p50 p75 p100
 ##      gd_of_birth       0       49 49 19.65 0.48 19  19  20  20   20
 ##  pups_born_alive       0       49 49  7.35 1.76  3   6   8   8   11
@@ -537,7 +537,7 @@ tail(litters_data, 5)
 ##  ▇▂▁▁▁▁▁▁
 ##  ▂▂▃▃▅▇▇▅
 ## 
-## ── Variable type:numeric ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:numeric ──────────────────────────────────────────────────────────────────
 ##     variable missing complete  n  mean   sd   p0   p25   p50   p75 p100
 ##   gd0_weight      15       34 49 24.38 3.28 17   22.3  24.1  26.67 33.4
 ##  gd18_weight      17       32 49 41.52 4.05 33.4 38.88 42.25 43.8  52.7
@@ -685,6 +685,10 @@ pups_readr
 pups_base$S
 pups_readr$S</code></pre>
 <p>In short, <code>read_csv</code> produces tibbles which are very similar to the base R data frames produced by <code>read.csv</code>. However, tibbles have some features that can help prevent mistakes and unwanted behavior. </details></p>
+</div>
+<div id="importing-using-file-import" class="section level3">
+<h3>Importing using File &gt; Import</h3>
+<p>You can open many data files using RStudio’s drop-down menus. To import an excel spreadsheet, for example, you can use File &gt; Import Dataset &gt; From Excel. This allows several import options, previews the data, and shows the code necessary for importing. Importing in this way will load the data into your current session, but you’ll have to copy the import code to your RMarkdown file to ensure reproducibility. This approach to importing data can be helpful when you’re getting started, but gaining proficiency with writing code directly will be helpful in the long term and is more consistent with the goals of the course.</p>
 </div>
 <div id="exporting-data" class="section level3">
 <h3>Exporting data</h3>
