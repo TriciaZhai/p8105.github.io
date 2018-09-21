@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 
 ## Example
 
-For this example, I'll a new R Markdown file to the repo / project I started for the [Data Wrangling I](topic_data_wrangling_i.html) topic; this will make it easy to load example data sets using the code I wrote in [data import](data_import.html).
+For this example, I'll start a new R Markdown file to the repo / project I started for the [Data Wrangling I](topic_data_wrangling_i.html) topic; this will make it easy to load example data sets using the code I wrote in [data import](data_import.html).
 
 Once again we're going to be using the `tidyverse`, so we'll load that at the outset. We're going to be looking at a lot of output, so I'll print only three lines of each tibble by default. Lastly, we'll focus on the data in `FAS_litters.csv` and `FAS_pups.csv`, so we'll load those data and clean up the column names using what we learned in [data import](data_import.html).
 
@@ -250,7 +250,7 @@ litters_data =
     group = tolower(group))
 ```
 
-Usually you'll just elide the first argument and be happy with life, but there are some cases where the placeholder will help. For example, to regress `wt_gain` on `pups_born_alive`, you might use:
+In this example, the dataset argument is called `dat` in `janitor::clean_names` and `.data` in the `dplyr` functions (which can be confusing). In the majority of cases (and everywhere in the tidyverse) you'll elide the first argument and be happy with life, but there are some cases where the placeholder is necessary. For example, to regress `wt_gain` on `pups_born_alive`, you might use:
 
 ```{r}
 litters_data %>%

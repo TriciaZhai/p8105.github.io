@@ -392,7 +392,7 @@ div.tocify {
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>For this example, I’ll a new R Markdown file to the repo / project I started for the <a href="topic_data_wrangling_i.html">Data Wrangling I</a> topic; this will make it easy to load example data sets using the code I wrote in <a href="data_import.html">data import</a>.</p>
+<p>For this example, I’ll start a new R Markdown file to the repo / project I started for the <a href="topic_data_wrangling_i.html">Data Wrangling I</a> topic; this will make it easy to load example data sets using the code I wrote in <a href="data_import.html">data import</a>.</p>
 <p>Once again we’re going to be using the <code>tidyverse</code>, so we’ll load that at the outset. We’re going to be looking at a lot of output, so I’ll print only three lines of each tibble by default. Lastly, we’ll focus on the data in <code>FAS_litters.csv</code> and <code>FAS_pups.csv</code>, so we’ll load those data and clean up the column names using what we learned in <a href="data_import.html">data import</a>.</p>
 <pre class="r"><code>library(tidyverse)
 ## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
@@ -668,7 +668,7 @@ litters_data
   mutate(.data = .,
     wt_gain = gd18_weight - gd0_weight,
     group = tolower(group))</code></pre>
-<p>Usually you’ll just elide the first argument and be happy with life, but there are some cases where the placeholder will help. For example, to regress <code>wt_gain</code> on <code>pups_born_alive</code>, you might use:</p>
+<p>In this example, the dataset argument is called <code>dat</code> in <code>janitor::clean_names</code> and <code>.data</code> in the <code>dplyr</code> functions (which can be confusing). In the majority of cases (and everywhere in the tidyverse) you’ll elide the first argument and be happy with life, but there are some cases where the placeholder is necessary. For example, to regress <code>wt_gain</code> on <code>pups_born_alive</code>, you might use:</p>
 <pre class="r"><code>litters_data %&gt;%
   lm(wt_gain ~ pups_born_alive, data = .) %&gt;%
   broom::tidy()
