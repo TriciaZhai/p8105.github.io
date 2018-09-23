@@ -6,10 +6,10 @@ Visualization and exploratory numerical analysis are the analytic components tha
 
 The topic is made up of the following components:
 
-* [Visualization with `ggplot2` Pt. 1](visualization.html)
-* [Visualization with `ggplot2` Pt. 2](visualization_2.html)
+* [Visualization with `ggplot2` Pt. 1](visualization_pt1.html)
+* [Visualization with `ggplot2` Pt. 2](visualization_pt2.html)
 * [Exploratory analysis using `group_by`](exploratory_analysis.html)
 
-The slack channel for this topic is [here]().
+The slack channel for this topic is [here](https://p8105-fall2018.slack.com/messages/CCCBZPUVC).
 
 The code that I produced working examples in lecture is [here]().
