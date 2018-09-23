@@ -16,3 +16,39 @@ Data from the Behavioral Risk Factors Surveillance System for Selected Metropoli
 
 [Glossary](https://chronicdata.cdc.gov/Behavioral-Risk-Factors/Behavioral-Risk-Factor-Surveillance-System-BRFSS-H/iuq5-y9ct)
 
+## Data acquisition and description
+
+Data on restaurant inspection results are publicly available at [data.gov](https://catalog.data.gov/dataset/behavioral-risk-factors-selected-metropolitan-area-risk-trends-smart-county-prevalence-dat-a0124). The specific data to be used in this class, linked to at the top of this page, was accessed in September 2018 using the code below.
+
+```{r, eval = FALSE}
+library(tidyverse)
+library(httr)
+library(jsonlite)
+
+var_names = GET("https://chronicdata.cdc.gov/views/acme-vg9e.json") %>%
+  content("text") %>%
+  fromJSON() %>% 
+  .[["columns"]] %>% 
+  .[["name"]] %>% 
+  .[-23]
+
+brfss_smart2010 = 
+  GET("https://chronicdata.cdc.gov/views/acme-vg9e/rows.json") %>% 
+  content("text") %>%
+  fromJSON() %>% 
+  .[["data"]]
+
+row_as_tibble = function(row_as_list, var_names) {
+  var_list = row_as_list[9:30]
+  names(var_list) = var_names 
+  var_list[sapply(var_list, is.null)] <- NULL
+  as_tibble(var_list, validate = FALSE)
+}
+
+brfss_smart2010 = 
+  brfss_smart2010 %>% 
+  map(.x = ., ~row_as_tibble(.x, var_names)) %>% 
+  bind_rows
+```
+
+The dataset contains roughly 134,000 rows and 21 columns. There is information on lcoation, topic, question, response, and response number. The data is structured so that each (multiple-choice) response to each question is a separate row. A complete data dictionary is linked above. 
