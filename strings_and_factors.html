@@ -338,6 +338,9 @@ div.tocify {
       <a href="dataset_airbnb.html">Airbnb</a>
     </li>
     <li>
+      <a href="dataset_brfss.html">BRFSS</a>
+    </li>
+    <li>
       <a href="dataset_fivethirtyeight.html">FiveThirtyEight</a>
     </li>
     <li>
@@ -491,30 +494,25 @@ urls = str_c(url_base, 1:5)
 read_html(urls[1]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;It’s worthy&quot;                                               
-##  [2] &quot;Five Stars&quot;                                                
-##  [3] &quot;No complaints&quot;                                             
-##  [4] &quot;Five Stars&quot;                                                
-##  [5] &quot;Nothing beats a Sonicare for thorough but gentle cleaning.&quot;
-##  [6] &quot;Five Stars&quot;                                                
-##  [7] &quot;Good quality and price&quot;                                    
-##  [8] &quot;Highly Recommended&quot;                                        
-##  [9] &quot;Very happy with this tootbrush&quot;                            
-## [10] &quot;Read before you buy.&quot;
+##  [1] &quot;Gets the job done.&quot;              &quot;Great Toothbrush&quot;               
+##  [3] &quot;Stopped working after 15 months&quot; &quot;Designed to be best&quot;            
+##  [5] &quot;A++&quot;                             &quot;Great cleaning.&quot;                
+##  [7] &quot;Five Stars&quot;                      &quot;Cleans teeth great&quot;             
+##  [9] &quot;Good!&quot;                           &quot;Didn&#39;t last 10 months.&quot;
 
 read_html(urls[2]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;Please help&quot;                                                                   
-##  [2] &quot;3-4 stars at best. Practical use 6-7/10. Not the most comfortable tooth brush.&quot;
-##  [3] &quot;Love it&quot;                                                                       
-##  [4] &quot;On time&quot;                                                                       
-##  [5] &quot;Boo&quot;                                                                           
-##  [6] &quot;nice but it shorts out&quot;                                                        
-##  [7] &quot;Good product&quot;                                                                  
-##  [8] &quot;Battery never lasted more than one brush!!!&quot;                                   
-##  [9] &quot;Five Stars&quot;                                                                    
-## [10] &quot;Work Well&quot;</code></pre>
+##  [1] &quot;I&#39;ve bought several Sonicares and love them all but like the ones with the smaller ...&quot;
+##  [2] &quot;Toothbrush&quot;                                                                            
+##  [3] &quot;Good stuff&quot;                                                                            
+##  [4] &quot;Improved over previous model&quot;                                                          
+##  [5] &quot;Works Great&quot;                                                                           
+##  [6] &quot;Works well &amp; much quieter than my Oral-B&quot;                                              
+##  [7] &quot;Five Stars&quot;                                                                            
+##  [8] &quot;Smile!&quot;                                                                                
+##  [9] &quot;We love these things&quot;                                                                  
+## [10] &quot;Love this toothbrush!&quot;</code></pre>
 <p>It would get really tedious to try to scrape all (5000+) reviews by copying code over and over; before long we’ll learn about writing R functions to reuse code and make this much easier!</p>
 </div>
 <div id="biostat-methods-i-example" class="section level3">

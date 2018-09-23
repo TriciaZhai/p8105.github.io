@@ -338,6 +338,9 @@ div.tocify {
       <a href="dataset_airbnb.html">Airbnb</a>
     </li>
     <li>
+      <a href="dataset_brfss.html">BRFSS</a>
+    </li>
+    <li>
       <a href="dataset_fivethirtyeight.html">FiveThirtyEight</a>
     </li>
     <li>
@@ -592,9 +595,11 @@ weather_nest
 <p>That said, a list column that contains fitted models might not be immediately helpful. We will generally want to extract some information about the model fit, and I generally recommend <code>broom::tidy</code>. That function (which we’ve seen in passing) produces a data frame.</p>
 <pre class="r"><code>lm(tmax ~ tmin, data = weather_nest$data[[1]]) %&gt;% 
   broom::tidy()
-##          term estimate  std.error statistic       p.value
-## 1 (Intercept) 7.779171 0.22116552  35.17352 3.883698e-119
-## 2        tmin 1.044830 0.01638279  63.77608 1.229687e-199</code></pre>
+## # A tibble: 2 x 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)     7.78    0.221       35.2 3.88e-119
+## 2 tmin            1.04    0.0164      63.8 1.23e-199</code></pre>
 <p>All together, we have a possible data analytic pipeline. First, nest data within stations; then fit models for each station; then tidy the result, saving the result in a new list column. Since <code>tidy</code> produces a data frame, we can <code>unnest</code> the result after removing intermediate list columns and check out the result. The complete analytic pipeline is in the chunk below.</p>
 <pre class="r"><code>weather_analysis = 
   weather %&gt;% 

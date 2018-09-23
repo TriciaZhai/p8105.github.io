@@ -338,6 +338,9 @@ div.tocify {
       <a href="dataset_airbnb.html">Airbnb</a>
     </li>
     <li>
+      <a href="dataset_brfss.html">BRFSS</a>
+    </li>
+    <li>
       <a href="dataset_fivethirtyeight.html">FiveThirtyEight</a>
     </li>
     <li>
@@ -395,14 +398,6 @@ div.tocify {
 <p>For this example, I’ll start a new R Markdown file to the repo / project I started for the <a href="topic_data_wrangling_i.html">Data Wrangling I</a> topic; this will make it easy to load example data sets using the code I wrote in <a href="data_import.html">data import</a>.</p>
 <p>Once again we’re going to be using the <code>tidyverse</code>, so we’ll load that at the outset. We’re going to be looking at a lot of output, so I’ll print only three lines of each tibble by default. Lastly, we’ll focus on the data in <code>FAS_litters.csv</code> and <code>FAS_pups.csv</code>, so we’ll load those data and clean up the column names using what we learned in <a href="data_import.html">data import</a>.</p>
 <pre class="r"><code>library(tidyverse)
-## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
-## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
-## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
-## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
-## ✔ readr   1.1.1     ✔ forcats 0.3.0
-## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
 
 options(tibble.print_min = 3)
 
@@ -672,9 +667,11 @@ litters_data
 <pre class="r"><code>litters_data %&gt;%
   lm(wt_gain ~ pups_born_alive, data = .) %&gt;%
   broom::tidy()
-##              term   estimate std.error statistic      p.value
-## 1     (Intercept) 13.0833132 1.2707022 10.296128 3.390028e-11
-## 2 pups_born_alive  0.6050786 0.1732314  3.492892 1.553186e-03</code></pre>
+## # A tibble: 2 x 5
+##   term            estimate std.error statistic  p.value
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)       13.1       1.27      10.3  3.39e-11
+## 2 pups_born_alive    0.605     0.173      3.49 1.55e- 3</code></pre>
 <p>There are limitations to the pipe. You shouldn’t have sequences that are too long; there isn’t a great way to deal with multiple inputs and outputs; and (since it’s not base R) not everyone will know what <code>%&gt;%</code> means or does. That said, compared to days when R users only had the first two options, life is much better!</p>
 <p><strong><em>Learning Assessment:</em></strong> Write a chain of commands that:</p>
 <ul>

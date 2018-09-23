@@ -338,6 +338,9 @@ div.tocify {
       <a href="dataset_airbnb.html">Airbnb</a>
     </li>
     <li>
+      <a href="dataset_brfss.html">BRFSS</a>
+    </li>
+    <li>
       <a href="dataset_fivethirtyeight.html">FiveThirtyEight</a>
     </li>
     <li>
@@ -409,12 +412,12 @@ div.tocify {
 ##################################################################</code></pre>
 <p>As part of <a href="homework_0.html">Homework 0</a>, we installed a lot of packages. You don’t need to re-install those each time you need them, but you do need to load packages you want to use with the <code>library</code> function. Although we won’t use it yet, I’m going to load the <code>tidyverse</code> package now.</p>
 <pre class="r"><code>library(tidyverse)
-## ── Attaching packages ──────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0
-## ── Conflicts ─────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <p>You can do basic computations in R, either on the command line (in the console) or by writing things in the script and executing the code in the console. Note that you can execute commands (e.g. the line with the cursor or highlighted code) in the console from a script using Command+Enter (Mac) or Ctrl+Enter (Windows).</p>
@@ -433,15 +436,15 @@ x + y
 <p>When making assignments, R assumes you don’t want to see the result. If you do want to see the result, you’ll have to ask for it. You can also apply <strong>functions</strong> to objects.</p>
 <pre class="r"><code>x = runif(20)
 x
-##  [1] 0.40258811 0.64256652 0.95808073 0.69289714 0.14124171 0.63177587
-##  [7] 0.58721128 0.31487393 0.89830635 0.54281588 0.16381701 0.06886176
-## [13] 0.99706409 0.26783104 0.18237986 0.67428406 0.65886330 0.28100502
-## [19] 0.72624805 0.53917259
+##  [1] 0.96357925 0.94028646 0.28693422 0.90803214 0.09321287 0.46433202
+##  [7] 0.76873262 0.44457163 0.30724226 0.54675002 0.48256725 0.98614893
+## [13] 0.96233141 0.65439271 0.20443379 0.29643372 0.87315400 0.34208599
+## [19] 0.98999067 0.81559335
 
 mean(x)
-## [1] 0.5185942
+## [1] 0.6165403
 var(x)
-## [1] 0.07765413</code></pre>
+## [1] 0.09143645</code></pre>
 <p>We’ve created two variables, <code>x</code> and <code>y</code> – these now exist in the <strong>environment</strong>. You can see everything in the environment using <code>ls()</code> on the command line, or check out the environment pane in RStudio.</p>
 </div>
 <div id="data-frames" class="section level3">

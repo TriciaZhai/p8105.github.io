@@ -29,6 +29,8 @@ navbar:
     menu:
     - text: Airbnb
       href: dataset_airbnb.html
+    - text: BRFSS
+      href: dataset_brfss.html
     - text: FiveThirtyEight
       href: dataset_fivethirtyeight.html
     - text: Instacart
