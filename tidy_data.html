@@ -381,10 +381,10 @@ div.tocify {
 
 
 <p>The overarching goal of data wrangling is to have a tidy, easy-to-use dataset.</p>
-<p>This is the third module in the <a href="topic_data_wrangling_i.html">Data Wrangling I</a> topic; the relevant slack channel is <a href="https://p8105-fall2017.slack.com/messages/C75HFE38U">here</a>.</p>
+<p>This is the third module in the <a href="topic_data_wrangling_i.html">Data Wrangling I</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCAEZLU49">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
-<script async class="speakerdeck-embed" data-id="77a37cf3dcb945a9abd2e09439158d07" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="77a37cf3dcb945a9abd2e09439158d07" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
 <div style="margin-bottom:5px">
 <strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-tidy-data" title="Tidy Data" target="_blank">Tidy Data</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>.
 </div>
@@ -392,8 +392,16 @@ div.tocify {
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>I’ll keep using the same R Project as in <a href="data_import.html">data import</a> and <a href="data_manipulation.html">data manipulation</a>, but create a new .Rmd for tidying. I’m also going to load some relevant packages, and limit the number of lines printed in a tibble. Lastly, there’s another dataset we’ll use in examples today; I’m going to download it <a href="./data/LotR_Words.xlsx">here</a> and add it to my <code>data</code> subdirectory.</p>
+<p>I’ll keep using the same repo / project as in <a href="data_import.html">data import</a> and <a href="data_manipulation.html">data manipulation</a>, but create a new .Rmd for tidying. I’m also going to load some relevant packages, and limit the number of lines printed in a tibble.</p>
 <pre class="r"><code>library(tidyverse)
+## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
+## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
+## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
+## ✔ readr   1.1.1     ✔ forcats 0.3.0
+## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
 library(readxl)
 
 options(tibble.print_min = 5)</code></pre>
@@ -527,6 +535,23 @@ litters_data
 ## #   pups_dead_birth &lt;int&gt;, pups_survive &lt;int&gt;, wt_gain &lt;dbl&gt;</code></pre>
 <p>Now we’re in pretty okay shape :-).</p>
 <p><strong><em>Learning Assessment:</em></strong> In the litters data, the variables <code>gd0_weight</code> and <code>gd18_weight</code> give the weight of the mother mouse on gestational days 0 and 18. Write a data cleaning chain that retains only <code>litter_number</code> and these columns; produces new variables <code>gd</code> and <code>weight</code>; and makes <code>gd</code> a numeric variable taking values <code>0</code> and <code>18</code> (for the last part, you might want to use <code>recode</code> …). Is this version “tidy”?</p>
+<p><details> <summary> Solution </summary></p>
+<p>The code below shows one approach to this data cleaning process:</p>
+<pre class="r"><code>litters_data %&gt;% 
+  select(litter_number, ends_with(&quot;weight&quot;)) %&gt;% 
+  gather(key = gd, value = weight, gd0_weight:gd18_weight) %&gt;% 
+  mutate(gd = recode(gd, &quot;gd0_weight&quot; = 0, &quot;gd18_weight&quot; = 18))
+## # A tibble: 98 x 3
+##   litter_number      gd weight
+##   &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;
+## 1 #1/2/95/2           0     27
+## 2 #1/5/3/83/3-3/2     0     NA
+## 3 #1/6/2/2/95-2       0     NA
+## 4 #1/82/3-2           0     NA
+## 5 #100                0     20
+## # ... with 93 more rows</code></pre>
+<p>In one sense, this is “tidy” because I have a variable for day and a variable for weight rather that using values in my variable names. However, it’s less useful if I’m interested in computing or analyzing weight gain during pregnancy.</p>
+<p></details></p>
 </div>
 <div id="spread" class="section level3">
 <h3><code>spread</code></h3>
@@ -576,7 +601,7 @@ return_king = read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &quot;J3:L6
   gather(key = sex, value = words, female:male) %&gt;%
   mutate(race = tolower(race),
          movie = &quot;Return&quot;)</code></pre>
-<p>This illustrates that there’s often some work needed to ensure the separate tables can be reasonably stacked. As an aside, the three code snippets above are all basically the same except for the range and the movie name – later we’ll see a better way to handle cases like this by writing our own functions, but this works for now.</p>
+<p>This illustrates that there’s often some work needed to ensure the separate tables can be reasonably stacked. As an aside, the three code snippets above are all basically the same except for the range and the movie name – later we’ll see a better way to handle cases like this by <a href="writing_functions.html">writing our own functions</a>, but this works for now.</p>
 <p>Once each table is ready to go, we can stack them up using <code>bind_rows</code>:</p>
 <pre class="r"><code>lotr_tidy = bind_rows(fellowship_ring, two_towers, return_king) %&gt;%
   select(movie, everything()) 
@@ -644,6 +669,25 @@ FAS_data
 <p>We made the key explicit in the join. By default, the <code>*_join</code> functions in <code>dplyr</code> will try to determine the key(s) based on variable names in the datasets you want to join. This is often but not always sufficient, and an extra step to make the key clear will help you and others reading your code.</p>
 <p>Note that joining is not particularly amenable to the <code>%&gt;%</code> operator because it is fundamentally non-linear: two separate datasets are coming together, rather than a single dataset being processed in a step-by-step fashion.</p>
 <p>As a final point, the <code>*_join</code> functions are very much related to SQL syntax, but emphasize operations common to data analysis.</p>
+<p><strong><em>Learning Assessment:</em></strong> The datasets in <a href="data/survey_results.zip">this zip file</a> contain de-identified responses to surveys included in Homeworks 0 and 1. Both contain a unique student identifier; the first has reponses to a question about operating systems, and the second has responses to questions about degree program and git experience. Write a code chunk that imports and cleans both datasets, and then joins them.</p>
+<p><details> <summary> Solution </summary></p>
+<p>I put both datasets in the <code>data</code> directory in my repo / project. The code below imports both datasets, cleans up variable names, and joins the datasets using <code>left_join</code>, <code>inner_join</code>, and <code>anti_join</code>.</p>
+<pre class="r"><code>surv_os = read_csv(&quot;data/surv_os.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  rename(id = what_is_your_uni, os = what_operating_system_do_you_use)
+
+surv_pr_git = read_csv(&quot;data/surv_program_git.csv&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  rename(id = what_is_your_uni, 
+         prog = what_is_your_degree_program,
+         git_exp = which_most_accurately_describes_your_experience_with_git)
+
+left_join(surv_os, surv_pr_git)
+inner_join(surv_os, surv_pr_git)
+anti_join(surv_os, surv_pr_git)
+anti_join(surv_pr_git, surv_os)</code></pre>
+<p>In one sense, this is “tidy” because I have a variable for day and a variable for weight rather that using values in my variable names. However, it’s less useful if I’m interested in computing or analyzing weight gain during pregnancy.</p>
+<p></details></p>
 </div>
 </div>
 <div id="other-materials" class="section level2">
@@ -654,6 +698,7 @@ FAS_data
 <li>Jenny Bryan’s <a href="http://stat545.com">Stat 545</a> class has content on tidy data – parts <a href="https://github.com/jennybc/lotr-tidy/blob/master/01-intro.md">1</a>, <a href="https://github.com/jennybc/lotr-tidy/blob/master/02-gather.md">2</a>, <a href="https://github.com/jennybc/lotr-tidy/blob/master/03-spread.md">3</a>, and <a href="https://github.com/jennybc/lotr-tidy/blob/master/04-tidy-bonus-content.md">4</a> are all good (some of the content above is very much related to this).</li>
 <li>You should revisit the data import <a href="https://github.com/rstudio/cheatsheets/raw/master/data-import.pdf">cheatsheet</a>, which also has some tips for tidying.</li>
 </ul>
+<p>The code that I produced working examples in lecture is <a href="https://github.com/P8105/data_wrangling_i">here</a>.</p>
 </div>
 
 <br><br>

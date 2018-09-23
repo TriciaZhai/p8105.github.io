@@ -8,7 +8,7 @@ output:
 
 The overarching goal of data wrangling is to have a tidy, easy-to-use dataset. 
 
-This is the third module in the [Data Wrangling I](topic_data_wrangling_i.html) topic; the relevant slack channel is [here](https://p8105-fall2017.slack.com/messages/C75HFE38U).
+This is the third module in the [Data Wrangling I](topic_data_wrangling_i.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCAEZLU49).
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -21,13 +21,13 @@ knitr::opts_chunk$set(
 
 ## Some slides
 
-<script async class="speakerdeck-embed" data-id="77a37cf3dcb945a9abd2e09439158d07" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="77a37cf3dcb945a9abd2e09439158d07" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
 <div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-tidy-data" title="Tidy Data" target="_blank">Tidy Data</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
 
 
 ## Example
 
-I'll keep using the same R Project as in [data import](data_import.html) and [data manipulation](data_manipulation.html), but create a new .Rmd for tidying. I'm also going to load some relevant packages, and limit the number of lines printed in a tibble. Lastly, there's another dataset we'll use in examples today; I'm going to download it [here](./data/LotR_Words.xlsx) and add it to my `data` subdirectory.
+I'll keep using the same repo / project as in [data import](data_import.html) and [data manipulation](data_manipulation.html), but create a new .Rmd for tidying. I'm also going to load some relevant packages, and limit the number of lines printed in a tibble. 
 
 ```{r}
 library(tidyverse)
@@ -114,6 +114,22 @@ Now we're in pretty okay shape :-).
 
 **_Learning Assessment:_** In the litters data, the variables `gd0_weight` and `gd18_weight` give the weight of the mother mouse on gestational days 0 and 18. Write a data cleaning chain that retains only `litter_number` and these columns; produces new variables `gd` and `weight`; and makes `gd` a numeric variable taking values `0` and `18` (for the last part, you might want to use `recode` ...). Is this version "tidy"?
 
+<details>
+<summary> Solution </summary>
+
+The code below shows one approach to this data cleaning process:
+
+```{r}
+litters_data %>% 
+  select(litter_number, ends_with("weight")) %>% 
+  gather(key = gd, value = weight, gd0_weight:gd18_weight) %>% 
+  mutate(gd = recode(gd, "gd0_weight" = 0, "gd18_weight" = 18))
+```
+
+In one sense, this is "tidy" because I have a variable for day and a variable for weight rather that using values in my variable names. However, it's less useful if I'm interested in computing or analyzing weight gain during pregnancy. 
+
+</details>
+
 
 ### `spread`
 
@@ -166,7 +182,7 @@ return_king = read_excel("./data/LotR_Words.xlsx", range = "J3:L6") %>%
          movie = "Return")
 ```
 
-This illustrates that there's often some work needed to ensure the separate tables can be reasonably stacked. As an aside, the three code snippets above are all basically the same except for the range and the movie name -- later we'll see a better way to handle cases like this by writing our own functions, but this works for now.
+This illustrates that there's often some work needed to ensure the separate tables can be reasonably stacked. As an aside, the three code snippets above are all basically the same except for the range and the movie name -- later we'll see a better way to handle cases like this by [writing our own functions](writing_functions.html), but this works for now.
 
 Once each table is ready to go, we can stack them up using `bind_rows`:
 
@@ -178,6 +194,7 @@ lotr_tidy
 ```
 
 Having the data in this form will make it easier to make comparisons across movies, aggregate within races across the trilogy, and perform other analyses. 
+
 
 ### Joining datasets
 
@@ -216,6 +233,34 @@ Note that joining is not particularly amenable to the `%>%` operator because it 
 
 As a final point, the `*_join` functions are very much related to SQL syntax, but emphasize operations common to data analysis. 
 
+**_Learning Assessment:_** The datasets in [this zip file](data/survey_results.zip) contain de-identified responses to surveys included in Homeworks 0 and 1. Both contain a unique student identifier; the first has reponses to a question about operating systems, and the second has responses to questions about degree program and git experience. Write a code chunk that imports and cleans both datasets, and then joins them. 
+
+<details>
+<summary> Solution </summary>
+
+I put both datasets in the `data` directory in my repo / project. The code below imports both datasets, cleans up variable names, and joins the datasets using `left_join`, `inner_join`, and `anti_join`.
+
+```{r, eval = FALSE}
+surv_os = read_csv("data/surv_os.csv") %>% 
+  janitor::clean_names() %>% 
+  rename(id = what_is_your_uni, os = what_operating_system_do_you_use)
+
+surv_pr_git = read_csv("data/surv_program_git.csv") %>% 
+  janitor::clean_names() %>% 
+  rename(id = what_is_your_uni, 
+         prog = what_is_your_degree_program,
+         git_exp = which_most_accurately_describes_your_experience_with_git)
+
+left_join(surv_os, surv_pr_git)
+inner_join(surv_os, surv_pr_git)
+anti_join(surv_os, surv_pr_git)
+anti_join(surv_pr_git, surv_os)
+```
+
+In one sense, this is "tidy" because I have a variable for day and a variable for weight rather that using values in my variable names. However, it's less useful if I'm interested in computing or analyzing weight gain during pregnancy. 
+
+</details>
+
 ## Other materials
 
 * R for Data Science, of course, has a chapter on [tidy data](http://r4ds.had.co.nz/tidy-data.html). The [paper](http://www.jstatsoft.org/v59/i10/paper) that lays out the underlying ideas may also be useful.
@@ -224,4 +269,4 @@ As a final point, the `*_join` functions are very much related to SQL syntax, bu
 [3](https://github.com/jennybc/lotr-tidy/blob/master/03-spread.md), and [4](https://github.com/jennybc/lotr-tidy/blob/master/04-tidy-bonus-content.md) are all good (some of the content above is very much related to this).
 * You should revisit the data import [cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/data-import.pdf), which also has some tips for tidying.
 
-
+The code that I produced working examples in lecture is [here](https://github.com/P8105/data_wrangling_i).
