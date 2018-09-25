@@ -31,7 +31,6 @@ I'll keep using the same repo / project as in [data import](data_import.html) an
 
 ```{r}
 library(tidyverse)
-library(readxl)
 
 options(tibble.print_min = 5)
 ```
@@ -163,31 +162,25 @@ We've looked at single-table non-tidy data, but non-tidiness often stems from re
 To produce the desired tidy dataset, we first need to read each table and do some cleaning.
 
 ```{r}
-fellowship_ring = read_excel("./data/LotR_Words.xlsx", range = "B3:D6") %>%
-  janitor::clean_names() %>%
-  gather(key = sex, value = words, female:male) %>%
-  mutate(race = tolower(race),
-         movie = "Fellowship")
+fellowship_ring = readxl::read_excel("./data/LotR_Words.xlsx", range = "B3:D6") %>%
+  mutate(movie = "fellowship_ring")
 
-two_towers = read_excel("./data/LotR_Words.xlsx", range = "F3:H6") %>%
-  janitor::clean_names() %>%
-  gather(key = sex, value = words, female:male) %>%
-  mutate(race = tolower(race),
-         movie = "Two Towers")
+two_towers = readxl::read_excel("./data/LotR_Words.xlsx", range = "F3:H6") %>%
+  mutate(movie = "two_towers")
 
-return_king = read_excel("./data/LotR_Words.xlsx", range = "J3:L6") %>%
-  janitor::clean_names() %>%
-  gather(key = sex, value = words, female:male) %>%
-  mutate(race = tolower(race),
-         movie = "Return")
+return_king = readxl::read_excel("./data/LotR_Words.xlsx", range = "J3:L6") %>%
+  mutate(movie = "return_king")
 ```
 
-This illustrates that there's often some work needed to ensure the separate tables can be reasonably stacked. As an aside, the three code snippets above are all basically the same except for the range and the movie name -- later we'll see a better way to handle cases like this by [writing our own functions](writing_functions.html), but this works for now.
+Here it was necessary to add a variable to each dataframe indicating the movie; that information had stored elsewhere in the original spreadsheet. As an aside, the three code snippets above are all basically the same except for the range and the movie name -- later we'll see a better way to handle cases like this by [writing our own functions](writing_functions.html), but this works for now.
 
-Once each table is ready to go, we can stack them up using `bind_rows`:
+Once each table is ready to go, we can stack them up using `bind_rows` and tidy the result:
 
 ```{r}
 lotr_tidy = bind_rows(fellowship_ring, two_towers, return_king) %>%
+  janitor::clean_names() %>%
+  gather(key = sex, value = words, female:male) %>%
+  mutate(race = tolower(race)) %>% 
   select(movie, everything()) 
 
 lotr_tidy
