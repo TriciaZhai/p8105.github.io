@@ -27,8 +27,8 @@ This "problem" focuses on structure of your submission, especially the use git a
 
 To that end: 
 
-* create a public GitHub repo + local R Project; we suggest naming this repo / directory `p8105_hw1_YOURUNI` (e.g. `p8105_hw1_ajg2202` for Jeff), but that's not required
-* create a single .Rmd file named `p8105_hw1_YOURUNI.Rmd` that renders to `github_document`
+* create a public GitHub repo + local R Project; we suggest naming this repo / directory `p8105_hw2_YOURUNI` (e.g. `p8105_hw2_ajg2202` for Jeff), but that's not required
+* create a single .Rmd file named `p8105_hw2_YOURUNI.Rmd` that renders to `github_document`
 * create a subdirectory to store the local data files used in Problems 1 and 2, and use relative paths to access these data files
 
 Your solutions to Problems 1, 2, and 3 should be implemented in your .Rmd file, and your git commit history should reflect the process you used to solve these Problems. 
@@ -48,7 +48,7 @@ Answer the following questions using these data:
 
 * How many distinct stations are there? Note that stations are identified both by name and by line (e.g. 125th St A/B/C/D; 125st 1; 125st 4/5); the `distinct` function may be useful here.
 * How many stations are ADA compliant?
-* What proportion of station entraces / exits without vending allow entrance?
+* What proportion of station entrances / exits without vending allow entrance?
 
 Reformat data so that route number and route name are distinct variables. How many distinct stations serve the A train? How many are ADA compliant? 
 
@@ -65,7 +65,7 @@ Read and clean the Mr. Trash Wheel sheet:
 
 Read and clean precipitation data for 2016 and 2017. For each, omit rows without precipitation data and add a variable year. Next, combine datasets and convert month to a character variable (the variable `month.name` is built into R and should be useful).
 
-Write a paragraph about these data; you are encouraged to use inline R. Be sure to note the number of observations in both resulting datasets, and give examples of key variables. For available data, what wass the total precipitation in 2017? What was the median number of sports balls in a dumpster in 2016?
+Write a paragraph about these data; you are encouraged to use inline R. Be sure to note the number of observations in both resulting datasets, and give examples of key variables. For available data, what was the total precipitation in 2017? What was the median number of sports balls in a dumpster in 2016?
 
 
 ### Problem 3
