@@ -257,8 +257,6 @@ anti_join(surv_os, surv_pr_git)
 anti_join(surv_pr_git, surv_os)
 ```
 
-In one sense, this is "tidy" because I have a variable for day and a variable for weight rather that using values in my variable names. However, it's less useful if I'm interested in computing or analyzing weight gain during pregnancy. 
-
 </details>
 
 ## Other materials
