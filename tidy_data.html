@@ -397,12 +397,12 @@ div.tocify {
 <h2>Example</h2>
 <p>I’ll keep using the same repo / project as in <a href="data_import.html">data import</a> and <a href="data_manipulation.html">data manipulation</a>, but create a new .Rmd for tidying. I’m also going to load some relevant packages, and limit the number of lines printed in a tibble.</p>
 <pre class="r"><code>library(tidyverse)
-## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0
-## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -649,8 +649,8 @@ litter_data = read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccd
     wt_gain = gd18_weight - gd0_weight,
     group = tolower(group))
 
-FAS_data = left_join(pup_data, litter_data, by = &quot;litter_number&quot;)
-FAS_data
+fas_data = left_join(pup_data, litter_data, by = &quot;litter_number&quot;)
+fas_data
 ## # A tibble: 313 x 13
 ##   litter_number sex   pd_ears pd_eyes pd_pivot pd_walk group gd0_weight
 ##   &lt;chr&gt;         &lt;chr&gt;   &lt;int&gt;   &lt;int&gt;    &lt;int&gt;   &lt;int&gt; &lt;chr&gt;      &lt;dbl&gt;

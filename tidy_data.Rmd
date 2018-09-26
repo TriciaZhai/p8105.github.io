@@ -216,8 +216,8 @@ litter_data = read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
     wt_gain = gd18_weight - gd0_weight,
     group = tolower(group))
 
-FAS_data = left_join(pup_data, litter_data, by = "litter_number")
-FAS_data
+fas_data = left_join(pup_data, litter_data, by = "litter_number")
+fas_data
 ```
 
 We made the key explicit in the join. By default, the `*_join` functions in `dplyr` will try to determine the key(s) based on variable names in the datasets you want to join. This is often but not always sufficient, and an extra step to make the key clear will help you and others reading your code.
