@@ -41,8 +41,6 @@ library(ggridges)
 We'll be working with NOAA weather data, which is downloaded using `rnoaa::meteo_pull_monitors` function in the code chunk below; similar code underlies the weather dataset used elsewhere in the course. Because this process can take some time, I'll cache the code chunk. 
 
 ```{r weather_data_create, cache = TRUE}
-library(rnoaa)
-
 weather_df = 
   rnoaa::meteo_pull_monitors(c("USW00094728", "USC00519397", "USS0023B17S"),
                       var = c("PRCP", "TMIN", "TMAX"), 
@@ -229,7 +227,7 @@ ggplot(weather_df, aes(x = name, y = tmax)) +
   stat_summary(fun.y = median, geom = "point", color = "blue", size = 4)
 ```
 
-Ridge plots were the trendiest plot of 2017, and were a replacement for both boxplots and violin plots. They're implemented in the [`ggridges`](https://github.com/clauswilke/ggridge) package, and are nice if you have lots of categories in which the shape of the distribution matters.
+Ridge plots were the trendiest plot of 2017, and were a replacement for both boxplots and violin plots. They're implemented in the [`ggridges`](https://github.com/clauswilke/ggridges) package, and are nice if you have lots of categories in which the shape of the distribution matters.
 
 ```{r}
 ggplot(weather_df, aes(x = tmax, y = name)) + 

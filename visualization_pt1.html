@@ -386,12 +386,12 @@ div.tocify {
 
 <p>Good visualization is a critical step in data analysis.</p>
 <p>This is the first module in the <a href="topic_visualization_and_eda.html">Visualization and EDA</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCCBZPUVC">here</a>.</p>
-<pre><code>## ── Attaching packages ──────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ─────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ───────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="some-slides" class="section level2">
@@ -413,9 +413,7 @@ library(ggridges)
 ## 
 ##     scale_discrete_manual</code></pre>
 <p>We’ll be working with NOAA weather data, which is downloaded using <code>rnoaa::meteo_pull_monitors</code> function in the code chunk below; similar code underlies the weather dataset used elsewhere in the course. Because this process can take some time, I’ll cache the code chunk.</p>
-<pre class="r"><code>library(rnoaa)
-
-weather_df = 
+<pre class="r"><code>weather_df = 
   rnoaa::meteo_pull_monitors(c(&quot;USW00094728&quot;, &quot;USC00519397&quot;, &quot;USS0023B17S&quot;),
                       var = c(&quot;PRCP&quot;, &quot;TMIN&quot;, &quot;TMAX&quot;), 
                       date_min = &quot;2017-01-01&quot;,
@@ -565,7 +563,7 @@ ggplot(weather_df) + geom_point(aes(x = tmax, y = tmin, color = &quot;blue&quot;
 ## Warning: Removed 3 rows containing non-finite values (stat_ydensity).
 ## Warning: Removed 3 rows containing non-finite values (stat_summary).</code></pre>
 <p><img src="visualization_pt1_files/figure-html/unnamed-chunk-19-1.png" width="90%" /></p>
-<p>Ridge plots were the trendiest plot of 2017, and were a replacement for both boxplots and violin plots. They’re implemented in the <a href="https://github.com/clauswilke/ggridge"><code>ggridges</code></a> package, and are nice if you have lots of categories in which the shape of the distribution matters.</p>
+<p>Ridge plots were the trendiest plot of 2017, and were a replacement for both boxplots and violin plots. They’re implemented in the <a href="https://github.com/clauswilke/ggridges"><code>ggridges</code></a> package, and are nice if you have lots of categories in which the shape of the distribution matters.</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmax, y = name)) + 
   geom_density_ridges(scale = .85)
 ## Picking joint bandwidth of 1.84
