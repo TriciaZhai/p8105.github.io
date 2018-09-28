@@ -50,7 +50,7 @@ Answer the following questions using these data:
 * How many stations are ADA compliant?
 * What proportion of station entrances / exits without vending allow entrance?
 
-Reformat data so that route number and route name are distinct variables. How many distinct stations serve the A train? How many are ADA compliant? 
+Reformat data so that route number and route name are distinct variables. How many distinct stations serve the A train? Of the stations that serve the A train, how many are ADA compliant? 
 
 ### Problem 2
 
