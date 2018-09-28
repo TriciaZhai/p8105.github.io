@@ -54,7 +54,7 @@ Reformat data so that route number and route name are distinct variables. How ma
 
 ### Problem 2
 
-This problem uses the [Mr. Trash Wheel](./dataset_mr_trash_wheel.html) dataset, available as an Excel file on the course website. 
+This problem uses the [Mr. Trash Wheel](./dataset_mr_trash_wheel.html) dataset, available as an Excel file on the course website. Please use the `HealthyHarborWaterWheelTotals2017-9-26.xlsx` version.
 
 Read and clean the Mr. Trash Wheel sheet:
 
