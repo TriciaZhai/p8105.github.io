@@ -386,14 +386,6 @@ div.tocify {
 
 <p>Good visualization is a critical step in data analysis.</p>
 <p>This is the second module in the <a href="topic_visualization_and_eda.html">Visualization and EDA</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCCBZPUVC">here</a>. Note that the slides and Other Materials / Extra Reading is the same as in <a href="visualization_pt1.html">Visualization Pt 1</a>.</p>
-<pre><code>## ── Attaching packages ──────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
-## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
-## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
-## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ─────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
 <script async class="speakerdeck-embed" data-id="7272d2325e0d4f27a6bca25afbf149ce" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
@@ -405,9 +397,17 @@ div.tocify {
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>Although I could add to the same .Rmd I started in <a href="visualization_pt1.html">Visualization Pt 1</a>, I’ll create a new document for today. We’re also going to take advantage of features in additional packages; most of these were installed previously, but you might need to install some others using the code below:</p>
-<pre class="r"><code>devtools::install_github(&quot;patchwork&quot;)
-devtools::install_github(&quot;gganimate&quot;)</code></pre>
+<pre class="r"><code>devtools::install_github(&quot;thomasp85/patchwork&quot;)</code></pre>
+<p>Next I’ll load the relevant packages.</p>
 <pre class="r"><code>library(tidyverse)
+## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
+## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
+## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
+## ✔ readr   1.1.1     ✔ forcats 0.3.0
+## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
 library(ggridges)
 ## 
 ## Attaching package: &#39;ggridges&#39;
@@ -415,8 +415,7 @@ library(ggridges)
 ## 
 ##     scale_discrete_manual
 library(ggthemes)
-library(patchwork)
-# library(gganimate)</code></pre>
+library(patchwork)</code></pre>
 <p>We’ll still work with NOAA weather data, which is loaded using the same code as in <a href="visualization_pt1.html">Visualization Pt 1</a>.</p>
 <pre class="r"><code>library(rnoaa)
 
@@ -447,14 +446,14 @@ weather_df
 ##  9 CentralPark_NY USW00094728 2017-01-09     0  -4.9  -9.9
 ## 10 CentralPark_NY USW00094728 2017-01-10     0   7.8  -6  
 ## # ... with 1,085 more rows</code></pre>
-<p>Start with basic scatterplot:</p>
+<p>As a starting point, we’ll revisit the scatterplot of <code>tmax</code> against <code>tmin</code> made in <a href="visualization_pt1.html">Visualization Pt 1</a>.</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5)
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
 <p><img src="visualization_pt2_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
-<div id="themes-and-colors" class="section level3">
-<h3>Themes and colors</h3>
-<p>There are a variety of useful ways to change the appearance of your plot, especially if your graphic is intended to be viewed by others. Some of the most important are the axis labels, title, and caption, all of which can be controlled using <code>labs()</code>.</p>
+<div id="labels-etc" class="section level3">
+<h3>Labels etc</h3>
+<p>Some of the most important are the axis labels, title, and caption, all of which can be controlled using <code>labs()</code>.</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
   labs(
@@ -465,6 +464,69 @@ weather_df
   )
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
 <p><img src="visualization_pt2_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
+<p>Tick marks and labels.</p>
+<pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name), alpha = .5) + 
+  labs(
+    title = &quot;Temperature plot&quot;,
+    x = &quot;Minimum daily temperature (C)&quot;,
+    y = &quot;Maxiumum daily temperature (C)&quot;,
+    caption = &quot;Data from the rnoaa package&quot;
+  ) + 
+  scale_x_continuous(breaks = c(-15, 0, 15), 
+                     labels = c(&quot;-15º C&quot;, &quot;0&quot;, &quot;15&quot;))
+## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
+<p>Other <code>scale_x</code> and <code>scale_y</code> options</p>
+<pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name), alpha = .5) + 
+  labs(
+    title = &quot;Temperature plot&quot;,
+    x = &quot;Minimum daily temperature (C)&quot;,
+    y = &quot;Maxiumum daily temperature (C)&quot;,
+    caption = &quot;Data from the rnoaa package&quot;
+  ) + 
+  scale_x_continuous(breaks = c(-15, 0, 15), 
+                     labels = c(&quot;-15ºC&quot;, &quot;0&quot;, &quot;15&quot;),
+                     limits = c(-20, 30)) + 
+  scale_y_continuous(trans = &quot;sqrt&quot;, 
+                     position = &quot;right&quot;)
+## Warning in self$trans$transform(x): NaNs produced
+## Warning: Transformation introduced infinite values in continuous y-axis
+## Warning: Removed 90 rows containing missing values (geom_point).</code></pre>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
+</div>
+<div id="colors-and-themes" class="section level3">
+<h3>Colors and themes</h3>
+<p>Lots of scale options for other aesthetics. Color comes up a lot.</p>
+<pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name), alpha = .5) + 
+  labs(
+    title = &quot;Temperature plot&quot;,
+    x = &quot;Minimum daily temperature (C)&quot;,
+    y = &quot;Maxiumum daily temperature (C)&quot;,
+    caption = &quot;Data from the rnoaa package&quot;
+  ) + 
+  scale_color_hue(name = &quot;Location&quot;, 
+                  h = c(100, 300))
+## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
+<p>Trying to create your own color scheme usually doesn’t go well; I encourage you to use the <a href="https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html"><code>viridis</code></a> package instead.</p>
+<pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
+  geom_point(aes(color = name), alpha = .5) + 
+  labs(
+    title = &quot;Temperature plot&quot;,
+    x = &quot;Minimum daily temperature (C)&quot;,
+    y = &quot;Maxiumum daily temperature (C)&quot;,
+    caption = &quot;Data from the rnoaa package&quot;
+  ) + 
+  viridis::scale_color_viridis(
+    name = &quot;Location&quot;, 
+    discrete = TRUE
+  )
+## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
+<p>We used <code>discrete = TRUE</code> because the color aesthetic is mapped to a discrete variable. In other cases (for example, when color mapped to <code>prcp</code>) you can omit this and get a continuous color gradient. The <code>viridis::scale_fill_viridis</code> is appropriate for the <code>fill</code> aesthetic.</p>
 <p>Another that I frequently change is the legend position; by default this is on the right of the graphic, but I often shift it to the bottom to ensure the graphic takes up the available left-to-right space.</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
@@ -474,9 +536,14 @@ weather_df
     y = &quot;Maxiumum daily temperature (C)&quot;,
     caption = &quot;Data from the rnoaa package&quot;
   ) + 
+  viridis::scale_color_viridis(
+    name = &quot;Location&quot;, 
+    discrete = TRUE
+  ) + 
   theme(legend.position = &quot;bottom&quot;)
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
-<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-10-1.png" width="90%" /></p>
+<p><code>legend.position = &quot;none&quot;</code> will remove the legend.</p>
 <p>While we’re on the subject, you can change the default theme (which is <code>theme_gray</code>) to something else. Here’s <code>theme_bw()</code>:</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
@@ -486,10 +553,14 @@ weather_df
     y = &quot;Maxiumum daily temperature (C)&quot;,
     caption = &quot;Data from the rnoaa package&quot;
   ) + 
+  viridis::scale_color_viridis(
+    name = &quot;Location&quot;, 
+    discrete = TRUE
+  ) + 
   theme_bw() + 
   theme(legend.position = &quot;bottom&quot;)
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
-<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-11-1.png" width="90%" /></p>
 <p>… and here’s <code>theme_classic()</code>:</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
@@ -499,10 +570,14 @@ weather_df
     y = &quot;Maxiumum daily temperature (C)&quot;,
     caption = &quot;Data from the rnoaa package&quot;
   ) + 
+  viridis::scale_color_viridis(
+    name = &quot;Location&quot;, 
+    discrete = TRUE
+  ) + 
   theme_classic() + 
   theme(legend.position = &quot;bottom&quot;)
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
-<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-12-1.png" width="90%" /></p>
 <p>… and, for some reason, here’s the Excel 2003 theme from <a href="https://cran.r-project.org/web/packages/ggthemes/vignettes/ggthemes.html"><code>ggthemes</code></a>:</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
@@ -512,56 +587,141 @@ weather_df
     y = &quot;Maxiumum daily temperature (C)&quot;,
     caption = &quot;Data from the rnoaa package&quot;
   ) + 
+  viridis::scale_color_viridis(
+    name = &quot;Location&quot;, 
+    discrete = TRUE
+  ) + 
   ggthemes::theme_excel() + 
   theme(legend.position = &quot;bottom&quot;)
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
-<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-13-1.png" width="90%" /></p>
 <p>Don’t use the Excel 2003 theme (the first two are fine, and <code>ggthemes</code> has other very nice themes as well).</p>
+<p>The ordering of <code>theme_bw()</code> and <code>theme()</code> matters – <code>theme()</code> changes a particular element of the plot’s “theme”. If you call <code>theme</code> to change the theme and then <code>theme_bw()</code>, and updates are overwritten by <code>theme_bw()</code>.</p>
+<p><strong><em>Learning Assessment:</em></strong> Revisit to density plot you made comparing precipitation across locations. Use themes and labels to improve the readability of this plot.</p>
+</div>
+<div id="setting-options" class="section level3">
+<h3>Setting options</h3>
+<p>In addition to figure sizing, I include a lot of my preferences in global options declared at the outset of each .Rmd file (this just gets copy-and-pasted everywhere).</p>
+<pre class="r"><code>library(tidyverse)
+
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = &quot;90%&quot;
+)
+
+theme_set(theme_bw() + theme(legend.position = &quot;bottom&quot;))</code></pre>
+</div>
+<div id="geom-data-argument" class="section level3">
+<h3><code>geom</code> data argument</h3>
+<p>We talked a bit about aesthetics being set globally vs locally. You can do a similar thing with data (this is a contrived example):</p>
+<pre class="r"><code>central_park = 
+  weather_df %&gt;% 
+  filter(name == &quot;CentralPark_NY&quot;)
+
+waikiki = 
+  weather_df %&gt;% 
+  filter(name == &quot;Waikiki_HA&quot;)
+
+ggplot(waikiki, aes(x = date, y = tmax, color = name)) + 
+  geom_point() + 
+  geom_line(data = central_park)
+## Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-15-1.png" width="90%" /></p>
+</div>
+<div id="patchwork" class="section level3">
+<h3><code>patchwork</code></h3>
+<p>Facetting works if you want the “same plot” for several levels of a category. Sometimes you want to show three completely different plots.</p>
+<pre class="r"><code>p1 = ggplot(weather_df, aes(x = tmax, y = tmin, color = name)) + 
+  geom_point(alpha = .5) +
+  theme(legend.position = &quot;none&quot;)
+
+p2 = weather_df %&gt;% 
+  filter(prcp &gt; 0) %&gt;% 
+  ggplot(aes(x = prcp, fill = name)) + 
+  geom_density(alpha = .5) + 
+  theme(legend.position = &quot;none&quot;)
+
+p3 = ggplot(weather_df, aes(x = date, y = tmax, color = name)) + 
+  geom_point(alpha = .5) +
+  geom_smooth(se = FALSE) + 
+  theme(legend.position = &quot;bottom&quot;)
+
+(p1 + p2) / p3
+## Warning: Removed 15 rows containing missing values (geom_point).
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
+## Warning: Removed 3 rows containing non-finite values (stat_smooth).
+## Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-16-1.png" width="90%" /></p>
+</div>
+<div id="data-manipulation" class="section level3">
+<h3>Data Manipulation</h3>
+<p>Data manip is part of plotting.</p>
 <p>The behavior of your plot depends on the data you’ve supplied; in some cases, it’s easier to control behavior through data manipulation than it is through the plot code. This is particularly true for the order of categorical or factor variables. Categorical variables will be ordered alphabetically; factors will be follow the specified order level. You can change the order level of a factor variable to your specified preference using <code>forcats::fct_relevel</code> or according to the value of another variable using <code>forcats::fct_reorder</code>.</p>
 <pre class="r"><code>weather_df %&gt;%
   mutate(name = forcats::fct_relevel(name, c(&quot;Waikiki_HA&quot;, &quot;CentralPark_NY&quot;, &quot;Waterhole_WA&quot;))) %&gt;% 
   ggplot(aes(x = name, y = tmax)) + 
   geom_violin(aes(fill = name), color = &quot;blue&quot;, alpha = .5) + 
-  stat_summary(fun.y = median, geom = &quot;point&quot;, color = &quot;blue&quot;, size = 4) + 
   theme(legend.position = &quot;bottom&quot;)
-## Warning: Removed 3 rows containing non-finite values (stat_ydensity).
-## Warning: Removed 3 rows containing non-finite values (stat_summary).</code></pre>
-<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-10-1.png" width="90%" /></p>
+## Warning: Removed 3 rows containing non-finite values (stat_ydensity).</code></pre>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-17-1.png" width="90%" /></p>
 <pre class="r"><code>weather_df %&gt;%
   mutate(name = forcats::fct_reorder(name, tmax)) %&gt;% 
   ggplot(aes(x = name, y = tmax)) + 
   geom_violin(aes(fill = name), color = &quot;blue&quot;, alpha = .5) + 
-  stat_summary(fun.y = median, geom = &quot;point&quot;, color = &quot;blue&quot;, size = 4) + 
   theme(legend.position = &quot;bottom&quot;)
-## Warning: Removed 3 rows containing non-finite values (stat_ydensity).
-## Warning: Removed 3 rows containing non-finite values (stat_summary).</code></pre>
-<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-11-1.png" width="90%" /></p>
+## Warning: Removed 3 rows containing non-finite values (stat_ydensity).</code></pre>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-18-1.png" width="90%" /></p>
 <p>We’ll learn more about the <a href="http://forcats.tidyverse.org/index.html"><code>forcats</code></a> package in <a href="data_wrangling_ii.html">Data Wrangling II</a>.</p>
-<p><strong><em>Learning Assessment:</em></strong> Revisit to density plot you made comparing precipitation across locations. Use themes and labels to improve the readability of this plot.</p>
-</div>
-<div id="axis-labels" class="section level3">
-<h3>Axis labels</h3>
-</div>
-<div id="geom-data-argument" class="section level3">
-<h3><code>geom</code> data argument</h3>
-<p>split weather into two</p>
-</div>
-<div id="tips-for-polishing-figures" class="section level3">
-<h3>Tips for polishing figures</h3>
-<p>Note: i never remember any of this, and just google it repeatedly</p>
-<p>Scales</p>
-<p>Tick marks</p>
-<p>Legend location</p>
-<p>“Final” global options I set</p>
-<p>Rotating axis text</p>
-</div>
-<div id="patchwork" class="section level3">
-<h3><code>patchwork</code></h3>
-<p>tmax vs tmin + precip ridge</p>
-</div>
-<div id="examples" class="section level3">
-<h3>Examples</h3>
-<p>PULSE data</p>
+<p>More difficult example – suppose i wanted a three-panel plot showing the distribution of min and max temps in each location.</p>
+<pre class="r"><code>weather_df %&gt;%
+  select(name, tmax, tmin) %&gt;% 
+  gather(key = observation, value = temp, tmax:tmin) %&gt;% 
+  ggplot(aes(x = temp, fill = observation)) +
+  geom_density(alpha = .5) + 
+  facet_grid(~name) + 
+  viridis::scale_fill_viridis(discrete = TRUE)
+## Warning: Removed 18 rows containing non-finite values (stat_density).</code></pre>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-19-1.png" width="90%" /></p>
+<p>Make a plot of pusle data</p>
+<pre class="r"><code>pulse_data = haven::read_sas(&quot;./data/public_pulse_data.sas7bdat&quot;) %&gt;%
+  janitor::clean_names() %&gt;%
+  gather(key = visit, value = bdi, bdi_score_bl:bdi_score_12m) %&gt;%
+  separate(visit, into = c(&quot;remove_1&quot;, &quot;remove_2&quot;, &quot;visit&quot;), sep = &quot;_&quot;) %&gt;%
+  select(id, visit, everything(), -starts_with(&quot;remove&quot;)) %&gt;%
+  mutate(visit = replace(visit, visit == &quot;bl&quot;, &quot;00m&quot;),
+         visit = factor(visit, levels = str_c(c(&quot;00&quot;, &quot;01&quot;, &quot;06&quot;, &quot;12&quot;), &quot;m&quot;))) %&gt;%
+  arrange(id, visit)
+## Warning: attributes are not identical across measure variables;
+## they will be dropped
+
+ggplot(pulse_data, aes(x = visit, y = bdi)) + 
+  geom_boxplot()
+## Warning: Removed 879 rows containing non-finite values (stat_boxplot).</code></pre>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-20-1.png" width="90%" /></p>
+<p>Make a plot of FAS data</p>
+<pre class="r"><code>pup_data = read_csv(&quot;./data/FAS_pups.csv&quot;, col_types = &quot;ciiiii&quot;) %&gt;%
+  janitor::clean_names() %&gt;%
+  mutate(sex = recode(sex, `1` = &quot;male&quot;, `2` = &quot;female&quot;)) 
+
+litter_data = read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;%
+  janitor::clean_names() %&gt;%
+  select(-pups_survive) %&gt;%
+  separate(group, into = c(&quot;dose&quot;, &quot;day_of_tx&quot;), sep = 3) %&gt;%
+  mutate(wt_gain = gd18_weight - gd0_weight,
+         day_of_tx = as.numeric(day_of_tx))
+
+fas_data = left_join(pup_data, litter_data, by = &quot;litter_number&quot;) 
+
+fas_data %&gt;% 
+  select(sex, dose, day_of_tx, pd_ears:pd_walk) %&gt;% 
+  gather(key = outcome, value = pn_day, pd_ears:pd_walk) %&gt;% 
+  na.omit() %&gt;% 
+  mutate(outcome = forcats::fct_reorder(outcome, day_of_tx, median)) %&gt;% 
+  ggplot(aes(x = dose, y = pn_day)) + 
+  geom_violin() + 
+  facet_grid(day_of_tx ~ outcome)</code></pre>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-21-1.png" width="90%" /></p>
 </div>
 </div>
 <div id="other-materials" class="section level2">
