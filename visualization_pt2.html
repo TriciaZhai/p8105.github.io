@@ -396,9 +396,9 @@ div.tocify {
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>Although I could add to the same .Rmd I started in <a href="visualization_pt1.html">Visualization Pt 1</a>, I’ll create a new document for today. We’re also going to take advantage of features in additional packages; most of these were installed previously, but you might need to install some others using the code below:</p>
+<p>I’ll create a new .Rmd for this example, and include it in the Git repo / directory for the <a href="topic_visualization_and_eda.html">Visualization and EDA</a> topic. I’m also going to take advantage of features in additional packages; most of these were installed previously, but it might be necessary to install <a href="https://github.com/thomasp85/patchwork"><code>patchwork</code></a> using the code below:</p>
 <pre class="r"><code>devtools::install_github(&quot;thomasp85/patchwork&quot;)</code></pre>
-<p>Next I’ll load the relevant packages.</p>
+<p>Next I’ll load the relevant packages for this example.</p>
 <pre class="r"><code>library(tidyverse)
 ## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
@@ -414,12 +414,9 @@ library(ggridges)
 ## The following object is masked from &#39;package:ggplot2&#39;:
 ## 
 ##     scale_discrete_manual
-library(ggthemes)
 library(patchwork)</code></pre>
 <p>We’ll still work with NOAA weather data, which is loaded using the same code as in <a href="visualization_pt1.html">Visualization Pt 1</a>.</p>
-<pre class="r"><code>library(rnoaa)
-
-weather_df = 
+<pre class="r"><code>weather_df = 
   rnoaa::meteo_pull_monitors(c(&quot;USW00094728&quot;, &quot;USC00519397&quot;, &quot;USS0023B17S&quot;),
                       var = c(&quot;PRCP&quot;, &quot;TMIN&quot;, &quot;TMAX&quot;), 
                       date_min = &quot;2017-01-01&quot;,
@@ -446,14 +443,14 @@ weather_df
 ##  9 CentralPark_NY USW00094728 2017-01-09     0  -4.9  -9.9
 ## 10 CentralPark_NY USW00094728 2017-01-10     0   7.8  -6  
 ## # ... with 1,085 more rows</code></pre>
-<p>As a starting point, we’ll revisit the scatterplot of <code>tmax</code> against <code>tmin</code> made in <a href="visualization_pt1.html">Visualization Pt 1</a>.</p>
+<p>As a starting point, let’s revisit the scatterplot of <code>tmax</code> against <code>tmin</code> made in <a href="visualization_pt1.html">Visualization Pt 1</a>.</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5)
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
 <p><img src="visualization_pt2_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
-<div id="labels-etc" class="section level3">
-<h3>Labels etc</h3>
-<p>Some of the most important are the axis labels, title, and caption, all of which can be controlled using <code>labs()</code>.</p>
+<div id="labels-ticks" class="section level3">
+<h3>Labels, ticks</h3>
+<p>There are a variety of useful ways to change the appearance of your plot, especially if your graphic is intended to be viewed by others. One of the most important things you can do is provide informative axis labels, plot titles, and captions, all of which can be controlled using <code>labs()</code>.</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
   labs(
@@ -464,7 +461,7 @@ weather_df
   )
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
 <p><img src="visualization_pt2_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
-<p>Tick marks and labels.</p>
+<p>You’ll occasionally want finer control over the location and specification of tick marks on the X or Y axis. These can be manipulated in <code>scale_x_*</code> and <code>scale_y_*</code> where <code>*</code> depends on the type of variable mapped to the <code>x</code> and <code>y</code> aesthetics.</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
   labs(
@@ -477,7 +474,7 @@ weather_df
                      labels = c(&quot;-15º C&quot;, &quot;0&quot;, &quot;15&quot;))
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
 <p><img src="visualization_pt2_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
-<p>Other <code>scale_x</code> and <code>scale_y</code> options</p>
+<p>There are a variety of other <code>scale_x</code> and <code>scale_y</code> options – it can be helpful to know how and where these are controlled, although I usually would have to google how to do what I want.</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
   labs(
@@ -495,10 +492,11 @@ weather_df
 ## Warning: Transformation introduced infinite values in continuous y-axis
 ## Warning: Removed 90 rows containing missing values (geom_point).</code></pre>
 <p><img src="visualization_pt2_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
+<p>For many graph options there are several ways to produce the desired result, and you should feel free to use whichever is most convenient. For instance, <code>scale_y_sqrt()</code> can be added to a <code>ggplot</code> object to transform the Y scale, and <code>xlim()</code> can be used to control the plot limits in the X axis.</p>
 </div>
 <div id="colors-and-themes" class="section level3">
 <h3>Colors and themes</h3>
-<p>Lots of scale options for other aesthetics. Color comes up a lot.</p>
+<p>Analogously to <code>scale_x_*</code> and <code>scale_y_*</code>, there are <code>scale</code>s corresponding to many other aestheics. Some of the most common are used to control the <code>color</code> aesthetic. For example, arguments to <code>scale_color_hue()</code> control the color scale and the name in the plot legend.</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
   labs(
@@ -511,7 +509,7 @@ weather_df
                   h = c(100, 300))
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
 <p><img src="visualization_pt2_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
-<p>Trying to create your own color scheme usually doesn’t go well; I encourage you to use the <a href="https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html"><code>viridis</code></a> package instead.</p>
+<p>Trying to create your own color scheme usually doesn’t go well; I encourage you to use the <a href="https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html"><code>viridis</code></a> package instead. There are several options, but the default color scheme works nicely!</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
   labs(
@@ -526,8 +524,8 @@ weather_df
   )
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
 <p><img src="visualization_pt2_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
-<p>We used <code>discrete = TRUE</code> because the color aesthetic is mapped to a discrete variable. In other cases (for example, when color mapped to <code>prcp</code>) you can omit this and get a continuous color gradient. The <code>viridis::scale_fill_viridis</code> is appropriate for the <code>fill</code> aesthetic.</p>
-<p>Another that I frequently change is the legend position; by default this is on the right of the graphic, but I often shift it to the bottom to ensure the graphic takes up the available left-to-right space.</p>
+<p>We used <code>discrete = TRUE</code> because the <code>color</code> aesthetic is mapped to a discrete variable. In other cases (for example, when color mapped to <code>prcp</code>) you can omit this argument to get a continuous color gradient. The <code>viridis::scale_fill_viridis()</code> function is appropriate for the <code>fill</code> aesthetic used in histograms, density plots. and elsewhere.</p>
+<p>Another plot aspect that I frequently change is the legend position. By default this is on the right of the graphic, but I often shift it to the bottom to ensure the graphic takes up the available left-to-right space.</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
   labs(
@@ -543,8 +541,8 @@ weather_df
   theme(legend.position = &quot;bottom&quot;)
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
 <p><img src="visualization_pt2_files/figure-html/unnamed-chunk-10-1.png" width="90%" /></p>
-<p><code>legend.position = &quot;none&quot;</code> will remove the legend.</p>
-<p>While we’re on the subject, you can change the default theme (which is <code>theme_gray</code>) to something else. Here’s <code>theme_bw()</code>:</p>
+<p>Quick tip: <code>legend.position = &quot;none&quot;</code> will remove the legend. This is helpful when multiple plots use the same color scheme or when the legend is obnoxious for some other reason.</p>
+<p>While we’re on the subject of <code>theme</code>, you can change the default theme (which is <code>theme_gray</code>) to something else. Here’s <code>theme_bw()</code>:</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = tmin, y = tmax)) + 
   geom_point(aes(color = name), alpha = .5) + 
   labs(
@@ -596,12 +594,31 @@ weather_df
 ## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
 <p><img src="visualization_pt2_files/figure-html/unnamed-chunk-13-1.png" width="90%" /></p>
 <p>Don’t use the Excel 2003 theme (the first two are fine, and <code>ggthemes</code> has other very nice themes as well).</p>
-<p>The ordering of <code>theme_bw()</code> and <code>theme()</code> matters – <code>theme()</code> changes a particular element of the plot’s “theme”. If you call <code>theme</code> to change the theme and then <code>theme_bw()</code>, and updates are overwritten by <code>theme_bw()</code>.</p>
-<p><strong><em>Learning Assessment:</em></strong> Revisit to density plot you made comparing precipitation across locations. Use themes and labels to improve the readability of this plot.</p>
+<p>The ordering of <code>theme_bw()</code> and <code>theme()</code> matters – <code>theme()</code> changes a particular element of the plot’s current “theme”. If you call <code>theme</code> to change the some element and then <code>theme_bw()</code>, the changes introduced by <code>theme()</code> are overwritten by <code>theme_bw()</code>.</p>
+<p><strong><em>Learning Assessment:</em></strong> Revisit the plot showing <code>tmax</code> against date for each location. Use labels, scale options, and theme changes to improve the readability of this plot.</p>
+<p><details> <summary> Solution </summary></p>
+<p>One possible plot is shown below.</p>
+<pre class="r"><code>ggplot(weather_df, aes(x = date, y = tmax, color = name)) + 
+  geom_smooth(se = FALSE) + 
+  geom_point(aes(size = prcp), alpha = .75) + 
+  labs(
+    title = &quot;Temperature plot&quot;,
+    x = &quot;Date&quot;,
+    y = &quot;Maxiumum daily temperature (C)&quot;,
+    caption = &quot;Data from the rnoaa package&quot;
+  ) + 
+  viridis::scale_color_viridis(discrete = TRUE) + 
+  theme_minimal() + 
+  theme(legend.position = &quot;bottom&quot;)
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
+## Warning: Removed 3 rows containing non-finite values (stat_smooth).
+## Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-14-1.png" width="90%" /></p>
+<p></details></p>
 </div>
 <div id="setting-options" class="section level3">
 <h3>Setting options</h3>
-<p>In addition to figure sizing, I include a lot of my preferences in global options declared at the outset of each .Rmd file (this just gets copy-and-pasted everywhere).</p>
+<p>In addition to figure sizing, I include a few other figure preferences in global options declared at the outset of each .Rmd file (this code chunk just gets copy-and-pasted to every new file).</p>
 <pre class="r"><code>library(tidyverse)
 
 knitr::opts_chunk$set(
@@ -611,10 +628,12 @@ knitr::opts_chunk$set(
 )
 
 theme_set(theme_bw() + theme(legend.position = &quot;bottom&quot;))</code></pre>
+<p>There are ways to set color preferences globally as well, although they’re a bit more complex and we probably won’t cover them.</p>
 </div>
-<div id="geom-data-argument" class="section level3">
-<h3><code>geom</code> data argument</h3>
-<p>We talked a bit about aesthetics being set globally vs locally. You can do a similar thing with data (this is a contrived example):</p>
+<div id="data-argument-in-geom_" class="section level3">
+<h3>Data argument in <code>geom_*</code></h3>
+<p>We’ve seen that where an aesthetic gets mapped to a variable matters – setting <code>aes(color = name)</code> in <code>ggplot</code> can yield different results than the same setting in <code>geom_point()</code>. This arises from the way that <code>ggplot</code> objects inherit aesthetic mappings, and it turns out there’s a similar thing with the data used to make a plot.</p>
+<p>In a contrived example, we can split <code>weather_df</code> into separate datasets for Central Park and Waikiki. Then we use one in the <code>ggplot()</code> call and another in <code>geom_line()</code>:</p>
 <pre class="r"><code>central_park = 
   weather_df %&gt;% 
   filter(name == &quot;CentralPark_NY&quot;)
@@ -627,53 +646,58 @@ ggplot(waikiki, aes(x = date, y = tmax, color = name)) +
   geom_point() + 
   geom_line(data = central_park)
 ## Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
-<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-15-1.png" width="90%" /></p>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-16-1.png" width="90%" /></p>
+<p>More realistically, it’s sometimes necessary to overlay data summaries on a plot of the complete data. Depending on the setting, one way to do this is to create a “summary” dataframe and use that when adding a new <code>geom</code> to a <code>ggplot</code> based on the full data.</p>
 </div>
 <div id="patchwork" class="section level3">
 <h3><code>patchwork</code></h3>
-<p>Facetting works if you want the “same plot” for several levels of a category. Sometimes you want to show three completely different plots.</p>
-<pre class="r"><code>p1 = ggplot(weather_df, aes(x = tmax, y = tmin, color = name)) + 
+<p>We’ve seen facetting as an approach to create the “same plot” for several levels of a categorical variable, and this can get you pretty far. Sometimes, though, you want to show two or three fundamentally different plots in the same graphic: you may want to juxtapose a scatterplot and a boxplot, or show scatterplots illustrating relationships between different variables. In this case, a solution is to create each of the panels you want separately and combine panels using tools in the <a href="https://github.com/thomasp85/patchwork"><code>patchwork</code></a> package:</p>
+<pre class="r"><code>tmax_tmin_p = ggplot(weather_df, aes(x = tmax, y = tmin, color = name)) + 
   geom_point(alpha = .5) +
   theme(legend.position = &quot;none&quot;)
 
-p2 = weather_df %&gt;% 
+prcp_dens_p = weather_df %&gt;% 
   filter(prcp &gt; 0) %&gt;% 
   ggplot(aes(x = prcp, fill = name)) + 
   geom_density(alpha = .5) + 
   theme(legend.position = &quot;none&quot;)
 
-p3 = ggplot(weather_df, aes(x = date, y = tmax, color = name)) + 
+tmax_date_p = ggplot(weather_df, aes(x = date, y = tmax, color = name)) + 
   geom_point(alpha = .5) +
   geom_smooth(se = FALSE) + 
   theme(legend.position = &quot;bottom&quot;)
 
-(p1 + p2) / p3
+(tmax_tmin_p + prcp_dens_p) / tmax_date_p
 ## Warning: Removed 15 rows containing missing values (geom_point).
 ## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
 ## Warning: Removed 3 rows containing non-finite values (stat_smooth).
 ## Warning: Removed 3 rows containing missing values (geom_point).</code></pre>
-<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-16-1.png" width="90%" /></p>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-17-1.png" width="90%" /></p>
+<p>The package is already very helpful but is under active development – some features may change or be added over time – so check back periodically to stay up-to-date. This does require some amount of work for each panel, and you should keep in mind that this is intended to help combine panels into a plot that couldn’t be created better using data tidying steps.</p>
 </div>
 <div id="data-manipulation" class="section level3">
 <h3>Data Manipulation</h3>
-<p>Data manip is part of plotting.</p>
-<p>The behavior of your plot depends on the data you’ve supplied; in some cases, it’s easier to control behavior through data manipulation than it is through the plot code. This is particularly true for the order of categorical or factor variables. Categorical variables will be ordered alphabetically; factors will be follow the specified order level. You can change the order level of a factor variable to your specified preference using <code>forcats::fct_relevel</code> or according to the value of another variable using <code>forcats::fct_reorder</code>.</p>
+<p>Often, struggles with <code>ggplot</code> are struggles with data tidying in disguise. Viewing data manipulation as part of the visualization process will often be your path to success! Put differently, the behavior of your plot depends on the data you’ve supplied; in some cases, it’s easier to control behavior through data manipulation than it is through the plot code.</p>
+<p>This is particularly true for the order of categorical or factor variables in plots. Categorical variables will be ordered alphabetically; factors will follow the specified order level that underlies the variable labels. You can change the order level of a factor variable to your specified preference using <code>forcats::fct_relevel</code> or according to the value of another variable using <code>forcats::fct_reorder</code>.</p>
+<p>A first example reorders <code>name</code> “by hand”:</p>
 <pre class="r"><code>weather_df %&gt;%
   mutate(name = forcats::fct_relevel(name, c(&quot;Waikiki_HA&quot;, &quot;CentralPark_NY&quot;, &quot;Waterhole_WA&quot;))) %&gt;% 
   ggplot(aes(x = name, y = tmax)) + 
   geom_violin(aes(fill = name), color = &quot;blue&quot;, alpha = .5) + 
   theme(legend.position = &quot;bottom&quot;)
 ## Warning: Removed 3 rows containing non-finite values (stat_ydensity).</code></pre>
-<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-17-1.png" width="90%" /></p>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-18-1.png" width="90%" /></p>
+<p>A second example reorders <code>name</code> according to <code>tmax</code> values in each name:</p>
 <pre class="r"><code>weather_df %&gt;%
   mutate(name = forcats::fct_reorder(name, tmax)) %&gt;% 
   ggplot(aes(x = name, y = tmax)) + 
   geom_violin(aes(fill = name), color = &quot;blue&quot;, alpha = .5) + 
   theme(legend.position = &quot;bottom&quot;)
 ## Warning: Removed 3 rows containing non-finite values (stat_ydensity).</code></pre>
-<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-18-1.png" width="90%" /></p>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-19-1.png" width="90%" /></p>
 <p>We’ll learn more about the <a href="http://forcats.tidyverse.org/index.html"><code>forcats</code></a> package in <a href="data_wrangling_ii.html">Data Wrangling II</a>.</p>
-<p>More difficult example – suppose i wanted a three-panel plot showing the distribution of min and max temps in each location.</p>
+<p>A more difficult situation relates to data tidyiness. Suppose I wanted to create a three-panel plot showing densities for <code>tmax</code> and <code>tmin</code> within each location. More concretely, I want to be able to facet panels across the <code>name</code> variable, and create separate densities for <code>tmax</code> and <code>tmin</code> in each panel. Unfortunately, <code>weather_df</code> isn’t organized in a way that makes this easy.</p>
+<p>One solution would recognize that <code>tmax</code> and <code>tmin</code> are separate observation types of a shared <code>temperature</code> variable. With this understanding, it’s possible to tidy the <code>weather_df</code> and make the plot directly:</p>
 <pre class="r"><code>weather_df %&gt;%
   select(name, tmax, tmin) %&gt;% 
   gather(key = observation, value = temp, tmax:tmin) %&gt;% 
@@ -682,8 +706,8 @@ p3 = ggplot(weather_df, aes(x = date, y = tmax, color = name)) +
   facet_grid(~name) + 
   viridis::scale_fill_viridis(discrete = TRUE)
 ## Warning: Removed 18 rows containing non-finite values (stat_density).</code></pre>
-<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-19-1.png" width="90%" /></p>
-<p>Make a plot of pusle data</p>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-20-1.png" width="90%" /></p>
+<p>Our emphasis on data tidiness in previous examples is helpful in visualization. The code below imports and tidies the PULSE data, and creates a plot showing BDI score across visits. Some steps that are helpful in retrospect are using <code>gather</code> to organize the BDI score and visit time variables, and organizing the visit time variable into a factor with an informative ordering.</p>
 <pre class="r"><code>pulse_data = haven::read_sas(&quot;./data/public_pulse_data.sas7bdat&quot;) %&gt;%
   janitor::clean_names() %&gt;%
   gather(key = visit, value = bdi, bdi_score_bl:bdi_score_12m) %&gt;%
@@ -698,8 +722,8 @@ p3 = ggplot(weather_df, aes(x = date, y = tmax, color = name)) +
 ggplot(pulse_data, aes(x = visit, y = bdi)) + 
   geom_boxplot()
 ## Warning: Removed 879 rows containing non-finite values (stat_boxplot).</code></pre>
-<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-20-1.png" width="90%" /></p>
-<p>Make a plot of FAS data</p>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-21-1.png" width="90%" /></p>
+<p>As a final example, we’ll revisit the FAS data. We’ve seen code for data import and organization and for joining the litters and pups data. Here we add some data tidying steps to view pup-level outcomes (post-natal day on which ears “work”, on which the pup can walk, etc) across values of dose category and treatment day.</p>
 <pre class="r"><code>pup_data = read_csv(&quot;./data/FAS_pups.csv&quot;, col_types = &quot;ciiiii&quot;) %&gt;%
   janitor::clean_names() %&gt;%
   mutate(sex = recode(sex, `1` = &quot;male&quot;, `2` = &quot;female&quot;)) 
@@ -721,7 +745,8 @@ fas_data %&gt;%
   ggplot(aes(x = dose, y = pn_day)) + 
   geom_violin() + 
   facet_grid(day_of_tx ~ outcome)</code></pre>
-<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-21-1.png" width="90%" /></p>
+<p><img src="visualization_pt2_files/figure-html/unnamed-chunk-22-1.png" width="90%" /></p>
+<p>The PULSE and FAS examples involve some fairly complex import, tidying, and plotting steps. They aren’t intended to be daunting, but rather to illustrate how closely linked the steps in this process are and to emphasize the need for proficiency in data wrangling tools when conducting exploratory analyses.</p>
 </div>
 </div>
 <div id="other-materials" class="section level2">
