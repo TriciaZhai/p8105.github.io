@@ -384,10 +384,18 @@ div.tocify {
 
 
 <p>Data sets can frequently be partitioned into meaningful groups based on the variables they contain. Making this grouping explicit allows the computation of numeric summaries within groups, which in turn facilitates quantitative comparisons.</p>
-<p>This is the second module in the <a href="topic_visualization_and_eda.html">Visualization and EDA</a> topic; the relevant slack channel is <a href="https://p8105-fall2017.slack.com/messages/C7CGD92CX">here</a>.</p>
+<p>This is the second module in the <a href="topic_visualization_and_eda.html">Visualization and EDA</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCCBZPUVC">here</a>.</p>
+<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
+## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
+## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
+## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
-<script async class="speakerdeck-embed" data-id="38db98aa225d41a0a0d7fec84ae7a259" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="38db98aa225d41a0a0d7fec84ae7a259" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
 <div style="margin-bottom:5px">
 <strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-exploratory-analysis" title="Exploratory analysis" target="_blank">Exploratory Analysis</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>.
 </div>
@@ -395,11 +403,9 @@ div.tocify {
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>We’ll continue in the same project that we used for visualization, and use essentially the same dataset – the only exception is the addition of <code>month</code> variable, created using <code>lubridate::floor_date()</code>.</p>
-<pre class="r"><code>library(rnoaa)
-
-weather = 
-  meteo_pull_monitors(c(&quot;USW00094728&quot;, &quot;USC00519397&quot;, &quot;USS0023B17S&quot;),
+<p>We’ll continue in the same Git repo / R project that we used for visualization, and use essentially the same dataset – the only exception is the addition of <code>month</code> variable, created using <code>lubridate::floor_date()</code>.</p>
+<pre class="r"><code>weather = 
+  rnoaa::meteo_pull_monitors(c(&quot;USW00094728&quot;, &quot;USC00519397&quot;, &quot;USS0023B17S&quot;),
                       var = c(&quot;PRCP&quot;, &quot;TMIN&quot;, &quot;TMAX&quot;), 
                       date_min = &quot;2016-01-01&quot;,
                       date_max = &quot;2016-12-31&quot;) %&gt;%
@@ -413,19 +419,15 @@ weather =
   select(name, id, date, month, everything())
 weather
 ## # A tibble: 1,098 x 7
-##              name          id       date      month  prcp  tmax  tmin
-##             &lt;chr&gt;       &lt;chr&gt;     &lt;date&gt;     &lt;date&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 CentralPark_NY USW00094728 2016-01-01 2016-01-01     0   5.6   1.1
-##  2 CentralPark_NY USW00094728 2016-01-02 2016-01-01     0   4.4   0.0
-##  3 CentralPark_NY USW00094728 2016-01-03 2016-01-01     0   7.2   1.7
-##  4 CentralPark_NY USW00094728 2016-01-04 2016-01-01     0   2.2  -9.9
-##  5 CentralPark_NY USW00094728 2016-01-05 2016-01-01     0  -1.6 -11.6
-##  6 CentralPark_NY USW00094728 2016-01-06 2016-01-01     0   5.0  -3.8
-##  7 CentralPark_NY USW00094728 2016-01-07 2016-01-01     0   7.8  -0.5
-##  8 CentralPark_NY USW00094728 2016-01-08 2016-01-01     0   7.8  -0.5
-##  9 CentralPark_NY USW00094728 2016-01-09 2016-01-01     0   8.3   4.4
-## 10 CentralPark_NY USW00094728 2016-01-10 2016-01-01   457  15.0   4.4
-## # ... with 1,088 more rows</code></pre>
+##   name           id          date       month       prcp  tmax  tmin
+##   &lt;chr&gt;          &lt;chr&gt;       &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 CentralPark_NY USW00094728 2016-01-01 2016-01-01     0   5.6   1.1
+## 2 CentralPark_NY USW00094728 2016-01-02 2016-01-01     0   4.4   0  
+## 3 CentralPark_NY USW00094728 2016-01-03 2016-01-01     0   7.2   1.7
+## 4 CentralPark_NY USW00094728 2016-01-04 2016-01-01     0   2.2  -9.9
+## 5 CentralPark_NY USW00094728 2016-01-05 2016-01-01     0  -1.6 -11.6
+## 6 CentralPark_NY USW00094728 2016-01-06 2016-01-01     0   5    -3.8
+## # ... with 1,092 more rows</code></pre>
 <div id="group_by" class="section level3">
 <h3><code>group_by</code></h3>
 <p>Datasets are often comprised of groups defined by one or more (categorical) variable; <code>group_by()</code> makes these groupings explicit so that they can be included in subsequent operations. For example, we might group <code>weather</code> by <code>name</code> and <code>month</code>:</p>

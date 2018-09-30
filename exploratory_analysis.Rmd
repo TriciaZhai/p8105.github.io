@@ -8,9 +8,11 @@ output:
 
 Data sets can frequently be partitioned into meaningful groups based on the variables they contain. Making this grouping explicit allows the computation of numeric summaries within groups, which in turn facilitates quantitative comparisons. 
 
-This is the second module in the [Visualization and EDA](topic_visualization_and_eda.html) topic; the relevant slack channel is [here](https://p8105-fall2017.slack.com/messages/C7CGD92CX).
+This is the second module in the [Visualization and EDA](topic_visualization_and_eda.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCCBZPUVC).
 
 ```{r, echo = FALSE}
+library(tidyverse)
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   fig.width = 6,
@@ -18,25 +20,23 @@ knitr::opts_chunk$set(
   out.width = "90%"
 )
 
-library(tidyverse)
+theme_set(theme_bw() + theme(legend.position = "bottom"))
 options(tibble.print_min = 6)
 ```
 
 ## Some slides
 
-<script async class="speakerdeck-embed" data-id="38db98aa225d41a0a0d7fec84ae7a259" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="38db98aa225d41a0a0d7fec84ae7a259" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
 <div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-exploratory-analysis" title="Exploratory analysis" target="_blank">Exploratory Analysis</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
 
 
 ## Example
 
-We'll continue in the same project that we used for visualization, and use essentially the same dataset -- the only exception is the addition of `month` variable, created using `lubridate::floor_date()`. 
+We'll continue in the same Git repo / R project that we used for visualization, and use essentially the same dataset -- the only exception is the addition of `month` variable, created using `lubridate::floor_date()`. 
 
 ```{r weather_data_create, cache = TRUE}
-library(rnoaa)
-
 weather = 
-  meteo_pull_monitors(c("USW00094728", "USC00519397", "USS0023B17S"),
+  rnoaa::meteo_pull_monitors(c("USW00094728", "USC00519397", "USS0023B17S"),
                       var = c("PRCP", "TMIN", "TMAX"), 
                       date_min = "2016-01-01",
                       date_max = "2016-12-31") %>%
@@ -126,6 +126,7 @@ weather %>%
     theme(legend.position = "bottom")
 ```
 
+
 ### Grouped `mutate`
 
 Summarizing collapses groups into single data points. In contrast, using `mutate()` in conjuntion with `group_by()` will retain all original data points and add new variables computed within groups.
@@ -192,6 +193,7 @@ weather %>%
 ### Limitations
 
 `summarize()` can only be used with functions that return a single-number summary. This creates a ceiling, even if it is **very** high. Later we'll see how to aggregate data in a more general way, and how to perform complex operations on the resulting sub-datasets.
+
 
 ## Other materials
 
