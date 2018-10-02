@@ -213,7 +213,7 @@ ggplot(weather_df, aes(x = tmin, y = tmax)) +
   theme(legend.position = "bottom")
 ```
 
-... and, for some reason, here's the Excel 2003 theme from [`ggthemes`](https://cran.r-project.org/web/packages/ggthemes/vignettes/ggthemes.html):
+... and, for some reason, here's the Excel 2003 theme from [`ggthemes`](https://jrnold.github.io/ggthemes/):
 
 ```{r}
 ggplot(weather_df, aes(x = tmin, y = tmax)) + 
@@ -237,7 +237,7 @@ Don't use the Excel 2003 theme (the first two are fine, and `ggthemes` has other
 The ordering of `theme_bw()` and `theme()` matters -- `theme()` changes a particular element of the plot's current "theme". If you call `theme` to change the some element and then `theme_bw()`, the changes introduced by `theme()` are overwritten by `theme_bw()`. 
 
 
-**_Learning Assessment:_** Revisit the plot showing `tmax` against date for each location. Use labels, scale options, and theme changes to improve the readability of this plot. 
+**_Learning Assessment:_** Revisit the plot showing `tmax` against `date` for each location. Use labels, scale options, and theme changes to improve the readability of this plot. 
 
 <details>
 <summary> Solution </summary>
