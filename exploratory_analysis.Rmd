@@ -270,7 +270,7 @@ These results may suggest that pups in the control group are able to pivot earli
 
 </details>
 
-**_NOTE_**: In both of these examples, the data are structure such that repeated observations are made on the same study units. In the PULSE data, repeated observations are made on subjects over time; in the FAS data, pups are "repeated observations" within litters. The analyses here, and plots made previously, are _exploratory_ -- any more substantial claims would require appropriate statistical analysis for non-independent samples. 
+**_Note_**: In both of these examples, the data are structure such that repeated observations are made on the same study units. In the PULSE data, repeated observations are made on subjects over time; in the FAS data, pups are "repeated observations" within litters. The analyses here, and plots made previously, are _exploratory_ -- any more substantial claims would require appropriate statistical analysis for non-independent samples. 
 
 
 ## Other materials
@@ -279,4 +279,4 @@ These results may suggest that pups in the control group are able to pivot earli
 * R for Data Science has sub-chapters on [grouped summaries](http://r4ds.had.co.nz/transform.html#grouped-summaries-with-summarise) and [exploratory data analysis](http://r4ds.had.co.nz/exploratory-data-analysis.html)
 * A more in-depth overview of window functions is [here](https://cran.r-project.org/web/packages/dplyr/vignettes/window-functions.html)
 
-The code that I produced working examples in lecture is [here](./lecture_code/visualization_and_eda.zip).
+The code that I produced working examples in lecture is [here](https://github.com/P8105/viz_and_edap).

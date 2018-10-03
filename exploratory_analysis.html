@@ -385,12 +385,12 @@ div.tocify {
 
 <p>Data sets can frequently be partitioned into meaningful groups based on the variables they contain. Making this grouping explicit allows the computation of numeric summaries within groups, which in turn facilitates quantitative comparisons.</p>
 <p>This is the second module in the <a href="topic_visualization_and_eda.html">Visualization and EDA</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCCBZPUVC">here</a>.</p>
-<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="some-slides" class="section level2">
@@ -756,7 +756,7 @@ fas_data %&gt;%
   knitr::kable(digits = 3)</code></pre>
 <p>These results may suggest that pups in the control group are able to pivot earlier than pups in the low-dose group, but it is unclear if there are differences between the control and moderate-dose groups or if day of treatment is an important predictor.</p>
 <p></details></p>
-<p><strong><em>NOTE</em></strong>: In both of these examples, the data are structure such that repeated observations are made on the same study units. In the PULSE data, repeated observations are made on subjects over time; in the FAS data, pups are “repeated observations” within litters. The analyses here, and plots made previously, are <em>exploratory</em> – any more substantial claims would require appropriate statistical analysis for non-independent samples.</p>
+<p><strong><em>Note</em></strong>: In both of these examples, the data are structure such that repeated observations are made on the same study units. In the PULSE data, repeated observations are made on subjects over time; in the FAS data, pups are “repeated observations” within litters. The analyses here, and plots made previously, are <em>exploratory</em> – any more substantial claims would require appropriate statistical analysis for non-independent samples.</p>
 </div>
 </div>
 <div id="other-materials" class="section level2">
@@ -766,7 +766,7 @@ fas_data %&gt;%
 <li>R for Data Science has sub-chapters on <a href="http://r4ds.had.co.nz/transform.html#grouped-summaries-with-summarise">grouped summaries</a> and <a href="http://r4ds.had.co.nz/exploratory-data-analysis.html">exploratory data analysis</a></li>
 <li>A more in-depth overview of window functions is <a href="https://cran.r-project.org/web/packages/dplyr/vignettes/window-functions.html">here</a></li>
 </ul>
-<p>The code that I produced working examples in lecture is <a href="./lecture_code/visualization_and_eda.zip">here</a>.</p>
+<p>The code that I produced working examples in lecture is <a href="https://github.com/P8105/viz_and_edap">here</a>.</p>
 </div>
 
 <br><br>

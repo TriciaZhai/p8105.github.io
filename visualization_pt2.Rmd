@@ -438,4 +438,4 @@ Oh man is there a lot of stuff about visualization ...
     * [Why I use ggplot2](http://varianceexplained.org/r/why-I-use-ggplot2/)
 
 
-The code that I produced working examples in lecture is [here](./lecture_code/visualization_and_eda.zip).
+The code that I produced working examples in lecture is [here](https://github.com/P8105/viz_and_eda).
