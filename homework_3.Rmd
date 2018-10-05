@@ -45,7 +45,7 @@ First, do some data cleaning:
 
 * format the data to use appropriate variable names; 
 * focus on the "Overall Health" topic
-* include only responses from "Excellent" to "Poor" (i.e. no pre-collapsed categories)
+* include only responses from "Excellent" to "Poor" 
 * organize responses as a factor taking levels from "Excellent" to "Poor"
 
 Using this dataset, do or answer the following (commenting on the results of each):
