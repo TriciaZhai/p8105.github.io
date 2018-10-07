@@ -8,7 +8,7 @@ output:
 
 We have, by now, established some fundamental tools for doing data science. It's important to revisit our definition, and especially our discussion of connotation, before moving forward. 
 
-The slack channel for today's example is [here](https://p8105-fall2017.slack.com/messages/C7ET6NQGG).
+The slack channel for today's example is [here](https://p8105-fall2018.slack.com/messages/CDA08BPC7).
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -19,36 +19,40 @@ knitr::opts_chunk$set(
 )
 
 library(tidyverse)
+
+theme_set(theme_bw() + theme(legend.position = "bottom"))
 ```
 
 ## Some slides
 
-<script async class="speakerdeck-embed" data-id="69791e0a56b14efd9f741fc10cea30f9" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="69791e0a56b14efd9f741fc10cea30f9" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
 <div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-data-science-revisited" title="'Data Science' Revisited" target="_blank">"Data Science" Revisited</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
 
 
 ## Example
 
-This example is based entirely on live-coding and uses the [NYC Airbnb data](dataset_airbnb.html). Once downloaded, the data can be imported using:
+This example is based entirely on live-coding and uses the [NYC Airbnb data](dataset_airbnb.html). The data can be imported using the [p8105.datasets](https://github.com/P8105/p8105.datasets) package:
 
-```{r cache = TRUE}
-airbnb_data = read_csv("./data/nyc_airbnb.zip")
+```{r}
+library(p8105.datasets)
+
+data(nyc_airbnb)
 ```
 
-As always, I'll do today's coding in a R Markdown file, sitting in an R Project with a data directory.
+As always, I'll do today's coding in a R Markdown file, sitting in an GitHub Repo / R Project.
 
 ### Understanding variables
 
 First, let's take a few minutes to understand the dataset and the variables it contains.
 
 ```{r}
-# View(airbnb_data)
-str(airbnb_data)
+# View(nyc_airbnb)
+str(nyc_airbnb)
 
-airbnb_data %>%
+nyc_airbnb %>%
   count(room_type)
 
-airbnb_data %>%
+nyc_airbnb %>%
   count(neighbourhood_group)
 ```
 
@@ -64,12 +68,11 @@ A major element of data science is to ask questions, and this dataset provides s
 We'll take a few minutes as a class to brainstorm some additional questions, and then try to answer some of them.
 
 ```{r, echo = FALSE, eval = FALSE}
-ggplot(airbnb_data, aes(x = longitude, y = latitude)) +
+ggplot(nyc_airbnb, aes(x = longitude, y = latitude)) +
   geom_point() + 
   coord_map()
   coord_equal(ratio = 1)
 ```
-
 
 ```{r, echo = FALSE, eval = FALSE}
 library(sp)
