@@ -587,6 +587,11 @@ poke$abilities
 ## [1] 1</code></pre>
 <p>To build a Pokemon dataset for analysis, you’d need to distill the data returned from the API into a useful format; iterate across all pokemon; and combine the results.</p>
 </div>
+<div id="be-reasonable" class="section level3">
+<h3>Be reasonable</h3>
+<p>When you’re reading data from the web, remember you’re accessing resources on someone else’s server – either by reading HTML or by accessing data via an API. In some cases, those who make data public will take steps to limit bandwidth devoted to a small number of users. Amazon and IMDB, for example, probably won’t notice if you scrape small amounts of data but <em>would</em> notice if you tried to read data from thousands of pages every time you knitted a document.</p>
+<p>Similarly, API developers can (and will) limit the number of database entries that can be accessed in a single request. In those cases you’d have to take some steps to iterate over “pages” and combine the results; as an example, our code for the <a href="dataset_restaurant_inspections.html">NYC Restaurant Inspections</a> does this.</p>
+</div>
 </div>
 <div id="other-materials" class="section level2">
 <h2>Other materials</h2>
