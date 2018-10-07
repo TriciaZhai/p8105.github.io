@@ -384,36 +384,22 @@ div.tocify {
 
 
 <p>In <a href="data_import.html">data import</a>, we saw how to load data from a variety of formats; this is a fairly standard way to get data that have been gathered as part of a study. In a lot of cases, though, you’re going to have to go out and get the data you want or need. That’s what we’re covering now.</p>
-<p>This is the first module in the <a href="topic_data_wrangling_ii.html">Data Wrangling II</a> topic; the relevant slack channel is <a href="https://p8105-fall2017.slack.com/messages/C7N8HG34N">here</a>.</p>
+<p>This is the first module in the <a href="topic_data_wrangling_ii.html">Data Wrangling II</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCC345PM5">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
-<script async class="speakerdeck-embed" data-id="849dc71f1d784a4a9af780e5c4ba16a2" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="849dc71f1d784a4a9af780e5c4ba16a2" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
 <div style="margin-bottom:5px">
-<strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-reading-data-from-the-web" title="Reading Data from the Web" target="_blank">Reading Data from the Web</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>.
+<strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-reading-data-from-the-web" title="Reading Data from the Web" target="_blank">Reading Data from the Web</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>.
 </div>
 <p><br></p>
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>As always, it’s good to start by figuring out how you want to organize you code for this content. I’ll create a new directory called <code>example_data_wrangling_ii</code>, start an R Project, and open a new R Markdown file called <code>reading_data_from_the_web.Rmd</code>. I’ll initialize Git and make the repo public on GitHub. Although we’ll mostly be getting data from the web, we’ll revisit some of <a href="./resources/data_import_examples.zip">these examples</a>, so I’ll create a <code>data</code> subdirectory and put those in it.</p>
+<p>As always, I’ll create a new GH Repo + local project called <code>data_wrangling_ii</code>, and open a new R Markdown file called <code>reading_data_from_the_web.Rmd</code>. Although we’ll mostly be getting data from the web, we’ll revisit some of <a href="./resources/data_import_examples.zip">these examples</a>, so I’ll create a <code>data</code> subdirectory and put those in it.</p>
 <p>There are some new additions to our standard packages (<code>rvest</code> and <code>httr</code>); I’m loading everything we need now. Now’s also the time to “install” the <a href="http://selectorgadget.com">Selector Gadget</a>.</p>
 <pre class="r"><code>library(tidyverse)
 library(rvest)
-## Loading required package: xml2
-## 
-## Attaching package: &#39;rvest&#39;
-## The following object is masked from &#39;package:purrr&#39;:
-## 
-##     pluck
-## The following object is masked from &#39;package:readr&#39;:
-## 
-##     guess_encoding
-library(httr)
-## 
-## Attaching package: &#39;httr&#39;
-## The following object is masked from &#39;package:plotly&#39;:
-## 
-##     config</code></pre>
+library(httr)</code></pre>
 <div id="extracting-tables" class="section level3">
 <h3>Extracting tables</h3>
 <p><a href="http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm">This page</a> contains data from the National Survey on Drug Use and Health; it includes tables for drug use in the past year or month, separately for specific kinds of drug use. These data are potentially useful for analysis, and we’d like to be able to read in the first table.</p>
@@ -445,7 +431,8 @@ drug_use_xml
 ## [13] &lt;table class=&quot;rti&quot; border=&quot;1&quot; cellspacing=&quot;0&quot; cellpadding=&quot;1&quot; width ...
 ## [14] &lt;table class=&quot;rti&quot; border=&quot;1&quot; cellspacing=&quot;0&quot; cellpadding=&quot;1&quot; width ...
 ## [15] &lt;table class=&quot;rti&quot; border=&quot;1&quot; cellspacing=&quot;0&quot; cellpadding=&quot;1&quot; width ...</code></pre>
-<p>This has extracted <em>all</em> of the tables on the original page; that’s why we have a list with 15 elements. We’re only focused on the first one for now, so let’s get the contents from the first list element.</p>
+<p>This has extracted <em>all</em> of the tables on the original page; that’s why we have a list with 15 elements. (We haven’t really talked about lists yet, but for now you can think of them as a general collection of objects in R. As we proceed, syntax for extracting individual elements from a list will become clear, and we’ll talk lots about lists in <a href="listcols_and_bootstrapping.html">list columns</a>.)</p>
+<p>We’re only focused on the first table for now, so let’s get the contents from the first list element.</p>
 <pre class="r"><code>table_marj = (drug_use_xml %&gt;% html_nodes(css = &quot;table&quot;))[[1]] %&gt;%
   html_table() </code></pre>
 <p>I won’t print the table here, but if you look at it you’ll notice a problem: the “note” at the bottom of the table appears in every column in the first row. We need to remove that; I’ll also convert to a tibble so that things print nicely.</p>
@@ -456,33 +443,83 @@ drug_use_xml
 
 table_marj
 ## # A tibble: 56 x 16
-##   State `12+(2013-2014)` `12+(2014-2015)` `12+(P Value)` `12-17(2013-201…
-## * &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;          &lt;chr&gt;           
-## 1 Tota… 12.90a           13.36            0.002          13.28b          
-## 2 Nort… 13.88a           14.66            0.005          13.98           
-## 3 Midw… 12.40b           12.76            0.082          12.45           
-## 4 South 11.24a           11.64            0.029          12.02           
-## 5 West  15.27            15.62            0.262          15.53a          
-## 6 Alab… 9.98             9.60             0.426          9.90            
-## # ... with 50 more rows, and 11 more variables: `12-17(2014-2015)` &lt;chr&gt;,
+##    State `12+(2013-2014)` `12+(2014-2015)` `12+(P Value)` `12-17(2013-201…
+##  * &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;          &lt;chr&gt;           
+##  1 Tota… 12.90a           13.36            0.002          13.28b          
+##  2 Nort… 13.88a           14.66            0.005          13.98           
+##  3 Midw… 12.40b           12.76            0.082          12.45           
+##  4 South 11.24a           11.64            0.029          12.02           
+##  5 West  15.27            15.62            0.262          15.53a          
+##  6 Alab… 9.98             9.60             0.426          9.90            
+##  7 Alas… 19.60a           21.92            0.010          17.30           
+##  8 Ariz… 13.69            13.12            0.364          15.12           
+##  9 Arka… 11.37            11.59            0.678          12.79           
+## 10 Cali… 14.49            15.25            0.103          15.03           
+## # ... with 46 more rows, and 11 more variables: `12-17(2014-2015)` &lt;chr&gt;,
 ## #   `12-17(P Value)` &lt;chr&gt;, `18-25(2013-2014)` &lt;chr&gt;,
 ## #   `18-25(2014-2015)` &lt;chr&gt;, `18-25(P Value)` &lt;chr&gt;,
 ## #   `26+(2013-2014)` &lt;chr&gt;, `26+(2014-2015)` &lt;chr&gt;, `26+(P Value)` &lt;chr&gt;,
 ## #   `18+(2013-2014)` &lt;chr&gt;, `18+(2014-2015)` &lt;chr&gt;, `18+(P Value)` &lt;chr&gt;</code></pre>
-<p>Success!! At least, mostly. These data aren’t <a href="tidy_data.html">tidy</a>, but we’ll worry about that in another module.</p>
+<p>Success!! At least, mostly. These data aren’t <a href="tidy_data.html">tidy</a>, but we’ll worry about that <a href="strings_and_factors.html">soon</a>.</p>
 <p><strong><em>Learning assessment:</em></strong> Create a data frame that contains the cost of living table for New York from <a href="https://www.bestplaces.net/cost_of_living/city/new_york/new_york">this page</a>.</p>
+<p><details> <summary> Solution </summary></p>
+<p>The code below shows one approach to this data cleaning process:</p>
+<pre class="r"><code>nyc_cost = read_html(&quot;https://www.bestplaces.net/cost_of_living/city/new_york/new_york&quot;) %&gt;%
+  html_nodes(css = &quot;table&quot;) %&gt;%
+  .[[1]] %&gt;%
+  html_table(header = TRUE)</code></pre>
+<p>In case you hadn’t known, NYC is kind of expensive.</p>
+<p></details></p>
 </div>
 <div id="css-selectors" class="section level3">
 <h3>CSS Selectors</h3>
-<p>Suppose we’d like to scrape the cast of <a href="http://www.imdb.com/title/tt0241527/">Harry Potter and the Sorcerer’s Stone</a> from the IMDB page. The first step is the same as before – we need to get the HTML.</p>
-<pre class="r"><code>hpss_html = read_html(&quot;http://www.imdb.com/title/tt0241527/&quot;)</code></pre>
-<p>The cast list isn’t stored in a handy table, so we’re going to isolate the CSS selector for cast. A bit of clicking around gets me something like below.</p>
+<p>Suppose we’d like to scrape the data about the <a href="https://www.imdb.com/list/ls000630791/">Harry Potter Saga</a> from the IMDB page. The first step is the same as before – we need to get the HTML.</p>
+<pre class="r"><code>hpsaga_html = read_html(&quot;https://www.imdb.com/list/ls000630791/&quot;)</code></pre>
+<p>The information isn’t stored in a handy table, so we’re going to isolate the CSS selector for elements we care about. A bit of clicking around gets me something like below.</p>
 <p><img src="images/read_from_web_css_selctor.png" style="width:75%"></p>
-<p>I’ll use the CSS selector in <code>html_nodes()</code> to extract the relevant HTML code, and convert it to text.</p>
-<pre class="r"><code>cast = hpss_html %&gt;%
-  html_nodes(&quot;.itemprop .itemprop&quot;) %&gt;%
-  html_text()</code></pre>
-<p><strong><em>Learning Assessment:</em></strong> <a href="https://www.amazon.com/Philips-Sonicare-rechargeable-toothbrush-HX6211/product-reviews/B00YAR7ZFM/ref=cm_cr_arp_d_viewopt_srt?ie=UTF8&amp;reviewerType=all_reviews&amp;sortBy=recent&amp;pageNumber=1">This page</a> contains the 10 most recent reviews of a popular toothbrush. Use a process similar to the one above to extract the titles of the reviews. Note: getting the star ratings from Amazon is trickier, but the CSS path <code>&quot;#cm_cr-review_list .review-rating&quot;</code> helps – I discovered this after about an hour of googling around.</p>
+<p>For each element, I’ll use the CSS selector in <code>html_nodes()</code> to extract the relevant HTML code, and convert it to text. Then I can combine these into a data frame.</p>
+<pre class="r"><code>title_vec = hpsaga_html %&gt;%
+  html_nodes(&quot;.lister-item-header a&quot;) %&gt;%
+  html_text()
+
+gross_rev_vec = hpsaga_html %&gt;%
+  html_nodes(&quot;.text-small:nth-child(7) span:nth-child(5)&quot;) %&gt;%
+  html_text()
+
+runtime_vec = hpsaga_html %&gt;%
+  html_nodes(&quot;.runtime&quot;) %&gt;%
+  html_text()
+
+hpsata_df = tibble(
+  title = title_vec,
+  rev = gross_rev_vec,
+  runtime = runtime_vec
+)</code></pre>
+<p><strong><em>Learning Assessment:</em></strong> <a href="https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=1">This page</a> contains the 10 most recent reviews of the movie “Napoleon Dynamite”. Use a process similar to the one above to extract the titles of the reviews. Note: getting the star ratings from Amazon is trickier, but the CSS path <code>&quot;#cm_cr-review_list .review-rating&quot;</code> helps – I discovered this after about an hour of googling around.</p>
+<p><details> <summary> Solution </summary></p>
+<p>The code below will give me relevant information for the ten most recent reviews on Amazon:</p>
+<pre class="r"><code>url = &quot;https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=1&quot;
+
+dynamite_html = read_html(url)
+
+review_titles = dynamite_html %&gt;%
+  html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
+  html_text()
+
+review_stars = dynamite_html %&gt;%
+  html_nodes(&quot;#cm_cr-review_list .review-rating&quot;) %&gt;%
+  html_text()
+
+review_text = dynamite_html %&gt;%
+    html_nodes(&quot;.review-data:nth-child(4)&quot;) %&gt;%
+    html_text()
+
+reviews = tibble(
+  title = review_titles,
+  stars = review_stars,
+  text = review_text
+)</code></pre>
+<p></details></p>
 </div>
 <div id="using-an-api" class="section level3">
 <h3>Using an API</h3>
@@ -502,22 +539,10 @@ table_marj
   content(&quot;text&quot;) %&gt;%
   jsonlite::fromJSON() %&gt;%
   as_tibble()</code></pre>
-<p><a href="https://catalog.data.gov/dataset?q=-aapi+api+OR++res_format%3Aapi#topic=developers_navigation">Data.gov</a> also has a lot of data available using their API; often this is available as CSV or JSON as well. For example, we might be interested in data coming from <a href="https://catalog.data.gov/dataset/nutrition-physical-activity-and-obesity-behavioral-risk-factor-surveillance-system">BRFSS</a>. This is importable via the API as a CSV (JSON, in this example, is much more complicated).</p>
-<pre class="r"><code>brfss = 
-  GET(&quot;https://chronicdata.cdc.gov/api/views/hn4x-zwk7/rows.csv?accessType=DOWNLOAD&quot;) %&gt;% 
-  content(&quot;parsed&quot;)
-## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   YearStart = col_integer(),
-##   YearEnd = col_integer(),
-##   Data_Value = col_double(),
-##   Data_Value_Alt = col_double(),
-##   Low_Confidence_Limit = col_double(),
-##   High_Confidence_Limit = col_double(),
-##   Sample_Size = col_integer()
-## )
-## See spec(...) for full column specifications.</code></pre>
+<p><a href="https://catalog.data.gov/dataset?q=-aapi+api+OR++res_format%3Aapi#topic=developers_navigation">Data.gov</a> also has a lot of data available using their API; often this is available as CSV or JSON as well. For example, we might be interested in data coming from <a href="https://catalog.data.gov/dataset/behavioral-risk-factors-selected-metropolitan-area-risk-trends-smart-county-prevalence-dat-a0124">BRFSS</a>. This is importable via the API as a CSV (JSON, in this example, is <a href="dataset_brfss.html">much more complicated</a>).</p>
+<pre class="r"><code>brfss_smart2010 = 
+  GET(&quot;https://data.cdc.gov/api/views/acme-vg9e/rows.csv?accessType=DOWNLOAD&quot;) %&gt;% 
+  content(&quot;parsed&quot;)</code></pre>
 <p>Both of the previous examples are <em>extremely</em> easy – we accessed data that is essentially a data table, and we had a very straightforward API.</p>
 <p>To get a sense of how this becomes complicated, let’s look at the <a href="https://pokeapi.co">Pokemon API</a> (which is also pretty nice).</p>
 <pre class="r"><code>poke = GET(&quot;http://pokeapi.co/api/v2/pokemon/1&quot;) %&gt;%
@@ -571,7 +596,7 @@ poke$abilities
 <li>There are some cool projects based on scraped data; the RStudio community collected some <a href="https://community.rstudio.com/t/whats-the-most-interesting-use-of-rvest-youve-seen-in-the-wild/745">here</a></li>
 <li>Check out the <a href="https://github.com/tidyverse/dplyr/blob/master/data-raw/starwars.R">R file</a> used to create the <code>starwars</code> dataset (in the <code>tidyverse</code>) using the <a href="https://swapi.co">Star Wars API</a> (from the maker of the Pokemon API).</li>
 </ul>
-<p>The code that I produced working examples in lecture is <a href="https://github.com/jeff-goldsmith/example_data_wrangling_ii">here</a>.</p>
+<p>The code that I produced working examples in lecture is <a href="https://github.com/P8105/data_wrangling_ii">here</a>.</p>
 </div>
 
 <br><br>

@@ -8,30 +8,34 @@ output:
   
 In [data import](data_import.html), we saw how to load data from a variety of formats; this is a fairly standard way to get data that have been gathered as part of a study. In a lot of cases, though, you're going to have to go out and get the data you want or need. That's what we're covering now.
 
-This is the first module in the [Data Wrangling II](topic_data_wrangling_ii.html) topic; the relevant slack channel is [here](https://p8105-fall2017.slack.com/messages/C7N8HG34N).
+This is the first module in the [Data Wrangling II](topic_data_wrangling_ii.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCC345PM5).
 
-```{r, echo = FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   fig.width = 6,
   fig.asp = .6,
   out.width = "90%"
 )
+
+library(tidyverse)
+
+theme_set(theme_bw() + theme(legend.position = "bottom"))
 ```
 
 ## Some slides
 
-<script async class="speakerdeck-embed" data-id="849dc71f1d784a4a9af780e5c4ba16a2" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
-<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-reading-data-from-the-web" title="Reading Data from the Web" target="_blank">Reading Data from the Web</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
+<script async class="speakerdeck-embed" data-id="849dc71f1d784a4a9af780e5c4ba16a2" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-reading-data-from-the-web" title="Reading Data from the Web" target="_blank">Reading Data from the Web</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
 
 
 ## Example
 
-As always, it's good to start by figuring out how you want to organize you code for this content. I'll create a new directory called `example_data_wrangling_ii`, start an R Project, and open a new R Markdown file called `reading_data_from_the_web.Rmd`. I'll initialize Git and make the repo public on GitHub. Although we'll mostly be getting data from the web, we'll revisit some of [these examples](./resources/data_import_examples.zip), so I'll create a `data` subdirectory and put those in it.
+As always, I'll create a new GH Repo + local project called `data_wrangling_ii`, and open a new R Markdown file called `reading_data_from_the_web.Rmd`. Although we'll mostly be getting data from the web, we'll revisit some of [these examples](./resources/data_import_examples.zip), so I'll create a `data` subdirectory and put those in it.
 
 There are some new additions to our standard packages (`rvest` and `httr`); I'm loading everything we need now. Now's also the time to "install" the [Selector Gadget](http://selectorgadget.com). 
 
-```{r}
+```{r, message = FALSE}
 library(tidyverse)
 library(rvest)
 library(httr)
@@ -57,7 +61,9 @@ drug_use_xml %>%
   html_nodes(css = "table")
 ```
 
-This has extracted _all_ of the tables on the original page; that's why we have a list with 15 elements. We're only focused on the first one for now, so let's get the contents from the first list element.
+This has extracted _all_ of the tables on the original page; that's why we have a list with 15 elements. (We haven't really talked about lists yet, but for now you can think of them as a general collection of objects in R. As we proceed, syntax for extracting individual elements from a list will become clear, and we'll talk lots about lists in [list columns](listcols_and_bootstrapping.html).) 
+
+We're only focused on the first table for now, so let's get the contents from the first list element.
 
 ```{r}
 table_marj = (drug_use_xml %>% html_nodes(css = "table"))[[1]] %>%
@@ -75,57 +81,92 @@ table_marj = (drug_use_xml %>% html_nodes(css = "table"))[[1]] %>%
 table_marj
 ```
 
-Success!! At least, mostly. These data aren't [tidy](tidy_data.html), but we'll worry about that in another module. 
+Success!! At least, mostly. These data aren't [tidy](tidy_data.html), but we'll worry about that [soon](strings_and_factors.html). 
 
 **_Learning assessment:_** Create a data frame that contains the cost of living table for New York from [this page](https://www.bestplaces.net/cost_of_living/city/new_york/new_york).
 
-```{r, eval = FALSE, echo =  FALSE}
+<details>
+<summary> Solution </summary>
+
+The code below shows one approach to this data cleaning process:
+
+```{r, eval = FALSE}
 nyc_cost = read_html("https://www.bestplaces.net/cost_of_living/city/new_york/new_york") %>%
   html_nodes(css = "table") %>%
-  .[[2]] %>%
+  .[[1]] %>%
   html_table(header = TRUE)
 ```
 
+In case you hadn't known, NYC is kind of expensive.
+
+</details>
+
 ### CSS Selectors
 
-Suppose we'd like to scrape the cast of [Harry Potter and the Sorcerer's Stone](http://www.imdb.com/title/tt0241527/) from the IMDB page. The first step is the same as before -- we need to get the HTML.
+Suppose we'd like to scrape the data about the [Harry Potter Saga](https://www.imdb.com/list/ls000630791/) from the IMDB page. The first step is the same as before -- we need to get the HTML.
 
 ```{r}
-hpss_html = read_html("http://www.imdb.com/title/tt0241527/")
+hpsaga_html = read_html("https://www.imdb.com/list/ls000630791/")
 ```
 
-The cast list isn't stored in a handy table, so we're going to isolate the CSS selector for cast. A bit of clicking around gets me something like below. 
+The information isn't stored in a handy table, so we're going to isolate the CSS selector for elements we care about. A bit of clicking around gets me something like below. 
 
 <img src="images/read_from_web_css_selctor.png" style="width:75%">
   
-  I'll use the CSS selector in `html_nodes()` to extract the relevant HTML code, and convert it to text. 
+For each element, I'll use the CSS selector in `html_nodes()` to extract the relevant HTML code, and convert it to text. Then I can combine these into a data frame. 
 
 ```{r}
-cast = hpss_html %>%
-  html_nodes(".itemprop .itemprop") %>%
+title_vec = hpsaga_html %>%
+  html_nodes(".lister-item-header a") %>%
   html_text()
+
+gross_rev_vec = hpsaga_html %>%
+  html_nodes(".text-small:nth-child(7) span:nth-child(5)") %>%
+  html_text()
+
+runtime_vec = hpsaga_html %>%
+  html_nodes(".runtime") %>%
+  html_text()
+
+hpsata_df = tibble(
+  title = title_vec,
+  rev = gross_rev_vec,
+  runtime = runtime_vec
+)
 ```
 
-**_Learning Assessment:_** [This page](https://www.amazon.com/Philips-Sonicare-rechargeable-toothbrush-HX6211/product-reviews/B00YAR7ZFM/ref=cm_cr_arp_d_viewopt_srt?ie=UTF8&reviewerType=all_reviews&sortBy=recent&pageNumber=1) contains the 10 most recent reviews of a popular toothbrush. Use a process similar to the one above to extract the titles of the reviews. Note: getting the star ratings from Amazon is trickier, but the CSS path `"#cm_cr-review_list .review-rating"` helps -- I discovered this after about an hour of googling around. 
+**_Learning Assessment:_** [This page](https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=1) contains the 10 most recent reviews of the movie "Napoleon Dynamite". Use a process similar to the one above to extract the titles of the reviews. Note: getting the star ratings from Amazon is trickier, but the CSS path `"#cm_cr-review_list .review-rating"` helps -- I discovered this after about an hour of googling around. 
 
-```{r, eval = FALSE, echo = FALSE}
-url = "https://www.amazon.com/Philips-Sonicare-rechargeable-toothbrush-HX6211/product-reviews/B00YAR7ZFM/ref=cm_cr_arp_d_viewopt_srt?ie=UTF8&reviewerType=all_reviews&sortBy=recent&pageNumber=1"
+<details>
+<summary> Solution </summary>
 
-toothbrush_html = read_html(url)
+The code below will give me relevant information for the ten most recent reviews on Amazon:
 
-review_titles = toothbrush_html %>%
+```{r, eval = FALSE}
+url = "https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber=1"
+
+dynamite_html = read_html(url)
+
+review_titles = dynamite_html %>%
   html_nodes("#cm_cr-review_list .review-title") %>%
   html_text()
 
-review_stars = toothbrush_html %>%
+review_stars = dynamite_html %>%
   html_nodes("#cm_cr-review_list .review-rating") %>%
   html_text()
 
-reviews = data_frame(
+review_text = dynamite_html %>%
+    html_nodes(".review-data:nth-child(4)") %>%
+    html_text()
+
+reviews = tibble(
   title = review_titles,
-  stars = review_stars
+  stars = review_stars,
+  text = review_text
 )
 ```
+
+</details>
 
 
 ### Using an API
@@ -148,11 +189,11 @@ nyc_water = GET("https://data.cityofnewyork.us/resource/waf7-5gvc.json") %>%
   as_tibble()
 ```
 
-[Data.gov](https://catalog.data.gov/dataset?q=-aapi+api+OR++res_format%3Aapi#topic=developers_navigation) also has a lot of data available using their API; often this is available as CSV or JSON as well. For example, we might be interested in data coming from [BRFSS](https://catalog.data.gov/dataset/nutrition-physical-activity-and-obesity-behavioral-risk-factor-surveillance-system). This is importable via the API as a CSV (JSON, in this example, is much more complicated).
+[Data.gov](https://catalog.data.gov/dataset?q=-aapi+api+OR++res_format%3Aapi#topic=developers_navigation) also has a lot of data available using their API; often this is available as CSV or JSON as well. For example, we might be interested in data coming from [BRFSS](https://catalog.data.gov/dataset/behavioral-risk-factors-selected-metropolitan-area-risk-trends-smart-county-prevalence-dat-a0124). This is importable via the API as a CSV (JSON, in this example, is [much more complicated](dataset_brfss.html)).
 
-```{r}
-brfss = 
-  GET("https://chronicdata.cdc.gov/api/views/hn4x-zwk7/rows.csv?accessType=DOWNLOAD") %>% 
+```{r, eval = FALSE}
+brfss_smart2010 = 
+  GET("https://data.cdc.gov/api/views/acme-vg9e/rows.csv?accessType=DOWNLOAD") %>% 
   content("parsed")
 ```
 
@@ -181,4 +222,4 @@ To build a Pokemon dataset for analysis, you'd need to distill the data returned
 * There are some cool projects based on scraped data; the RStudio community collected some [here](https://community.rstudio.com/t/whats-the-most-interesting-use-of-rvest-youve-seen-in-the-wild/745)
 * Check out the [R file](https://github.com/tidyverse/dplyr/blob/master/data-raw/starwars.R) used to create the `starwars` dataset (in the `tidyverse`) using the [Star Wars API](https://swapi.co) (from the maker of the Pokemon API).
 
-The code that I produced working examples in lecture is [here](https://github.com/jeff-goldsmith/example_data_wrangling_ii).
+The code that I produced working examples in lecture is [here](https://github.com/P8105/data_wrangling_ii).
