@@ -102,4 +102,4 @@ gg = gg + geom_point(data = airbnb_data, aes(x = longitude, y = latitude))
 * If you didn't listen before, now's the time for Chris Volinsky's ["How Industry Views Data Science Education in Statistics Departments"](https://youtu.be/JLs01Z5baSU?t=1063)
 * Jeff Leek's [problem forward](https://simplystatistics.org/2013/05/29/what-statistics-should-do-about-big-data-problem-forward-not-solution-backward/) blog post
 
-The code that I produced working examples in lecture is [here](./lecture_code/what_is_ds_ii.zip).
+The code that I produced working examples in lecture is [here](https://github.com/P8105/case_study).
