@@ -82,6 +82,14 @@ weather_df %>%
   count(month)
 ```
 
+`count()` is a useful tidyverse alternative to Base R's `table` function. Both functions produce summaries of how often values appear, but `table`'s output is of class `table` and is hard to do any additional work with, while `count` produces a dataframe you can use or manipulate directly. For an example, run the code below and try to do something useful with the result.
+
+```{r, eval = FALSE}
+weather_df %>%
+  pull(month) %>% 
+  table
+```
+
 You can use `summarize()` to compute multiple summaries within each group. As an example, we count the number of observations in each month and the number of distinct values of `date` in each month.
 
 ```{r}

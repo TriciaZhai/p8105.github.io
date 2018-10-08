@@ -385,12 +385,12 @@ div.tocify {
 
 <p>Data sets can frequently be partitioned into meaningful groups based on the variables they contain. Making this grouping explicit allows the computation of numeric summaries within groups, which in turn facilitates quantitative comparisons.</p>
 <p>This is the second module in the <a href="topic_visualization_and_eda.html">Visualization and EDA</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCCBZPUVC">here</a>.</p>
-<pre><code>## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="some-slides" class="section level2">
@@ -476,6 +476,10 @@ div.tocify {
 ## 10 2016-10-01    93
 ## 11 2016-11-01    90
 ## 12 2016-12-01    93</code></pre>
+<p><code>count()</code> is a useful tidyverse alternative to Base R’s <code>table</code> function. Both functions produce summaries of how often values appear, but <code>table</code>’s output is of class <code>table</code> and is hard to do any additional work with, while <code>count</code> produces a dataframe you can use or manipulate directly.</p>
+<pre class="r"><code>weather_df %&gt;%
+  pull(month) %&gt;% 
+  table</code></pre>
 <p>You can use <code>summarize()</code> to compute multiple summaries within each group. As an example, we count the number of observations in each month and the number of distinct values of <code>date</code> in each month.</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(month) %&gt;%
@@ -544,7 +548,7 @@ div.tocify {
   ggplot(aes(x = month, y = mean_tmax, color = name)) + 
     geom_point() + geom_line() + 
     theme(legend.position = &quot;bottom&quot;)</code></pre>
-<p><img src="exploratory_analysis_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
+<p><img src="exploratory_analysis_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
 <p>The results of <code>group_by()</code> and <code>summarize()</code> are generally tidy, but presenting reader-friendly results for this kind of exploratory analysis often benefits from some un-tidying. For example, the table below shows month-by-month average max temperatures in a more human-readable format.</p>
 <pre class="r"><code>weather_df %&gt;%
   group_by(name, month) %&gt;%
@@ -627,7 +631,7 @@ div.tocify {
   mutate(centered_tmax = tmax - mean(tmax)) %&gt;% 
   ggplot(aes(x = date, y = centered_tmax, color = name)) + 
     geom_point() </code></pre>
-<p><img src="exploratory_analysis_files/figure-html/unnamed-chunk-10-1.png" width="90%" /></p>
+<p><img src="exploratory_analysis_files/figure-html/unnamed-chunk-11-1.png" width="90%" /></p>
 </div>
 <div id="window-functions" class="section level3">
 <h3>Window functions</h3>
