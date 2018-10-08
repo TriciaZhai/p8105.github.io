@@ -386,12 +386,12 @@ div.tocify {
 
 <p>Good visualization is a critical step in data analysis.</p>
 <p>This is the first module in the <a href="topic_visualization_and_eda.html">Visualization and EDA</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCCBZPUVC">here</a>.</p>
-<pre><code>## ── Attaching packages ────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ───────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="some-slides" class="section level2">
@@ -551,7 +551,7 @@ ggplot(weather_df) + geom_point(aes(x = tmax, y = tmin, color = &quot;blue&quot;
   geom_density(alpha = .4, adjust = .5, color = &quot;blue&quot;)
 ## Warning: Removed 3 rows containing non-finite values (stat_density).</code></pre>
 <p><img src="visualization_pt1_files/figure-html/unnamed-chunk-17-1.png" width="90%" /></p>
-<p>The <code>adjust</code> parameter in density plots is similar to the <code>binwidth</code> parameter in histograms, and it helps to try a few values. I set the transparency level to .4 to make sure all densities appear. You should also note the distinction between <code>fill</code> and <code>color</code> aesthetics here. Lastly, you could facet by <code>name</code> as above but would have to ask if that makes comparisons easier or harder.</p>
+<p>The <code>adjust</code> parameter in density plots is similar to the <code>binwidth</code> parameter in histograms, and it helps to try a few values. I set the transparency level to .4 to make sure all densities appear. You should also note the distinction between <code>fill</code> and <code>color</code> aesthetics here. You could facet by <code>name</code> as above but would have to ask if that makes comparisons easier or harder. Lastly, adding <code>geom_rug()</code> to a density plot can be a helpful way to show the data in addition to summarizing it!</p>
 <p>Histograms and densities are one way of investigating univariate distributions; boxplots are another.</p>
 <pre class="r"><code>ggplot(weather_df, aes(x = name, y = tmax)) + geom_boxplot()
 ## Warning: Removed 3 rows containing non-finite values (stat_boxplot).</code></pre>
