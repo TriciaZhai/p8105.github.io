@@ -61,7 +61,6 @@ nyc_airbnb %>%
 A major element of data science is to ask questions, and this dataset provides some rich opportunities. For example, we might ask:
 
 * Does rating vary by neighborhood, room type, or both?
-* Do hosts with more listings have higher or lower ratings?
 * How is price related to other variables?
 * Where are rentals located?
 
