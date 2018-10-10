@@ -64,7 +64,7 @@ The goal is to do some exploration of this dataset. To that end, write a short d
 
 * How many aisles are there, and which aisles are the most items ordered from? 
 * Make a plot that shows the number of items ordered in each aisle. Order aisles sensibly, and organize your plot so others can read it. 
-* Make a table showing the most popular item aisles "baking ingredients", "dog food care", and "packaged vegetables fruits"
+* Make a table showing the most popular item **in each of the** aisles "baking ingredients", "dog food care", and "packaged vegetables fruits".
 * Make a table showing the mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week; format this table for human readers (i.e. produce a 2 x 7 table).
 
 
@@ -75,5 +75,5 @@ This problem uses the [NY NOAA](dataset_noaa.html) data. DO NOT include this dat
 The goal is to do some exploration of this dataset. To that end, write a short description of the dataset, noting the size and structure of the data, describing some key variables, and indicating the extent to which missing data is an issue. Then, do or answer the following (commenting on the results of each):
 
 * Do some data cleaning. Create separate variables for year, month, and day. Ensure observations for temperature, precipitation, and snowfall are given in reasonable units. For snowfall, what are the most commonly observed values? Why?
-* Make a two-panel plot showing the average temperature in January and in July in each station across years. Is there any observable / interpretable structure? Any outliers? 
+* Make a two-panel plot showing the average **max** temperature in January and in July in each station across years. Is there any observable / interpretable structure? Any outliers? 
 * Make a two-panel plot showing (i) `tmax` vs `tmin` for the full dataset (note that a scatterplot may not be the best option); and (ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
