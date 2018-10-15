@@ -433,18 +433,20 @@ drug_use_xml
 ## [15] &lt;table class=&quot;rti&quot; border=&quot;1&quot; cellspacing=&quot;0&quot; cellpadding=&quot;1&quot; width ...</code></pre>
 <p>This has extracted <em>all</em> of the tables on the original page; that’s why we have a list with 15 elements. (We haven’t really talked about lists yet, but for now you can think of them as a general collection of objects in R. As we proceed, syntax for extracting individual elements from a list will become clear, and we’ll talk lots about lists in <a href="listcols_and_bootstrapping.html">list columns</a>.)</p>
 <p>We’re only focused on the first table for now, so let’s get the contents from the first list element.</p>
-<pre class="r"><code>table_marj = (drug_use_xml %&gt;% html_nodes(css = &quot;table&quot;))[[1]] %&gt;%
+<pre class="r"><code>table_marj = (drug_use_xml %&gt;% html_nodes(css = &quot;table&quot;)) %&gt;% 
+  .[[1]] %&gt;%
   html_table() </code></pre>
 <p>I won’t print the table here, but if you look at it you’ll notice a problem: the “note” at the bottom of the table appears in every column in the first row. We need to remove that; I’ll also convert to a tibble so that things print nicely.</p>
-<pre class="r"><code>table_marj = (drug_use_xml %&gt;% html_nodes(css = &quot;table&quot;))[[1]] %&gt;%
+<pre class="r"><code>table_marj = (drug_use_xml %&gt;% html_nodes(css = &quot;table&quot;)) %&gt;% 
+  .[[1]] %&gt;%
   html_table() %&gt;%
-  .[-1,] %&gt;% 
+  slice(-1) %&gt;% 
   as_tibble()
 
 table_marj
 ## # A tibble: 56 x 16
 ##    State `12+(2013-2014)` `12+(2014-2015)` `12+(P Value)` `12-17(2013-201…
-##  * &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;          &lt;chr&gt;           
+##    &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;          &lt;chr&gt;           
 ##  1 Tota… 12.90a           13.36            0.002          13.28b          
 ##  2 Nort… 13.88a           14.66            0.005          13.98           
 ##  3 Midw… 12.40b           12.76            0.082          12.45           
@@ -586,11 +588,12 @@ poke$abilities
 ## [[2]]$slot
 ## [1] 1</code></pre>
 <p>To build a Pokemon dataset for analysis, you’d need to distill the data returned from the API into a useful format; iterate across all pokemon; and combine the results.</p>
+<p>For both of the API examples we saw today, it wouldn’t be <em>terrible</em> to just download the CSV, document where it came from carefully, and move on. APIs are more helpful when the full dataset is complex and you only need pieces, or when the data are updated regularly.</p>
 </div>
 <div id="be-reasonable" class="section level3">
 <h3>Be reasonable</h3>
 <p>When you’re reading data from the web, remember you’re accessing resources on someone else’s server – either by reading HTML or by accessing data via an API. In some cases, those who make data public will take steps to limit bandwidth devoted to a small number of users. Amazon and IMDB, for example, probably won’t notice if you scrape small amounts of data but <em>would</em> notice if you tried to read data from thousands of pages every time you knitted a document.</p>
-<p>Similarly, API developers can (and will) limit the number of database entries that can be accessed in a single request. In those cases you’d have to take some steps to iterate over “pages” and combine the results; as an example, our code for the <a href="dataset_restaurant_inspections.html">NYC Restaurant Inspections</a> does this.</p>
+<p>Similarly, API developers can (and will) limit the number of database entries that can be accessed in a single request. In those cases you’d have to take some steps to iterate over “pages” and combine the results; as an example, our code for the <a href="dataset_restaurant_inspections.html">NYC Restaurant Inspections</a> does this. In some cases, API developers protect themselves from unreasonable use by requiring users to be authenticated – it’s still possible to use <code>httr</code> in these cases, but we won’t get into it.</p>
 </div>
 </div>
 <div id="other-materials" class="section level2">
@@ -600,6 +603,7 @@ poke$abilities
 <li>A lot of <a href="https://opendata.cityofnewyork.us">NYC data</a> is public; <a href="https://www.opendatanetwork.com/search?q=new+york+city">this</a> is a good place to start looking for interesting data</li>
 <li>There are some cool projects based on scraped data; the RStudio community collected some <a href="https://community.rstudio.com/t/whats-the-most-interesting-use-of-rvest-youve-seen-in-the-wild/745">here</a></li>
 <li>Check out the <a href="https://github.com/tidyverse/dplyr/blob/master/data-raw/starwars.R">R file</a> used to create the <code>starwars</code> dataset (in the <code>tidyverse</code>) using the <a href="https://swapi.co">Star Wars API</a> (from the maker of the Pokemon API).</li>
+<li>Some really helpful R packages are wrappers for APIs – the <code>rnoaa</code> package we’ve used is an example, and so is <code>rtweet</code></li>
 </ul>
 <p>The code that I produced working examples in lecture is <a href="https://github.com/P8105/data_wrangling_ii">here</a>.</p>
 </div>
