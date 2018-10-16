@@ -31,6 +31,7 @@ To that end:
     * the `data` folder and its contents should not appear in your git history or on GitHub, but you can still access files in this folder using relative paths
     * after downloading your submission, we'll add the `data` directory and data files to 
 * create a single .Rmd file named `p8105_mtp_YOURUNI.Rmd` that renders to `github_document`
+* submit a link to your repo via Courseworks
 
 We will assess adherence to the instructions above and whether we are able to knit your .Rmd in the grading of this project. Adherence to appropriate styling and clarity of code will be assessed. This project includes figures; the readability of your embedded plots (e.g. font sizes, axis labels, titles) will be assessed.
 

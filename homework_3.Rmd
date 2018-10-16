@@ -29,6 +29,7 @@ To that end:
 
 * create a public GitHub repo + local R Project; we suggest naming this repo / directory `p8105_hw3_YOURUNI` (e.g. `p8105_hw3_ajg2202` for Jeff), but that's not required
 * create a single .Rmd file named `p8105_hw3_YOURUNI.Rmd` that renders to `github_document`
+* submit a link to your repo via Courseworks
 
 Your solutions to Problems 1, 2, and 3 should be implemented in your .Rmd file, and your git commit history should reflect the process you used to solve these Problems. 
 
