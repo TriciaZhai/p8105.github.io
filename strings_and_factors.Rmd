@@ -71,7 +71,7 @@ You can designate a list of characters that will count as a match.
 
 ```{r}
 string_vec = c(
-  "Name the worst thing about Bush!",
+  "Y'all remember Pres. HW Bush?",
   "I saw a green bush",
   "BBQ and Bushwalking at Molonglo Gorge",
   "BUSH!!"
@@ -87,7 +87,7 @@ string_vec = c(
   '7th inning stretch',
   '1st half soon to begin. Texas won the toss.',
   'she is 5 feet 4 inches tall',
-  '3am - cant sleep :('
+  '3AM - cant sleep :('
   )
 
 str_detect(string_vec, "^[0-9][a-zA-Z]")

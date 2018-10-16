@@ -431,7 +431,7 @@ str_detect(string_vec, &quot;i think$&quot;)
 ## [1] FALSE FALSE FALSE  TRUE</code></pre>
 <p>You can designate a list of characters that will count as a match.</p>
 <pre class="r"><code>string_vec = c(
-  &quot;Name the worst thing about Bush!&quot;,
+  &quot;Y&#39;all remember Pres. HW Bush?&quot;,
   &quot;I saw a green bush&quot;,
   &quot;BBQ and Bushwalking at Molonglo Gorge&quot;,
   &quot;BUSH!!&quot;
@@ -444,7 +444,7 @@ str_detect(string_vec,&quot;[Bb]ush&quot;)
   &#39;7th inning stretch&#39;,
   &#39;1st half soon to begin. Texas won the toss.&#39;,
   &#39;she is 5 feet 4 inches tall&#39;,
-  &#39;3am - cant sleep :(&#39;
+  &#39;3AM - cant sleep :(&#39;
   )
 
 str_detect(string_vec, &quot;^[0-9][a-zA-Z]&quot;)
@@ -549,25 +549,30 @@ urls = str_c(url_base, 1:5)
 read_html(urls[1]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;My mom loves it&quot;              &quot;Nothing Quite Like It.&quot;      
-##  [3] &quot;Has pretty sweet bow skills.&quot; &quot;Great&quot;                       
-##  [5] &quot;Fast delivery&quot;                &quot;Lol&quot;                         
-##  [7] &quot;Very funny movie&quot;             &quot;Vote For Pedro&quot;              
-##  [9] &quot;So funny!&quot;                    &quot;Great move&quot;
+##  [1] &quot;Go watch THE ROCK or dumb &amp; dumber instead&quot;
+##  [2] &quot;My mom loves it&quot;                           
+##  [3] &quot;Nothing Quite Like It.&quot;                    
+##  [4] &quot;Has pretty sweet bow skills.&quot;              
+##  [5] &quot;Great&quot;                                     
+##  [6] &quot;Fast delivery&quot;                             
+##  [7] &quot;Lol&quot;                                       
+##  [8] &quot;Very funny movie&quot;                          
+##  [9] &quot;Vote For Pedro&quot;                            
+## [10] &quot;So funny!&quot;
 
 read_html(urls[2]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;Refund needed. Did not pay through Amazon prime.&quot;
-##  [2] &quot;Need a laugh?&quot;                                   
-##  [3] &quot;The greatest!&quot;                                   
-##  [4] &quot;Five Stars&quot;                                      
-##  [5] &quot;Napoleon Dynamite is an awesome movie&quot;           
-##  [6] &quot;One Star&quot;                                        
-##  [7] &quot;\U0001f62b&quot;                                      
-##  [8] &quot;Five Stars&quot;                                      
-##  [9] &quot;Haha&quot;                                            
-## [10] &quot;Five Stars&quot;</code></pre>
+##  [1] &quot;Great move&quot;                                      
+##  [2] &quot;Refund needed. Did not pay through Amazon prime.&quot;
+##  [3] &quot;Need a laugh?&quot;                                   
+##  [4] &quot;The greatest!&quot;                                   
+##  [5] &quot;Five Stars&quot;                                      
+##  [6] &quot;Napoleon Dynamite is an awesome movie&quot;           
+##  [7] &quot;One Star&quot;                                        
+##  [8] &quot;\U0001f62b&quot;                                      
+##  [9] &quot;Five Stars&quot;                                      
+## [10] &quot;Haha&quot;</code></pre>
 <p>It would get really tedious to try to scrape all (~2500) reviews by copying code over and over; before long we’ll learn about writing R functions to reuse code and make this much easier!</p>
 </div>
 <div id="thoughts-on-factors" class="section level3">
