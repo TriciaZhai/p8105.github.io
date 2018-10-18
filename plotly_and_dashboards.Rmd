@@ -8,34 +8,36 @@ output:
 
 Plotly is a flexible framework for producing interactive graphics; it has a variety of implementations, including one for R. We'll take a look at a few common plot types, and then introduce `flexdashboards` as a way to collect plots (either static or interactive).
 
-This is the first module in the [Interactivity](topic_interactivity.html) topic; the relevant slack channel is [here](https://p8105-fall2017.slack.com/messages/C7RJ9G3SP).
+This is the second module in the [Interactivity](topic_interactivity.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCATLNVUK).
 
-```{r, echo = FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   fig.width = 6,
   fig.asp = .6,
   out.width = "90%"
 )
+
+library(tidyverse)
+
+theme_set(theme_bw() + theme(legend.position = "bottom"))
 ```
 
 
 ## Some slides
 
-<script async class="speakerdeck-embed" data-id="674218dc49484b6898ee32eb47ba646d" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
-<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-tidy-text" title="Plotly and Dashboards" target="_blank">Plotly and Dashboards</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
+<script async class="speakerdeck-embed" data-id="674218dc49484b6898ee32eb47ba646d" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-plotly-dashboards" title="Plotly and Dashboards" target="_blank">Plotly and Dashboards</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
 
 
 ## Example
 
-To gear up for this topic, we'll create a directory, start an R Project, initialize git, and push to GitHub. For reasons we'll see soon, we want the repo to appear as a website, so I'll copy my [template files](resources/Website_Template.zip) into the directory. I'm also going to add Julia as a collaborator. 
+For this example, I'll create a new .Rmd file that knits to .html in the repo / R Project holding the website I made in [making websites](making_websites.html). In addition to some usual packages, I'll load `plotly`.
 
 ```{r}
 library(tidyverse)
-library(janitor)
-library(stringr)
-library(forcats)
 library(viridis)
+library(p8105.datasets)
 
 library(plotly)
 ```
@@ -45,8 +47,9 @@ We're going to focus on the [Airbnb](dataset_airbnb.html) data for this topic. T
 ```{r import_data}
 set.seed(1)
 
-airbnb_data = read_csv("./data/nyc_airbnb.zip") %>%
-  clean_names() %>%
+data(nyc_airbnb)
+nyc_airbnb = 
+  nyc_airbnb %>% 
   mutate(rating = review_scores_location / 2) %>%
   select(boro = neighbourhood_group, neighbourhood, rating, price, room_type,
          latitude, longitude) %>%
@@ -68,7 +71,7 @@ Below we're plotting the location (latitude and longitude) of the rentals in our
 The type of plot is `scatter`, which has several "modes": `markers` produces the same kind of plot as `ggplot::geom_point`, `lines` produces the same kind of plot as `ggplot::geom_line`.
 
 ```{r}
-airbnb_data %>%
+nyc_airbnb %>%
   mutate(text_label = str_c("Price: $", price, '\nRating: ', rating)) %>% 
   plot_ly(x = ~longitude, y = ~latitude, type = "scatter", mode = "markers",
           alpha = 0.5, 
@@ -86,12 +89,12 @@ After we've done that subsetting, the process for creating the boxplot is simila
 
 ```{r}
 common_neighborhoods =
-  airbnb_data %>% 
+  nyc_airbnb %>% 
   count(neighbourhood, sort = TRUE) %>% 
   top_n(8) %>% 
   select(neighbourhood)
 
-inner_join(airbnb_data, common_neighborhoods,
+inner_join(nyc_airbnb, common_neighborhoods,
              by = "neighbourhood") %>% 
   mutate(neighbourhood = fct_reorder(neighbourhood, price)) %>% 
   plot_ly(y = ~price, color = ~neighbourhood, type = "box",
@@ -105,7 +108,7 @@ Again, this can be helpful -- we have a five-number summary when we hover, and b
 Lastly, we'll make a bar chart. Plotly expects data in a specific format for bar charts, so we use `count` to get the number of rentals in each neighborhood (i.e. to get the bar height). Otherwise, the process should seem pretty familiar ...
 
 ```{r}
-airbnb_data %>% 
+nyc_airbnb %>% 
   count(neighbourhood) %>% 
   mutate(neighbourhood = fct_reorder(neighbourhood, n)) %>% 
   plot_ly(x = ~neighbourhood, y = ~n, color = ~neighbourhood, type = "bar")
@@ -120,7 +123,7 @@ You _can_ convert a `ggplot` object straight to an interactive graphic using `gg
 For example, the code below recreates our scatterplot using `ggplot` followed by `ggplotly`. 
 
 ```{r}
-scatter_ggplot = airbnb_data %>%
+scatter_ggplot = nyc_airbnb %>%
   ggplot(aes(x = longitude, y = latitude, color = price)) +
   geom_point(alpha = 0.25) +
   scale_color_viridis() +
@@ -134,7 +137,7 @@ We can recreate our boxplot in a similar way.
 
 ```{r}
 box_ggplot = 
-  inner_join(airbnb_data, common_neighborhoods,
+  inner_join(nyc_airbnb, common_neighborhoods,
              by = "neighbourhood") %>% 
   mutate(neighbourhood = fct_reorder(neighbourhood, price)) %>% 
   ggplot(aes(x = neighbourhood, y = price, fill = neighbourhood)) +
