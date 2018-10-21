@@ -42,12 +42,12 @@ Accelerometers have become an appealing alternative to self-report techniques fo
 
 The data for this project was collected on a 63 year-old male with BMI 25, who was admitted to the Advanced Cardiac Care Center of Columbia University Medical Center and diagnosed with congestive heart failure (CHF). He wore an accelerometerdevice that continuously recorded physical activity for several months. The goal of this study was to understand patterns of physical activity over long periods of time; more generally, it is hoped that trends that emerge prior to and happen right after adverse clinical eventsand can be potentially used for dynamic update of patient status.
 
-The data can be downloaded [here](data/p8105_mtp_data.csv).
+The data can be downloaded [here](data/p8105_mtp_data.csv). **In this spreadsheet, variables `activity.*` are the activity counts for each minute of a 24-hour day starting at midnight.**
 
 
 ### Problem
 
-Throughout, you should describe your work in writing that targets a reasonably sophisticated collaborator – not an expert data scientist, but an interested observer. Include code and output; structure your report clearly. Write in a reproducible way (e.g. using inline R code where necessary). Include only relevant information, and adhere to a strict-500 word limit (this excludes figures and tables, code chunks, inline code, YAML, and other non-text elements). You can check your word count using `wordcountaddin::text_stats("p8105_mtp_YOURUNI.Rmd")`; we'll use the "koRpus" count.
+Throughout, you should describe your work in writing that targets a reasonably sophisticated collaborator – not an expert data scientist, but an interested observer. Include code and output; structure your report clearly. Write in a reproducible way (e.g. using inline R code where necessary). Include only relevant information, and adhere to a strict-500 word limit (this excludes figures and tables, code chunks, inline code, YAML, and other non-text elements). You can check your word count using `wordcountaddin::text_stats("p8105_mtp_YOURUNI.Rmd")`; installation instructions can be found on the [`wordcountaddin` package website](https://github.com/benmarwick/wordcountaddin). We'll use the "koRpus" count.
 
 First, load, tidy, and otherwise wrangle the data. Your final dataset should include all originally observed variables and values; have useful variable names; and code data with reasonable variable classes. Describe the resulting dataset (e.g. what variables exist, how many observations, etc). Discuss any additional exploratory analyses you conduct, but only include results you think are interesting (e.g. visually inspect distributions for outliers, but include only if these are informative).
 
