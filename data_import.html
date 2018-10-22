@@ -412,7 +412,7 @@ div.tocify {
 <p>(Hint: if you ever use <code>setwd()</code>, you’re using absolute paths and <a href="https://twitter.com/hadleywickham/status/940021008764846080">taking big risks</a>…)</p>
 <p>The code below finds my current working directory:</p>
 <pre class="r"><code>getwd()
-## [1] &quot;/Users/jeffgoldsmith 1/Dropbox/Work/Teaching/P8105/Fall_2018/p8105.github.io&quot;</code></pre>
+## [1] &quot;/Users/jeffgoldsmith/Dropbox/Work/Teaching/P8105/Fall_2018/p8105.github.io&quot;</code></pre>
 <p>A relative path to the same file as the absolute path above is</p>
 <pre><code>&quot;./data/FAS_litters.csv&quot;</code></pre>
 <p>The table below, copied from <a href="https://geanders.github.io/RProgrammingForResearch/entering-and-cleaning-data-1.html#file-and-directory-pathnames">R Programming for Research</a>, gives useful shorthand notation for relative pathnames.</p>
@@ -515,12 +515,12 @@ tail(litters_data, 5)
 ##  n obs: 49 
 ##  n variables: 8 
 ## 
-## ── Variable type:character ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:character ──────────────────────────────────────
 ##       variable missing complete  n min max empty n_unique
 ##          group       0       49 49   4   4     0        6
 ##  litter_number       0       49 49   3  15     0       49
 ## 
-## ── Variable type:integer ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:integer ────────────────────────────────────────
 ##         variable missing complete  n  mean   sd p0 p25 p50 p75 p100
 ##      gd_of_birth       0       49 49 19.65 0.48 19  19  20  20   20
 ##  pups_born_alive       0       49 49  7.35 1.76  3   6   8   8   11
@@ -532,7 +532,7 @@ tail(litters_data, 5)
 ##  ▇▂▁▁▁▁▁▁
 ##  ▂▂▃▃▅▇▇▅
 ## 
-## ── Variable type:numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:numeric ────────────────────────────────────────
 ##     variable missing complete  n  mean   sd   p0   p25   p50   p75 p100
 ##   gd0_weight      15       34 49 24.38 3.28 17   22.3  24.1  26.67 33.4
 ##  gd18_weight      17       32 49 41.52 4.05 33.4 38.88 42.25 43.8  52.7
