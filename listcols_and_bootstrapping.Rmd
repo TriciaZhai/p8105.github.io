@@ -10,7 +10,7 @@ R's data structures, especially data frames, are surprisingly flexible. This is 
 
 Bootstrapping is a popular resampling-based approach to statistical inference, and is helpful when usual statistical methods are intractable or inappropriate. The idea is to draw repeated samples from your original sample _with replacement_, thereby approximating the repeated sampling framework. Using list columns to store bootstrap samples is natural and provides a "tidy" approach to resampling-based inference.
 
-This is the third module in the [Iteration](topic_iteration.html) topic; the relevant slack channel is [here](https://p8105-fall2017.slack.com/messages/C7WC2UPT7).
+This is the third module in the [Iteration](topic_iteration.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCAAE7XDW).
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(

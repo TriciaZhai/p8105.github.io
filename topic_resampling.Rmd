@@ -10,6 +10,6 @@ This topic is made up of the following components:
 * [Iteration and simulation](iteration_and_simulation.html)
 * [List columns and bootstrapping](listcols_and_bootstrapping.html)
 
-The slack channel for this topic is [here]().
+The slack channel for this topic is [here](https://p8105-fall2018.slack.com/messages/CCAAE7XDW).
 
 The code that I produced working examples in lecture is [here]().

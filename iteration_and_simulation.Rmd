@@ -8,7 +8,7 @@ output:
 
 We've noted that functions are helpful when you repeat code more than twice; we've also noted that a lot of statistical methods involve doing the same thing a large number of times. Putting those together motivates a careful approach to iteratation; conducting simulations is a very relevant example. 
 
-This is the second module in the [Iteration](topic_iteration.html) topic; the relevant slack channel is [here](https://p8105-fall2017.slack.com/messages/C7WC2UPT7).
+This is the second module in the [Iteration](topic_iteration.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCAAE7XDW).
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
