@@ -397,15 +397,6 @@ div.tocify {
 <h2>Example</h2>
 <p>I’ll write code for today’s content in a new R Markdown document called <code>strings_and_factors.Rmd</code>, and put it in the same directory / GitHub repo as <code>reading_data.Rmd</code>. Since we’ll revisit some scraped examples, I’ll load <code>rvest</code> now; we’ll also use some datasets in <code>p8105.datasets</code> so I’ll load that as well.</p>
 <pre class="r"><code>library(rvest)
-## Loading required package: xml2
-## 
-## Attaching package: &#39;rvest&#39;
-## The following object is masked from &#39;package:purrr&#39;:
-## 
-##     pluck
-## The following object is masked from &#39;package:readr&#39;:
-## 
-##     guess_encoding
 library(p8105.datasets)</code></pre>
 <div id="strings-and-regex" class="section level3">
 <h3>Strings and regex</h3>
@@ -549,29 +540,29 @@ urls = str_c(url_base, 1:5)
 read_html(urls[1]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;Go watch THE ROCK or dumb &amp; dumber instead&quot;
-##  [2] &quot;My mom loves it&quot;                           
-##  [3] &quot;Nothing Quite Like It.&quot;                    
-##  [4] &quot;Has pretty sweet bow skills.&quot;              
-##  [5] &quot;Great&quot;                                     
-##  [6] &quot;Fast delivery&quot;                             
-##  [7] &quot;Lol&quot;                                       
-##  [8] &quot;Vote For Pedro&quot;                            
-##  [9] &quot;So funny!&quot;                                 
-## [10] &quot;Great move&quot;
+##  [1] &quot;Nostalgic Stupidity&quot;                       
+##  [2] &quot;Happy&quot;                                     
+##  [3] &quot;Go watch THE ROCK or dumb &amp; dumber instead&quot;
+##  [4] &quot;My mom loves it&quot;                           
+##  [5] &quot;Nothing Quite Like It.&quot;                    
+##  [6] &quot;Has pretty sweet bow skills.&quot;              
+##  [7] &quot;Great&quot;                                     
+##  [8] &quot;Fast delivery&quot;                             
+##  [9] &quot;Lol&quot;                                       
+## [10] &quot;Vote For Pedro&quot;
 
 read_html(urls[2]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;Refund needed. Did not pay through Amazon prime.&quot;
-##  [2] &quot;Need a laugh?&quot;                                   
-##  [3] &quot;The greatest!&quot;                                   
-##  [4] &quot;Five Stars&quot;                                      
-##  [5] &quot;Napoleon Dynamite is an awesome movie&quot;           
-##  [6] &quot;One Star&quot;                                        
-##  [7] &quot;\U0001f62b&quot;                                      
-##  [8] &quot;Five Stars&quot;                                      
-##  [9] &quot;Haha&quot;                                            
+##  [1] &quot;So funny!&quot;                                       
+##  [2] &quot;Great move&quot;                                      
+##  [3] &quot;Refund needed. Did not pay through Amazon prime.&quot;
+##  [4] &quot;Need a laugh?&quot;                                   
+##  [5] &quot;The greatest!&quot;                                   
+##  [6] &quot;Five Stars&quot;                                      
+##  [7] &quot;Napoleon Dynamite is an awesome movie&quot;           
+##  [8] &quot;One Star&quot;                                        
+##  [9] &quot;\U0001f62b&quot;                                      
 ## [10] &quot;Five Stars&quot;</code></pre>
 <p>It would get really tedious to try to scrape all (~2500) reviews by copying code over and over; before long we’ll learn about writing R functions to reuse code and make this much easier!</p>
 </div>
