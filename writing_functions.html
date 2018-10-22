@@ -395,47 +395,55 @@ div.tocify {
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>For this topic, I’ll create a directory called <code>example_iteration</code> and take the steps to make it a public GitHub repo. I’ll write code for today’s content in a new R Markdown document called <code>functions.Rmd</code>, and I’m going to load the usual packages. I’m also setting the seed so that the output on this page is fixed.</p>
+<p>For this topic, I’ll create a GitHub repo + directory / R Project called <code>iteration</code>. I’ll write code for today’s content in a new R Markdown document called <code>writing_functions.Rmd</code>, and I’m going to load the some usual packages. I’m also setting the seed so that the output on this page is fixed.</p>
 <pre class="r"><code>library(tidyverse)
-
-theme_set(theme_bw())
-theme_update(legend.position = &quot;bottom&quot;)
 
 set.seed(1)</code></pre>
 <div id="my-first-function" class="section level3">
 <h3>My first function</h3>
-<p>The best way to build up a function is to start with code you’ve written outside a function. To see how this might work, I’ll start with a simple example: the chunk below takes a sample from a standard normal and then computes the Z score for the sample.</p>
-<pre class="r"><code>x = rnorm(25)
+<p>The best way to build up a function is to start with code you’ve written outside a function. To see how this might work, I’ll start with a simple example: the chunk below takes a sample from a normal distribution and then computes the vector of Z scores for the sample.</p>
+<pre class="r"><code>x = rnorm(25, mean = 5, sd = 3)
 
-mean(x) / sd(x)
-## [1] 0.1775222</code></pre>
-<p>If I want to repeat this (admittedly simple) process for lots of samples, I might want to have a function that takes the sample as an <em>argument</em>, computes the Z score in the <em>body</em>, and <em>returns</em> the result. I define such a function below.</p>
-<pre class="r"><code>z_score = function(x) {
+(x - mean(x)) / sd(x)
+##  [1] -0.83687228  0.01576465 -1.05703126  1.50152998  0.16928872
+##  [6] -1.04107494  0.33550276  0.59957343  0.42849461 -0.49894708
+## [11]  1.41364561  0.23279252 -0.83138529 -2.50852027  1.00648110
+## [16] -0.22481531 -0.19456260  0.81587675  0.68682298  0.44756609
+## [21]  0.78971253  0.64568566 -0.09904161 -2.27133861  0.47485186</code></pre>
+<p>If I want to repeat this (admittedly simple) process for lots of samples, I might want to have a function that takes the sample as an <em>argument</em>, computes the vector of Z scores in the <em>body</em>, and <em>returns</em> the result. I define such a function below.</p>
+<pre class="r"><code>z_scores = function(x) {
   
-  z = mean(x) / sd(x)
+  z = (x - mean(x)) / sd(x)
   z
   
 }
 
-z_score(x)
-## [1] 0.1775222</code></pre>
+z_scores(x)
+##  [1] -0.83687228  0.01576465 -1.05703126  1.50152998  0.16928872
+##  [6] -1.04107494  0.33550276  0.59957343  0.42849461 -0.49894708
+## [11]  1.41364561  0.23279252 -0.83138529 -2.50852027  1.00648110
+## [16] -0.22481531 -0.19456260  0.81587675  0.68682298  0.44756609
+## [21]  0.78971253  0.64568566 -0.09904161 -2.27133861  0.47485186</code></pre>
 <p>I can try this with a few samples and confirm that it works. I should also try to think of ways this code might break; the attempts below try a variety of inputs to see what happens.</p>
-<pre class="r"><code>z_score(3)
+<pre class="r"><code>z_scores(3)
 ## [1] NA
-z_score(&quot;my name is jeff&quot;)
+z_scores(&quot;my name is jeff&quot;)
 ## Warning in mean.default(x): argument is not numeric or logical: returning
 ## NA
-## Warning in var(if (is.vector(x) || is.factor(x)) x else as.double(x), na.rm
-## = na.rm): NAs introduced by coercion
-## [1] NA
-z_score(iris)
+## Error in x - mean(x): non-numeric argument to binary operator
+z_scores(iris)
 ## Warning in mean.default(x): argument is not numeric or logical: returning
 ## NA
+## Warning in Ops.factor(left, right): &#39;-&#39; not meaningful for factors
 ## Error in is.data.frame(x): (list) object cannot be coerced to type &#39;double&#39;
-z_score(sample(c(TRUE, FALSE), 25, replace = TRUE))
-## [1] 1.428286</code></pre>
+z_scores(sample(c(TRUE, FALSE), 25, replace = TRUE))
+##  [1]  0.6721344 -1.4282857  0.6721344  0.6721344  0.6721344  0.6721344
+##  [7]  0.6721344 -1.4282857 -1.4282857  0.6721344 -1.4282857  0.6721344
+## [13]  0.6721344  0.6721344 -1.4282857  0.6721344  0.6721344 -1.4282857
+## [19]  0.6721344 -1.4282857  0.6721344 -1.4282857  0.6721344  0.6721344
+## [25]  0.6721344</code></pre>
 <p>These all did something I didn’t want, but only two returned errors. To avoid behavior you don’t want (i.e. to <a href="http://www.faqs.org/docs/artu/ch01s06.html">“fail noisily and as soon as possible”</a>) we’ll add some checks on the argument values using conditional statements.</p>
-<pre class="r"><code>z_score = function(x) {
+<pre class="r"><code>z_scores = function(x) {
   
   if (!is.numeric(x)) {
     stop(&quot;Argument x should be numeric&quot;)
@@ -451,40 +459,36 @@ z_score(sample(c(TRUE, FALSE), 25, replace = TRUE))
 </div>
 <div id="multiple-outputs" class="section level3">
 <h3>Multiple outputs</h3>
-<p>In some cases it might be good to return not just the Z score, but the mean and standard deviation as well. A first option is to store each of the values in a named list, and to return that list.</p>
-<pre class="r"><code>z_score = function(x) {
+<p>In some cases it might be better to return the mean and standard deviation instead of the Z scores. A first option is to store each of the values in a named list, and to return that list.</p>
+<pre class="r"><code>mean_and_sd = function(x) {
   
   if (!is.numeric(x)) {
-    stop(&quot;argument x should be numeric&quot;)
+    stop(&quot;Argument x should be numeric&quot;)
   } else if (length(x) == 1) {
-    stop(&quot;z-scores cannot be computed for length 1 vectors&quot;)
+    stop(&quot;Z-scores cannot be computed for length 1 vectors&quot;)
   }
   
   mean_x = mean(x)
   sd_x = sd(x)
-  z = mean_x / sd_x
-  
+
   list(mean = mean_x, 
-       sd = sd_x,
-       z = z)
+       sd = sd_x)
 }</code></pre>
 <p>Alternatively, we might store values in a data frame.</p>
-<pre class="r"><code>z_score = function(x) {
+<pre class="r"><code>mean_and_sd = function(x) {
   
   if (!is.numeric(x)) {
-    stop(&quot;argument x should be numeric&quot;)
+    stop(&quot;Argument x should be numeric&quot;)
   } else if (length(x) == 1) {
     stop(&quot;z-scores cannot be computed for length 1 vectors&quot;)
   }
   
   mean_x = mean(x)
   sd_x = sd(x)
-  z = mean_x / sd_x
-  
+
   tibble(
     mean = mean_x, 
-    sd = sd_x,
-    z = z
+    sd = sd_x
   )
 }</code></pre>
 <p>In general, either of these will be fine; which one you choose will depend on what kind of values you want to return, and what you plan to do with the function itself. If you want to return the original sample along with the computed values, a list might make sense; if you plan to run your function a lot and study the results, having a data frame will make it easier to use other tools. We’ll see more of that in <a href="iteration_and_simulation.html">iteration and simulation</a>.</p>
@@ -517,9 +521,9 @@ beta1_hat = coef(ls_fit)[2]</code></pre>
     beta1_hat = coef(ls_fit)[2]
   )
 }</code></pre>
-<p>Repeated calls to <code>sim_regression()</code> will give a sense of sampling variability in regression coefficients in SLR; take a few minutes to run <code>sim_regression(30, 2, 3)</code> a few times, and then to run <code>sim_regression(300, 2, 3)</code>, and think about the results. We’ll examine this more formally in <a href="simulation.html">simulation</a></p>
+<p>Repeated calls to <code>sim_regression()</code> will give a sense of sampling variability in regression coefficients in SLR; take a few minutes to run <code>sim_regression(30, 2, 3)</code> a few times, and then to run <code>sim_regression(300, 2, 3)</code>, and think about the results. We’ll examine this more formally in <a href="simulation.html">simulation</a>.</p>
 <p>This is also a good time to point out how R handles argument matching. We can use <em>positional</em> matching, meaning the first value supplied is taken to be the first argument, the second value is the second argument, and so on. We do this with <code>tidyverse</code> functions a lot; the first argument is always a dataframe, and we just supply that dataframe in the first position. We also use positional matching when we call <code>mean(x)</code> or <code>sim_regression(30, 2, 3)</code>.</p>
-<p>Alternatively, we can use <em>named</em> matching, which uses the argument name in the function call. Named matching can be a bit more stable when you’re writing your own functions (in case you decide to change the order of the inputs, for example) but isn’t strictly necessary. Named arguments can be supplied in any order: <code>sim_regression(n = 30, beta0 = 2, beta1 = 3)</code> is equivalent to `sim_regression(beta1 = 3, n = 30, beta0 = 2).</p>
+<p>Alternatively, we can use <em>named</em> matching, which uses the argument name in the function call. Named matching can be a bit more stable when you’re writing your own functions (in case you decide to change the order of the inputs, for example) but isn’t strictly necessary. Named arguments can be supplied in any order: <code>sim_regression(n = 30, beta0 = 2, beta1 = 3)</code> is equivalent to <code>sim_regression(beta1 = 3, n = 30, beta0 = 2)</code>.</p>
 </div>
 <div id="revisiting-past-examples" class="section level3">
 <h3>Revisiting past examples</h3>
@@ -527,51 +531,132 @@ beta1_hat = coef(ls_fit)[2]</code></pre>
 <div id="scraping-amazon" class="section level4">
 <h4>Scraping Amazon</h4>
 <p>In <a href="reading_data_from_the_web.html">reading data from the web</a>, we wrote code that allowed us to scrape information in Amazon reviews. That code is below.</p>
-<pre class="r"><code>url = &quot;https://www.amazon.com/Philips-Sonicare-rechargeable-toothbrush-HX6211/product-reviews/B00YAR7ZFM/ref=cm_cr_arp_d_viewopt_srt?ie=UTF8&amp;reviewerType=all_reviews&amp;sortBy=recent&amp;pageNumber=1&quot;
+<pre class="r"><code>url = &quot;https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=1&quot;
 
-toothbrush_html = read_html(url)
+dynamite_html = read_html(url)
 
-review_titles = toothbrush_html %&gt;%
+review_titles = dynamite_html %&gt;%
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
 
-review_stars = toothbrush_html %&gt;%
+review_stars = dynamite_html %&gt;%
   html_nodes(&quot;#cm_cr-review_list .review-rating&quot;) %&gt;%
   html_text()
 
-reviews = data_frame(
+review_text = dynamite_html %&gt;%
+    html_nodes(&quot;.review-data:nth-child(4)&quot;) %&gt;%
+    html_text()
+
+reviews = tibble(
   title = review_titles,
-  stars = review_stars
+  stars = review_stars,
+  text = review_text
 )</code></pre>
-<p>Let’s write a quick function to scrape review information for any URL to an Amazon review page. Hint: this code appears in <a href="homework_5.html">Homework 5</a> …</p>
+<p>Let’s write a quick function to scrape review information for any URL to an Amazon review page.</p>
+<pre class="r"><code>library(rvest)
+## Loading required package: xml2
+## 
+## Attaching package: &#39;rvest&#39;
+## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     pluck
+## The following object is masked from &#39;package:readr&#39;:
+## 
+##     guess_encoding
+
+read_page_reviews &lt;- function(url) {
+  
+  h = read_html(url)
+  
+  title = h %&gt;%
+    html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
+    html_text()
+  
+  stars = h %&gt;%
+    html_nodes(&quot;#cm_cr-review_list .review-rating&quot;) %&gt;%
+    html_text() %&gt;%
+    str_extract(&quot;\\d&quot;) %&gt;%
+    as.numeric()
+  
+  text = h %&gt;%
+    html_nodes(&quot;.review-data:nth-child(4)&quot;) %&gt;%
+    html_text()
+  
+  data_frame(title, stars, text)
+}</code></pre>
+<p>Next we’ll use this to read in reviews from a few pages and combine the results.</p>
+<pre class="r"><code>url_base = &quot;https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=&quot;
+urls = stringr::str_c(url_base, 1:5)
+
+dynamite_reviews = bind_rows(
+  read_page_reviews(urls[1]),
+  read_page_reviews(urls[2]),
+  read_page_reviews(urls[3]),
+  read_page_reviews(urls[4]),
+  read_page_reviews(urls[5])
+)
+
+dynamite_reviews
+## # A tibble: 50 x 3
+##    title                     stars text                                   
+##    &lt;chr&gt;                     &lt;dbl&gt; &lt;chr&gt;                                  
+##  1 Nostalgic Stupidity           4 This movie is dumb. I won&#39;t lie and sa…
+##  2 Happy                         5 Don&#39;t know why I lov this movie but ido
+##  3 Go watch THE ROCK or dum…     2 This movie is horrible. How do so many…
+##  4 My mom loves it               5 Got this for my mom for mother&#39;s day, …
+##  5 Nothing Quite Like It.        5 So much fun watching these listless pe…
+##  6 Has pretty sweet bow ski…     5 Well, things are getting pretty seriou…
+##  7 Great                         5 Great                                  
+##  8 Fast delivery                 5 Bought as gift                         
+##  9 Lol                           5 Funny                                  
+## 10 Vote For Pedro                5 Flippin sweet                          
+## # ... with 40 more rows</code></pre>
 </div>
 <div id="loading-lotr-data" class="section level4">
 <h4>Loading LoTR data</h4>
 <p>In <a href="tidy_data.html">tidy data</a>, we broke the “only copy code twice” rule when we used the code below to process the <a href="./data/LotR_Words.xlsx">LoTR words data</a>:</p>
-<pre class="r"><code>fellowship_ring = read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &quot;B3:D6&quot;) %&gt;%
-  clean_names() %&gt;%
-  gather(key = sex, value = words, female:male) %&gt;%
-  mutate(race = tolower(race),
-         movie = &quot;Fellowship&quot;)
+<pre class="r"><code>fellowship_ring = readxl::read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &quot;B3:D6&quot;) %&gt;%
+  mutate(movie = &quot;fellowship_ring&quot;)
 
-two_towers = read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &quot;F3:H6&quot;) %&gt;%
-  clean_names() %&gt;%
-  gather(key = sex, value = words, female:male) %&gt;%
-  mutate(race = tolower(race),
-         movie = &quot;Two Towers&quot;)
+two_towers = readxl::read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &quot;F3:H6&quot;) %&gt;%
+  mutate(movie = &quot;two_towers&quot;)
 
-return_king = read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &quot;J3:L6&quot;) %&gt;%
-  clean_names() %&gt;%
+return_king = readxl::read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = &quot;J3:L6&quot;) %&gt;%
+  mutate(movie = &quot;return_king&quot;)
+
+lotr_tidy = bind_rows(fellowship_ring, two_towers, return_king) %&gt;%
+  janitor::clean_names() %&gt;%
   gather(key = sex, value = words, female:male) %&gt;%
-  mutate(race = tolower(race),
-         movie = &quot;Return&quot;)</code></pre>
-<p>Try to write a function that can be used to abstract the data loading and cleaning process. Use this function to recreate the tidied LoTR dataset.</p>
+  mutate(race = tolower(race)) %&gt;% 
+  select(movie, everything()) </code></pre>
+<p><strong><em>Learning Assessment:</em></strong> Try to write a function that can be used to abstract the data loading and cleaning process. Use this function to recreate the tidied LoTR dataset.</p>
+<p><details> <summary> Solution </summary></p>
+<p>The function below will read in and clean LoTR data – it differs from the previous code by including some data tidying steps in the function rather than after data have been combined, but produces the same result.</p>
+<pre class="r"><code>lotr_load_and_tidy = function(path, range, movie_name) {
+  
+  df = readxl::read_excel(path, range = range) %&gt;%
+    janitor::clean_names() %&gt;%
+    gather(key = sex, value = words, female:male) %&gt;%
+    mutate(race = tolower(race),
+           movie = movie_name)
+  
+  df
+  
+}
+
+lotr_tidy = 
+  bind_rows(
+    lotr_load_and_tidy(&quot;./data/LotR_Words.xlsx&quot;, &quot;B3:D6&quot;, &quot;fellowship_ring&quot;),
+    lotr_load_and_tidy(&quot;./data/LotR_Words.xlsx&quot;, &quot;F3:H6&quot;, &quot;two_towers&quot;),
+    lotr_load_and_tidy(&quot;./data/LotR_Words.xlsx&quot;, &quot;J3:L6&quot;, &quot;return_king&quot;)) %&gt;%
+  select(movie, everything()) </code></pre>
 <p>Having a function that handles the loading and cleaning is great – if I decide I want to change the tidying step, I only have to do it once, and I don’t have to worry about mistakes creeping in through copy-and-paste errors!</p>
+<p></details></p>
 </div>
 </div>
 <div id="functions-as-arguments" class="section level3">
 <h3>Functions as arguments</h3>
-<p>One powerful tool is the ability to pass functions as arguments into functions. This might seem like a weird thing to do, but it has a lot of handy applications – we’ll see just how far it goes in the next modules in the topic.</p>
+<p>One powerful tool is the ability to pass functions as arguments into functions. This might seem like a weird thing to do, but it has a lot of handy applications – we’ll see just how far it goes in the next modules in this topic.</p>
 <p>As a quick example, suppose we wanted to get a sense of how similar or different values in a vector are to each other. There are lots of ways to measure this – variance, standard deviation, range, inter-quartile range – and some are more appropriate in some cases than in others. The function below allows you to input a vector and a function, and returns the result of applying the specified function to the vector input.</p>
 <pre class="r"><code>x = rnorm(25, 0, 1)
 
@@ -585,7 +670,7 @@ my_summary(x, IQR)
 ## [1] 1.271572
 my_summary(x, var)
 ## [1] 0.8079694</code></pre>
-<p>This example is pretty trivial – you could just apply those functions directly to <code>x</code> and skip the hassle – but in many cases the idea of passing functions as arguments is really powerful. As an example, remember that you can reorder factors according to different summaries in <code>fct_reorder</code>!</p>
+<p>This example is pretty trivial – you could just apply those functions directly to <code>x</code> and skip the hassle – but in many cases the idea of passing functions as arguments is really powerful. As a practical example, remember that you can reorder factors according to different summaries in <code>fct_reorder</code>!</p>
 </div>
 <div id="scoping-and-names" class="section level3">
 <h3>Scoping and names</h3>
@@ -599,7 +684,7 @@ x = 1
 y = 2
 
 f(x = y)</code></pre>
-<p>Examples like this are tricky, but emphasize an issue that comes up a lot in writing functions: you define a variable in your global environment and use it in your function, but it isn’t passed as an argument. This is easy to miss, especially when you go from written code to a function, and can be hard to track down if you empty your working directory or change a variable name. The best advice I have is to give your arguments useful names and think carefully about where everything is defined, and to periodically empty your environment and try everything again!</p>
+<p>Examples like this are tricky, but emphasize an issue that comes up a lot in writing functions: you define a variable in your global environment and use it in your function, but it isn’t passed as an argument. This is easy to miss, especially when you go from written code to a function, and can be hard to track down if you empty your working directory or change a variable name. The best advice I have is to give your arguments useful names and think carefully about where everything is defined, and to periodically restart R and try everything again!</p>
 </div>
 </div>
 <div id="other-materials" class="section level2">
@@ -610,7 +695,7 @@ f(x = y)</code></pre>
 <li>R Programming for Data Science has nice chapters on <a href="https://bookdown.org/rdpeng/rprogdatascience/functions.html">functions</a> and <a href="https://bookdown.org/rdpeng/rprogdatascience/scoping-rules-of-r.html">scoping</a></li>
 <li>The <a href="http://www.faqs.org/docs/artu/ch01s06.html">Basics of UNIX Philosophy</a>, linked to above, apply broadly to designing code</li>
 </ul>
-<p>The code that I produced working examples in lecture is <a href="https://github.com/jeff-goldsmith/example_iteration">here</a>.</p>
+<p>The code that I produced working examples in lecture is <a href="https://github.com/p8105/iteration">here</a>.</p>
 </div>
 
 <br><br>
