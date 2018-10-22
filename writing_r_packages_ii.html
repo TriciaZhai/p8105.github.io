@@ -338,6 +338,9 @@ div.tocify {
       <a href="dataset_airbnb.html">Airbnb</a>
     </li>
     <li>
+      <a href="dataset_brfss.html">BRFSS</a>
+    </li>
+    <li>
       <a href="dataset_fivethirtyeight.html">FiveThirtyEight</a>
     </li>
     <li>
@@ -401,50 +404,68 @@ div.tocify {
 <h3>Search path</h3>
 <p>Before jumping into new pacakge development stuff, we’re going to take a closer look at R’s search path. You can see your current search path at any time using <code>search()</code>.</p>
 <pre class="r"><code>search()
-##  [1] &quot;.GlobalEnv&quot;          &quot;package:hexbin&quot;      &quot;package:ggthemes&quot;   
-##  [4] &quot;package:ggridges&quot;    &quot;package:tidytext&quot;    &quot;package:shiny&quot;      
-##  [7] &quot;package:httr&quot;        &quot;package:rvest&quot;       &quot;package:xml2&quot;       
-## [10] &quot;package:plotly&quot;      &quot;package:viridis&quot;     &quot;package:viridisLite&quot;
-## [13] &quot;package:janitor&quot;     &quot;package:modelr&quot;      &quot;package:haven&quot;      
-## [16] &quot;package:readxl&quot;      &quot;package:bindrcpp&quot;    &quot;package:forcats&quot;    
-## [19] &quot;package:stringr&quot;     &quot;package:dplyr&quot;       &quot;package:purrr&quot;      
-## [22] &quot;package:readr&quot;       &quot;package:tidyr&quot;       &quot;package:tibble&quot;     
-## [25] &quot;package:ggplot2&quot;     &quot;package:tidyverse&quot;   &quot;package:stats&quot;      
-## [28] &quot;package:graphics&quot;    &quot;package:grDevices&quot;   &quot;package:utils&quot;      
-## [31] &quot;package:datasets&quot;    &quot;package:methods&quot;     &quot;Autoloads&quot;          
-## [34] &quot;package:base&quot;</code></pre>
+##  [1] &quot;.GlobalEnv&quot;             &quot;package:patchwork&quot;     
+##  [3] &quot;package:hexbin&quot;         &quot;package:ggridges&quot;      
+##  [5] &quot;package:tidytext&quot;       &quot;package:shiny&quot;         
+##  [7] &quot;package:janitor&quot;        &quot;package:httr&quot;          
+##  [9] &quot;package:rvest&quot;          &quot;package:xml2&quot;          
+## [11] &quot;package:plotly&quot;         &quot;package:p8105.datasets&quot;
+## [13] &quot;package:viridis&quot;        &quot;package:viridisLite&quot;   
+## [15] &quot;package:modelr&quot;         &quot;package:haven&quot;         
+## [17] &quot;package:readxl&quot;         &quot;package:bindrcpp&quot;      
+## [19] &quot;package:forcats&quot;        &quot;package:stringr&quot;       
+## [21] &quot;package:dplyr&quot;          &quot;package:purrr&quot;         
+## [23] &quot;package:readr&quot;          &quot;package:tidyr&quot;         
+## [25] &quot;package:tibble&quot;         &quot;package:ggplot2&quot;       
+## [27] &quot;package:tidyverse&quot;      &quot;package:stats&quot;         
+## [29] &quot;package:graphics&quot;       &quot;package:grDevices&quot;     
+## [31] &quot;package:utils&quot;          &quot;package:datasets&quot;      
+## [33] &quot;package:methods&quot;        &quot;Autoloads&quot;             
+## [35] &quot;package:base&quot;</code></pre>
 <p>There’s not much here yet, since we haven’t loaded anything – mostly we have default packages and the global environment.</p>
 <p>When you call a function, R has to find it. We’ve often made the location of a function explicit using <code>package::function()</code> which tells R specifically where to look but doesn’t affect the search path.</p>
 <pre class="r"><code>iris = janitor::clean_names(iris)
 search()
-##  [1] &quot;.GlobalEnv&quot;          &quot;package:hexbin&quot;      &quot;package:ggthemes&quot;   
-##  [4] &quot;package:ggridges&quot;    &quot;package:tidytext&quot;    &quot;package:shiny&quot;      
-##  [7] &quot;package:httr&quot;        &quot;package:rvest&quot;       &quot;package:xml2&quot;       
-## [10] &quot;package:plotly&quot;      &quot;package:viridis&quot;     &quot;package:viridisLite&quot;
-## [13] &quot;package:janitor&quot;     &quot;package:modelr&quot;      &quot;package:haven&quot;      
-## [16] &quot;package:readxl&quot;      &quot;package:bindrcpp&quot;    &quot;package:forcats&quot;    
-## [19] &quot;package:stringr&quot;     &quot;package:dplyr&quot;       &quot;package:purrr&quot;      
-## [22] &quot;package:readr&quot;       &quot;package:tidyr&quot;       &quot;package:tibble&quot;     
-## [25] &quot;package:ggplot2&quot;     &quot;package:tidyverse&quot;   &quot;package:stats&quot;      
-## [28] &quot;package:graphics&quot;    &quot;package:grDevices&quot;   &quot;package:utils&quot;      
-## [31] &quot;package:datasets&quot;    &quot;package:methods&quot;     &quot;Autoloads&quot;          
-## [34] &quot;package:base&quot;</code></pre>
+##  [1] &quot;.GlobalEnv&quot;             &quot;package:patchwork&quot;     
+##  [3] &quot;package:hexbin&quot;         &quot;package:ggridges&quot;      
+##  [5] &quot;package:tidytext&quot;       &quot;package:shiny&quot;         
+##  [7] &quot;package:janitor&quot;        &quot;package:httr&quot;          
+##  [9] &quot;package:rvest&quot;          &quot;package:xml2&quot;          
+## [11] &quot;package:plotly&quot;         &quot;package:p8105.datasets&quot;
+## [13] &quot;package:viridis&quot;        &quot;package:viridisLite&quot;   
+## [15] &quot;package:modelr&quot;         &quot;package:haven&quot;         
+## [17] &quot;package:readxl&quot;         &quot;package:bindrcpp&quot;      
+## [19] &quot;package:forcats&quot;        &quot;package:stringr&quot;       
+## [21] &quot;package:dplyr&quot;          &quot;package:purrr&quot;         
+## [23] &quot;package:readr&quot;          &quot;package:tidyr&quot;         
+## [25] &quot;package:tibble&quot;         &quot;package:ggplot2&quot;       
+## [27] &quot;package:tidyverse&quot;      &quot;package:stats&quot;         
+## [29] &quot;package:graphics&quot;       &quot;package:grDevices&quot;     
+## [31] &quot;package:utils&quot;          &quot;package:datasets&quot;      
+## [33] &quot;package:methods&quot;        &quot;Autoloads&quot;             
+## [35] &quot;package:base&quot;</code></pre>
 <p>The <code>iris</code> dataset is included in the <code>datasets</code> package, which is in the search path. We can also use the <code>clean_names()</code> function since we’ve been very clear about where R should find it. We didn’t do anything to the search path, though!</p>
 <p>If you don’t specify the package for a specific function, R will look for it in the global environment and then in attached packages – that is, in the search path. The <code>library()</code> function attaches a package to the search path, including it in the collection of packages R searches when trying to find a function. For example, to call <code>clean_names()</code> without specifying the package, we can use <code>library(janitor)</code> to attach the package to the search path.</p>
 <pre class="r"><code>library(janitor)
 search()
-##  [1] &quot;.GlobalEnv&quot;          &quot;package:hexbin&quot;      &quot;package:ggthemes&quot;   
-##  [4] &quot;package:ggridges&quot;    &quot;package:tidytext&quot;    &quot;package:shiny&quot;      
-##  [7] &quot;package:httr&quot;        &quot;package:rvest&quot;       &quot;package:xml2&quot;       
-## [10] &quot;package:plotly&quot;      &quot;package:viridis&quot;     &quot;package:viridisLite&quot;
-## [13] &quot;package:janitor&quot;     &quot;package:modelr&quot;      &quot;package:haven&quot;      
-## [16] &quot;package:readxl&quot;      &quot;package:bindrcpp&quot;    &quot;package:forcats&quot;    
-## [19] &quot;package:stringr&quot;     &quot;package:dplyr&quot;       &quot;package:purrr&quot;      
-## [22] &quot;package:readr&quot;       &quot;package:tidyr&quot;       &quot;package:tibble&quot;     
-## [25] &quot;package:ggplot2&quot;     &quot;package:tidyverse&quot;   &quot;package:stats&quot;      
-## [28] &quot;package:graphics&quot;    &quot;package:grDevices&quot;   &quot;package:utils&quot;      
-## [31] &quot;package:datasets&quot;    &quot;package:methods&quot;     &quot;Autoloads&quot;          
-## [34] &quot;package:base&quot;
+##  [1] &quot;.GlobalEnv&quot;             &quot;package:patchwork&quot;     
+##  [3] &quot;package:hexbin&quot;         &quot;package:ggridges&quot;      
+##  [5] &quot;package:tidytext&quot;       &quot;package:shiny&quot;         
+##  [7] &quot;package:janitor&quot;        &quot;package:httr&quot;          
+##  [9] &quot;package:rvest&quot;          &quot;package:xml2&quot;          
+## [11] &quot;package:plotly&quot;         &quot;package:p8105.datasets&quot;
+## [13] &quot;package:viridis&quot;        &quot;package:viridisLite&quot;   
+## [15] &quot;package:modelr&quot;         &quot;package:haven&quot;         
+## [17] &quot;package:readxl&quot;         &quot;package:bindrcpp&quot;      
+## [19] &quot;package:forcats&quot;        &quot;package:stringr&quot;       
+## [21] &quot;package:dplyr&quot;          &quot;package:purrr&quot;         
+## [23] &quot;package:readr&quot;          &quot;package:tidyr&quot;         
+## [25] &quot;package:tibble&quot;         &quot;package:ggplot2&quot;       
+## [27] &quot;package:tidyverse&quot;      &quot;package:stats&quot;         
+## [29] &quot;package:graphics&quot;       &quot;package:grDevices&quot;     
+## [31] &quot;package:utils&quot;          &quot;package:datasets&quot;      
+## [33] &quot;package:methods&quot;        &quot;Autoloads&quot;             
+## [35] &quot;package:base&quot;
 
 iris = clean_names(iris)
 detach(&quot;package:janitor&quot;, unload = TRUE)</code></pre>
