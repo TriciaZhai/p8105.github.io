@@ -196,4 +196,4 @@ All of this `YAML` business is only an issue for dashboards embedded in websites
     * This [app](https://juliasilge.shinyapps.io/power-app/) for understanding power (blog post [here](https://juliasilge.com/blog/ab-testing/));
     * 538's [p-hacking tool](https://projects.fivethirtyeight.com/p-hacking/index.html?initialWidth=1024&childId=phacking&parentTitle=Science%20Isn’t%20Broken%20%7C%20FiveThirtyEight&parentUrl=https%3A%2F%2Ffivethirtyeight.com%2Ffeatures%2Fscience-isnt-broken%2F) (full article [here](https://fivethirtyeight.com/features/science-isnt-broken/#part3)).
 
-The code that I produced working examples in lecture is [here](https://github.com/jeff-goldsmith/example_interactivity).
+The code that I produced working examples in lecture is [here](https://github.com/bst-p8105/bst-p8105.github.io).
