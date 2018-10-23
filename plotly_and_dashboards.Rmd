@@ -160,6 +160,7 @@ If I really want an interactive plot to look good, I'll use `plot_ly` to build i
 
 I use `ggplot` for static plots, and I make static plots way, _way_ more frequently than interactive plots. Sometimes I'll use `ggplotly` on top of that for some quick interactivity; this can be handy to do some zooming or inspect outlying features. 
 
+
 ### `flexdashboard`
 
 Clearly you can embed interactive graphics in HTML files produced by R Markdown; this is a handy time to introduce dashboards. In short, dashboards are a collection of related graphics (or tables, or other outputs) that are displayed in a structured way that's easy to navigate. 
@@ -177,11 +178,19 @@ Conveniently, this dashboard has space for three plots! We'll populate it using 
 Dashboard layouts are controlled by specifying columns and rows, and potentially subdiving these. We specified a two-column layout with set column widths, and then divided the second column into two panels. Using tabbed browsing and multiple pages can also be really useful -- check out the gallery linked below for examples!
 
 
-### Hosting a `flexdashboard`
+### `flexdashboard`s on websites
 
 You can share the HTML files for dashboards directly (e.g. by email); you can also host these online to make the dashboard visible to others. That process is essentially the same as for any other [website](making_websites.html) you'd make. 
 
-To illustrate, we'll put the dashboard we just created on a website for this topic. 
+However, the website's `_site.yml` file conflicts with the dashboard's `YAML` header (and the website's `_site.yml` "wins). To avoid this, instead of knitting you can use
+
+```{r, eval = FALSE}
+rmarkdown::render("dashboard_template.Rmd", output = "flex_dashboard")
+```
+
+This will create `dashboard_template.html` but not open it in RStudio's Viewer pane; you can open the file in a browser instead. Alternatively, using RStudio's Build pane to Build Website will produce the same results. To illustrate, we'll put the dashboard we just created on a website for this topic. 
+
+All of this `YAML` business is only an issue for dashboards embedded in websites; a standalone dashboard (in a non-website GH repo or R Project) can be knit using the same process as other .Rmd files. 
 
 
 ## Other materials
