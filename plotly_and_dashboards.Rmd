@@ -62,6 +62,13 @@ nyc_airbnb =
 
 We'll use this dataset as the basis for our plots. 
 
+### Templates
+
+The material below uses a template:
+
+* Here's a [flexdashboard](resources/dashboard_template.Rmd)
+
+
 ### Plotly scatterplot
 
 There are several practical differences comparing `ggplot` and `plot_ly`, but the underlying conceptual framework is similar. We need to define a dataset, specify how variables map to plot elements, and pick a plot type. 
@@ -123,7 +130,8 @@ You _can_ convert a `ggplot` object straight to an interactive graphic using `gg
 For example, the code below recreates our scatterplot using `ggplot` followed by `ggplotly`. 
 
 ```{r}
-scatter_ggplot = nyc_airbnb %>%
+scatter_ggplot = 
+  nyc_airbnb %>%
   ggplot(aes(x = longitude, y = latitude, color = price)) +
   geom_point(alpha = 0.25) +
   scale_color_viridis() +
