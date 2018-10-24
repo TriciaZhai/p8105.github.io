@@ -7,8 +7,8 @@ When writing code in general, and when implementing modern statistical approache
 This topic is made up of the following components:
 
 * [Writing functions](writing_functions.html)
-* [Iteration and simulation](iteration_and_simulation.html)
-* [List columns and bootstrapping](listcols_and_bootstrapping.html)
+* [Iteration and list columns](iteration_and_listcols.html)
+* [List columns and bootstrapping](simulation_and_bootstrapping.html)
 
 The slack channel for this topic is [here](https://p8105-fall2018.slack.com/messages/CCAAE7XDW).
 

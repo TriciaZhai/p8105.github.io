@@ -101,7 +101,7 @@ mean_and_sd = function(x) {
   if (!is.numeric(x)) {
     stop("Argument x should be numeric")
   } else if (length(x) == 1) {
-    stop("Z-scores cannot be computed for length 1 vectors")
+    stop("Cannot be computed for length 1 vectors")
   }
   
   mean_x = mean(x)
@@ -120,7 +120,7 @@ mean_and_sd = function(x) {
   if (!is.numeric(x)) {
     stop("Argument x should be numeric")
   } else if (length(x) == 1) {
-    stop("z-scores cannot be computed for length 1 vectors")
+    stop("Cannot be computed for length 1 vectors")
   }
   
   mean_x = mean(x)
@@ -154,10 +154,10 @@ beta1_hat = coef(ls_fit)[2]
 
 You should take a few minutes to examine this code -- make a plot of the simulated data to make sure it "makes sense", take a look at the result of the `lm` call, etc. 
 
-Once you're satisfied, it's time to wrap things up in a function. I'd like to be able to change the sample size and regression parameters, so those will be my *arguments*; the code that simulates data and fits the regression goes in the *body*; and the *return* statement should include the intercept and slope. A function that does all this is below. 
+Once you're satisfied, it's time to wrap things up in a function. I'd like to be able to change the sample size and regression parameters, so those will be my *arguments*; the code that simulates data and fits the regression goes in the *body*; and the *return* statement should include the intercept and slope. A function that does all this, using default values for the intercept and slope, is below. 
 
 ```{r}
-sim_regression = function(n, beta0, beta1) {
+sim_regression = function(n, beta0 = 2, beta1 = 3) {
   
   sim_data = tibble(
     x = rnorm(n, mean = 1, sd = 1),
@@ -173,11 +173,11 @@ sim_regression = function(n, beta0, beta1) {
 }
 ```
 
-Repeated calls to `sim_regression()` will give a sense of sampling variability in regression coefficients in SLR; take a few minutes to run `sim_regression(30, 2, 3)` a few times, and then to run `sim_regression(300, 2, 3)`, and think about the results. We'll examine this more formally in [simulation](simulation.html).
+Repeated calls to `sim_regression()` will give a sense of sampling variability in regression coefficients in SLR; take a few minutes to run `sim_regression(30)` a few times, and then to run `sim_regression(300)`, and think about the results. We'll examine this more formally in [simulation](simulation.html).
 
-This is also a good time to point out how R handles argument matching. We can use _positional_ matching, meaning the first value supplied is taken to be the first argument, the second value is the second argument, and so on. We do this with `tidyverse` functions a lot; the first argument is always a dataframe, and we just supply that dataframe in the first position. We also use positional matching when we call `mean(x)` or `sim_regression(30, 2, 3)`.
+This is also a good time to point out how R handles argument matching. We can use _positional_ matching, meaning the first value supplied is taken to be the first argument, the second value is the second argument, and so on. We do this with `tidyverse` functions a lot; the first argument is always a dataframe, and we just supply that dataframe in the first position. We also use positional matching when we call `mean(x)` or `sim_regression(30, 5, -1)`.
 
-Alternatively, we can use _named_ matching, which uses the argument name in the function call. Named matching can be a bit more stable when you're writing your own functions (in case you decide to change the order of the inputs, for example) but isn't strictly necessary. Named arguments can be supplied in any order: `sim_regression(n = 30, beta0 = 2, beta1 = 3)` is equivalent to `sim_regression(beta1 = 3, n = 30, beta0 = 2)`.
+Alternatively, we can use _named_ matching, which uses the argument name in the function call. Named matching can be a bit more stable when you're writing your own functions (in case you decide to change the order of the inputs, for example) but isn't strictly necessary. Named arguments can be supplied in any order: `sim_regression(n = 30, beta0 = 5, beta1 = -1)` is equivalent to `sim_regression(beta1 = -1, n = 30, beta0 = 5)`.
 
 
 ### Revisiting past examples
