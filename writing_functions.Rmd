@@ -32,10 +32,11 @@ theme_set(theme_bw() + theme(legend.position = "bottom"))
 
 ## Example
 
-For this topic, I'll create a GitHub repo + directory / R Project called `iteration`. I'll write code for today's content in a new R Markdown document called `writing_functions.Rmd`, and I'm going to load the some usual packages. I'm also setting the seed so that the output on this page is fixed. 
+For this topic, I'll create a GitHub repo + directory / R Project called `iteration`. I'll write code for today's content in a new R Markdown document called `writing_functions.Rmd`, and I'm going to load the usual packages. I'm also setting the seed so that the output on this page is fixed. 
 
 ```{r}
 library(tidyverse)
+library(rvest)
 
 set.seed(1)
 ```
@@ -93,7 +94,7 @@ Fantastic -- we have a pretty solid function for computing Z scores!
 
 ### Multiple outputs
 
-In some cases it might be better to return the mean and standard deviation instead of the Z scores. A first option is to store each of the values in a named list, and to return that list. 
+In some cases it might be better to return the mean and standard deviation instead of the Z scores. A first option is to store each of the values in a named list, and to return that list. (We'll talk more about lists in [iteration and listcols](iteration_and_listcols.html).)
 
 ```{r}
 mean_and_sd = function(x) {
@@ -173,7 +174,7 @@ sim_regression = function(n, beta0 = 2, beta1 = 3) {
 }
 ```
 
-Repeated calls to `sim_regression()` will give a sense of sampling variability in regression coefficients in SLR; take a few minutes to run `sim_regression(30)` a few times, and then to run `sim_regression(300)`, and think about the results. We'll examine this more formally in [simulation](simulation.html).
+Repeated calls to `sim_regression()` will give a sense of sampling variability in regression coefficients in SLR; take a few minutes to run `sim_regression(30)` a few times, and then to run `sim_regression(300)`, and think about the results. We'll examine this more formally in [iteration](iteration_and_listcols.html) and in [simulation](simulation_and_bootstrapping.html).
 
 This is also a good time to point out how R handles argument matching. We can use _positional_ matching, meaning the first value supplied is taken to be the first argument, the second value is the second argument, and so on. We do this with `tidyverse` functions a lot; the first argument is always a dataframe, and we just supply that dataframe in the first position. We also use positional matching when we call `mean(x)` or `sim_regression(30, 5, -1)`.
 
@@ -215,27 +216,29 @@ reviews = tibble(
 Let's write a quick function to scrape review information for any URL to an Amazon review page. 
 
 ```{r}
-library(rvest)
-
 read_page_reviews <- function(url) {
   
   h = read_html(url)
   
-  title = h %>%
+  review_titles = h %>%
     html_nodes("#cm_cr-review_list .review-title") %>%
     html_text()
   
-  stars = h %>%
+  review_stars = h %>%
     html_nodes("#cm_cr-review_list .review-rating") %>%
     html_text() %>%
     str_extract("\\d") %>%
     as.numeric()
   
-  text = h %>%
+  review_text = h %>%
     html_nodes(".review-data:nth-child(4)") %>%
     html_text()
   
-  data_frame(title, stars, text)
+  tibble(
+    title = review_titles,
+    stars = review_stars,
+    text = review_text
+  )
 }
 ```
 
@@ -243,7 +246,7 @@ Next we'll use this to read in reviews from a few pages and combine the results.
 
 ```{r}
 url_base = "https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&reviewerType=avp_only_reviews&sortBy=recent&pageNumber="
-urls = stringr::str_c(url_base, 1:5)
+urls = str_c(url_base, 1:5)
 
 dynamite_reviews = bind_rows(
   read_page_reviews(urls[1]),
@@ -348,7 +351,7 @@ y = 2
 f(x = y)
 ```
 
-Examples like this are tricky, but emphasize an issue that comes up a lot in writing functions: you define a variable in your global environment and use it in your function, but it isn't passed as an argument. This is easy to miss, especially when you go from written code to a function, and can be hard to track down if you empty your working directory or change a variable name. The best advice I have is to give your arguments useful names and think carefully about where everything is defined, and to periodically restart R and try everything again!
+Examples like this are tricky, but emphasize an issue that comes up a lot in writing functions: you define a variable in your global environment and use it in your function, but it isn't passed as an argument. This is easy to miss, especially when you go from  code written in chunks to a function, and can be hard to track down if you empty your working directory or change a variable name. The best advice I have is to give your arguments useful names and think carefully about where everything is defined, and to periodically restart R and try everything again!
 
 
 ## Other materials
