@@ -42,6 +42,9 @@ library(tidyverse)
 set.seed(1)
 ```
 
+Things are gonna get a little weird...
+
+
 ### Lists
 
 We need a brief digression about lists before we do anything. 
@@ -382,7 +385,7 @@ df %>%
   gather(key = sample, value = value, a:d) %>% 
   nest(value) %>% 
   mutate(
-    vec_values = map(.x = data, ~pull(.x, value)),
+    vec_values = map(data, "value"),
     summary = map(vec_values, mean_and_sd) 
   ) %>% 
   select(sample, summary) %>% 
@@ -414,16 +417,17 @@ lotr_tidy =
 
 ## Other materials
 
-Iteration and simulation can be tricky -- the readings below will help as you work through this!
+Iteration can be tricky -- the readings below will help as you work through this!
 
 * The chapter on [iteration](http://r4ds.had.co.nz/iteration.html) in R for Data Science has a useful treatment of iteration using loops and `map`
 * Jenny Bryan's [`purrr` tutorial](https://jennybc.github.io/purrr-tutorial/) has a lot of useful information and examples
 * R Programming for Data Science has information on [loops](https://bookdown.org/rdpeng/rprogdatascience/control-structures.html#for-loops) and [loop functions](https://bookdown.org/rdpeng/rprogdatascience/loop-functions.html); given Roger Peng's tendency towards base R he focuses on `lapply` and others instead of `map`
 * This [question and response](https://stackoverflow.com/questions/45101045/why-use-purrrmap-instead-of-lapply) on stack overflow explains why one might prefer `map` to `lapply`
 
-One of the best ways to learn about writing functions is to see what other people have done and try to figure out how it works. We've seen a couple of examples in other contexts that might be worth revising
+List columns take some getting used to; there are some materials to help with that.
 
-* This [app](https://juliasilge.shinyapps.io/power-app/) for understanding power uses `map` to generate power curves at various sample sizes
+* R for Data Science has a chapter on [fitting many models](http://r4ds.had.co.nz/many-models.html)
+* Jenny Bryan's [purrr tutorial](https://jennybc.github.io/purrr-tutorial/) has useful list-column examples
 * The [R file](https://github.com/tidyverse/dplyr/blob/master/data-raw/starwars.R) used to create the `starwars` dataset (in the `tidyverse`) using the [Star Wars API](https://swapi.co) processes list output (from the API) using several `map` variants
 
 The code that I produced working examples in lecture is [here](https://github.com/p8105/iteration).

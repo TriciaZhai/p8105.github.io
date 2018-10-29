@@ -383,7 +383,8 @@ div.tocify {
 </div>
 
 
-<p>R’s data structures, especially data frames, are surprisingly flexible. This is useful when the “observations” you want to store become more complex than single values; for example, each row many contain a few scalar observations as well a complete data set. In these cases, <em>list columns</em> are an appropriate column type, and <code>map</code> functions provide a way to interact with those columns.</p>
+<p>We’ve noted that functions are helpful when you repeat code more than twice; we’ve also noted that a lot of statistical methods involve doing the same thing a large number of times. Putting those together motivates a careful approach to iteratation.</p>
+<p>Meanwhile, R’s data structures, especially data frames, are surprisingly flexible. This is useful when the “observations” you want to store become more complex than single values; for example, each row many contain a few scalar observations as well a complete data set. In these cases, <em>list columns</em> are an appropriate column type, and <code>map</code> functions provide a way to interact with those columns.</p>
 <p>This is the second module in the <a href="topic_iteration.html">Iteration</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCAAE7XDW">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
@@ -399,6 +400,7 @@ div.tocify {
 <pre class="r"><code>library(tidyverse)
 
 set.seed(1)</code></pre>
+<p>Things are gonna get a little weird…</p>
 <div id="lists" class="section level3">
 <h3>Lists</h3>
 <p>We need a brief digression about lists before we do anything.</p>
@@ -615,63 +617,83 @@ weather_nest
 weather_nest %&gt;% pull(data)
 ## [[1]]
 ## # A tibble: 366 x 4
-##   date        prcp  tmax  tmin
-##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 2016-01-01     0   5.6   1.1
-## 2 2016-01-02     0   4.4   0  
-## 3 2016-01-03     0   7.2   1.7
-## 4 2016-01-04     0   2.2  -9.9
-## 5 2016-01-05     0  -1.6 -11.6
-## 6 2016-01-06     0   5    -3.8
-## # ... with 360 more rows
+##    date        prcp  tmax  tmin
+##    &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 2016-01-01     0   5.6   1.1
+##  2 2016-01-02     0   4.4   0  
+##  3 2016-01-03     0   7.2   1.7
+##  4 2016-01-04     0   2.2  -9.9
+##  5 2016-01-05     0  -1.6 -11.6
+##  6 2016-01-06     0   5    -3.8
+##  7 2016-01-07     0   7.8  -0.5
+##  8 2016-01-08     0   7.8  -0.5
+##  9 2016-01-09     0   8.3   4.4
+## 10 2016-01-10   457  15     4.4
+## # ... with 356 more rows
 ## 
 ## [[2]]
 ## # A tibble: 366 x 4
-##   date        prcp  tmax  tmin
-##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 2016-01-01     0  29.4  16.7
-## 2 2016-01-02     0  28.3  16.7
-## 3 2016-01-03     0  28.3  16.7
-## 4 2016-01-04     0  28.3  16.1
-## 5 2016-01-05     0  27.2  16.7
-## 6 2016-01-06     0  27.2  20  
-## # ... with 360 more rows
+##    date        prcp  tmax  tmin
+##    &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 2016-01-01     0  29.4  16.7
+##  2 2016-01-02     0  28.3  16.7
+##  3 2016-01-03     0  28.3  16.7
+##  4 2016-01-04     0  28.3  16.1
+##  5 2016-01-05     0  27.2  16.7
+##  6 2016-01-06     0  27.2  20  
+##  7 2016-01-07    46  27.8  18.3
+##  8 2016-01-08     3  28.3  17.8
+##  9 2016-01-09     8  27.8  19.4
+## 10 2016-01-10     3  28.3  18.3
+## # ... with 356 more rows
 ## 
 ## [[3]]
 ## # A tibble: 366 x 4
-##   date        prcp  tmax  tmin
-##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 2016-01-01     0   1.7  -5.9
-## 2 2016-01-02    25  -0.1  -6  
-## 3 2016-01-03     0  -5   -10  
-## 4 2016-01-04    25   0.3  -9.8
-## 5 2016-01-05    25   1.9  -1.8
-## 6 2016-01-06    25   1.4  -2.6
-## # ... with 360 more rows</code></pre>
+##    date        prcp  tmax  tmin
+##    &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 2016-01-01     0   1.7  -5.9
+##  2 2016-01-02    25  -0.1  -6  
+##  3 2016-01-03     0  -5   -10  
+##  4 2016-01-04    25   0.3  -9.8
+##  5 2016-01-05    25   1.9  -1.8
+##  6 2016-01-06    25   1.4  -2.6
+##  7 2016-01-07     0   1.4  -3.9
+##  8 2016-01-08     0   1.1  -4  
+##  9 2016-01-09     0   1.4  -4.5
+## 10 2016-01-10     0   2.3  -3.8
+## # ... with 356 more rows</code></pre>
 <p>The list column really is a list, and will behave as such elsewhere in R. So, for example, you can examine the first list entry using usual list index procedures.</p>
 <pre class="r"><code>weather_nest$data[[1]]
 ## # A tibble: 366 x 4
-##   date        prcp  tmax  tmin
-##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 2016-01-01     0   5.6   1.1
-## 2 2016-01-02     0   4.4   0  
-## 3 2016-01-03     0   7.2   1.7
-## 4 2016-01-04     0   2.2  -9.9
-## 5 2016-01-05     0  -1.6 -11.6
-## 6 2016-01-06     0   5    -3.8
-## # ... with 360 more rows</code></pre>
+##    date        prcp  tmax  tmin
+##    &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 2016-01-01     0   5.6   1.1
+##  2 2016-01-02     0   4.4   0  
+##  3 2016-01-03     0   7.2   1.7
+##  4 2016-01-04     0   2.2  -9.9
+##  5 2016-01-05     0  -1.6 -11.6
+##  6 2016-01-06     0   5    -3.8
+##  7 2016-01-07     0   7.8  -0.5
+##  8 2016-01-08     0   7.8  -0.5
+##  9 2016-01-09     0   8.3   4.4
+## 10 2016-01-10   457  15     4.4
+## # ... with 356 more rows</code></pre>
 <p>Of course, if you can <code>nest</code> data you should be able to <code>unnest</code> it as well, and you can (with the caveat that you’re unnesting a list column that contains a data frame).</p>
 <pre class="r"><code>unnest(weather_nest)
 ## # A tibble: 1,098 x 6
-##   name           id          date        prcp  tmax  tmin
-##   &lt;chr&gt;          &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 CentralPark_NY USW00094728 2016-01-01     0   5.6   1.1
-## 2 CentralPark_NY USW00094728 2016-01-02     0   4.4   0  
-## 3 CentralPark_NY USW00094728 2016-01-03     0   7.2   1.7
-## 4 CentralPark_NY USW00094728 2016-01-04     0   2.2  -9.9
-## 5 CentralPark_NY USW00094728 2016-01-05     0  -1.6 -11.6
-## 6 CentralPark_NY USW00094728 2016-01-06     0   5    -3.8
-## # ... with 1,092 more rows</code></pre>
+##    name           id          date        prcp  tmax  tmin
+##    &lt;chr&gt;          &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 CentralPark_NY USW00094728 2016-01-01     0   5.6   1.1
+##  2 CentralPark_NY USW00094728 2016-01-02     0   4.4   0  
+##  3 CentralPark_NY USW00094728 2016-01-03     0   7.2   1.7
+##  4 CentralPark_NY USW00094728 2016-01-04     0   2.2  -9.9
+##  5 CentralPark_NY USW00094728 2016-01-05     0  -1.6 -11.6
+##  6 CentralPark_NY USW00094728 2016-01-06     0   5    -3.8
+##  7 CentralPark_NY USW00094728 2016-01-07     0   7.8  -0.5
+##  8 CentralPark_NY USW00094728 2016-01-08     0   7.8  -0.5
+##  9 CentralPark_NY USW00094728 2016-01-09     0   8.3   4.4
+## 10 CentralPark_NY USW00094728 2016-01-10   457  15     4.4
+## # ... with 1,088 more rows</code></pre>
 <p>Nesting columns can help with data organization and comprehension by masking complexity you’re less concerned about right now and clarifying the things you are concerned about. In the weather data, it can be helpful to think of stations as the basic unit of observation, and daily weather recordings as a more granular level of observation. Nesting can also simplify the use of analytic approaches across levels of a higher variable.</p>
 </div>
 <div id="operations-on-list-columns" class="section level3">
@@ -780,7 +802,7 @@ weather_nest
   gather(key = sample, value = value, a:d) %&gt;% 
   nest(value) %&gt;% 
   mutate(
-    vec_values = map(.x = data, ~pull(.x, value)),
+    vec_values = map(data, &quot;value&quot;),
     summary = map(vec_values, mean_and_sd) 
   ) %&gt;% 
   select(sample, summary) %&gt;% 
@@ -813,16 +835,17 @@ lotr_tidy =
 </div>
 <div id="other-materials" class="section level2">
 <h2>Other materials</h2>
-<p>Iteration and simulation can be tricky – the readings below will help as you work through this!</p>
+<p>Iteration can be tricky – the readings below will help as you work through this!</p>
 <ul>
 <li>The chapter on <a href="http://r4ds.had.co.nz/iteration.html">iteration</a> in R for Data Science has a useful treatment of iteration using loops and <code>map</code></li>
 <li>Jenny Bryan’s <a href="https://jennybc.github.io/purrr-tutorial/"><code>purrr</code> tutorial</a> has a lot of useful information and examples</li>
 <li>R Programming for Data Science has information on <a href="https://bookdown.org/rdpeng/rprogdatascience/control-structures.html#for-loops">loops</a> and <a href="https://bookdown.org/rdpeng/rprogdatascience/loop-functions.html">loop functions</a>; given Roger Peng’s tendency towards base R he focuses on <code>lapply</code> and others instead of <code>map</code></li>
 <li>This <a href="https://stackoverflow.com/questions/45101045/why-use-purrrmap-instead-of-lapply">question and response</a> on stack overflow explains why one might prefer <code>map</code> to <code>lapply</code></li>
 </ul>
-<p>One of the best ways to learn about writing functions is to see what other people have done and try to figure out how it works. We’ve seen a couple of examples in other contexts that might be worth revising</p>
+<p>List columns take some getting used to; there are some materials to help with that.</p>
 <ul>
-<li>This <a href="https://juliasilge.shinyapps.io/power-app/">app</a> for understanding power uses <code>map</code> to generate power curves at various sample sizes</li>
+<li>R for Data Science has a chapter on <a href="http://r4ds.had.co.nz/many-models.html">fitting many models</a></li>
+<li>Jenny Bryan’s <a href="https://jennybc.github.io/purrr-tutorial/">purrr tutorial</a> has useful list-column examples</li>
 <li>The <a href="https://github.com/tidyverse/dplyr/blob/master/data-raw/starwars.R">R file</a> used to create the <code>starwars</code> dataset (in the <code>tidyverse</code>) using the <a href="https://swapi.co">Star Wars API</a> processes list output (from the API) using several <code>map</code> variants</li>
 </ul>
 <p>The code that I produced working examples in lecture is <a href="https://github.com/p8105/iteration">here</a>.</p>
