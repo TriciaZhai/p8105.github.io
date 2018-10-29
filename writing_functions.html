@@ -317,7 +317,7 @@ div.tocify {
       <a href="topic_interactivity.html">Interactivity</a>
     </li>
     <li>
-      <a href="topic_resampling.html">Resampling</a>
+      <a href="topic_iteration.html">Iteration</a>
     </li>
     <li>
       <a href="topic_linear_models.html">Linear Models</a>
@@ -398,15 +398,6 @@ div.tocify {
 <p>For this topic, I’ll create a GitHub repo + directory / R Project called <code>iteration</code>. I’ll write code for today’s content in a new R Markdown document called <code>writing_functions.Rmd</code>, and I’m going to load the usual packages. I’m also setting the seed so that the output on this page is fixed.</p>
 <pre class="r"><code>library(tidyverse)
 library(rvest)
-## Loading required package: xml2
-## 
-## Attaching package: &#39;rvest&#39;
-## The following object is masked from &#39;package:purrr&#39;:
-## 
-##     pluck
-## The following object is masked from &#39;package:readr&#39;:
-## 
-##     guess_encoding
 
 set.seed(1)</code></pre>
 <div id="my-first-function" class="section level3">
@@ -589,31 +580,26 @@ reviews = tibble(
 }</code></pre>
 <p>Next we’ll use this to read in reviews from a few pages and combine the results.</p>
 <pre class="r"><code>url_base = &quot;https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=&quot;
-urls = str_c(url_base, 1:5)
+vec_urls = str_c(url_base, 1:5)
 
 dynamite_reviews = bind_rows(
-  read_page_reviews(urls[1]),
-  read_page_reviews(urls[2]),
-  read_page_reviews(urls[3]),
-  read_page_reviews(urls[4]),
-  read_page_reviews(urls[5])
+  read_page_reviews(vec_urls[1]),
+  read_page_reviews(vec_urls[2]),
+  read_page_reviews(vec_urls[3]),
+  read_page_reviews(vec_urls[4]),
+  read_page_reviews(vec_urls[5])
 )
 
 dynamite_reviews
 ## # A tibble: 50 x 3
-##    title                     stars text                                   
-##    &lt;chr&gt;                     &lt;dbl&gt; &lt;chr&gt;                                  
-##  1 &quot;Great \&quot;Odd Ball\&quot; movi…     5 The dance scene was worth the time spe…
-##  2 Nostalgic Stupidity           4 This movie is dumb. I won&#39;t lie and sa…
-##  3 Happy                         5 Don&#39;t know why I lov this movie but ido
-##  4 Go watch THE ROCK or dum…     2 This movie is horrible. How do so many…
-##  5 My mom loves it               5 Got this for my mom for mother&#39;s day, …
-##  6 Nothing Quite Like It.        5 So much fun watching these listless pe…
-##  7 Has pretty sweet bow ski…     5 Well, things are getting pretty seriou…
-##  8 Great                         5 Great                                  
-##  9 Fast delivery                 5 Bought as gift                         
-## 10 Lol                           5 Funny                                  
-## # ... with 40 more rows</code></pre>
+##   title                                  stars text                       
+##   &lt;chr&gt;                                  &lt;dbl&gt; &lt;chr&gt;                      
+## 1 Great Movie                                5 Format: Prime VideoVerifie…
+## 2 True to life!                              5 Format: Prime VideoVerifie…
+## 3 Classic family friendly comedy kids c…     5 Format: Prime VideoVerifie…
+## 4 &quot;Great \&quot;Odd Ball\&quot; movie to watch&quot;        5 Format: Prime VideoVerifie…
+## 5 Nostalgic Stupidity                        4 Format: Prime VideoVerifie…
+## # ... with 45 more rows</code></pre>
 </div>
 <div id="loading-lotr-data" class="section level4">
 <h4>Loading LoTR data</h4>

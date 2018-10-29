@@ -317,7 +317,7 @@ div.tocify {
       <a href="topic_interactivity.html">Interactivity</a>
     </li>
     <li>
-      <a href="topic_resampling.html">Resampling</a>
+      <a href="topic_iteration.html">Iteration</a>
     </li>
     <li>
       <a href="topic_linear_models.html">Linear Models</a>
@@ -383,7 +383,7 @@ div.tocify {
 </div>
 
 
-<p>We’ve noted that functions are helpful when you repeat code more than twice; we’ve also noted that a lot of statistical methods involve doing the same thing a large number of times. Putting those together motivates a careful approach to iteratation; conducting simulations is a very relevant example.</p>
+<p>R’s data structures, especially data frames, are surprisingly flexible. This is useful when the “observations” you want to store become more complex than single values; for example, each row many contain a few scalar observations as well a complete data set. In these cases, <em>list columns</em> are an appropriate column type, and <code>map</code> functions provide a way to interact with those columns.</p>
 <p>This is the second module in the <a href="topic_iteration.html">Iteration</a> topic; the relevant slack channel is <a href="https://p8105-fall2018.slack.com/messages/CCAAE7XDW">here</a>.</p>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
@@ -395,7 +395,7 @@ div.tocify {
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>I’ll write code for today’s content in a new R Markdown document called <code>iteration_and_simulation.Rmd</code> in the <code>iteration</code> repo / directory I started last time. The code chunk below loads the <code>tidyverse</code> and sets a seed for reproducibility.</p>
+<p>I’ll write code for today’s content in a new R Markdown document called <code>iteration_and_listcols.Rmd</code> in the <code>iteration</code> repo / directory I started last time. The code chunk below loads the <code>tidyverse</code> and sets a seed for reproducibility.</p>
 <pre class="r"><code>library(tidyverse)
 
 set.seed(1)</code></pre>
@@ -433,7 +433,7 @@ l[[1]]
 ## [1] 5 6 7 8
 l[[1]][1:3]
 ## [1] 5 6 7</code></pre>
-<p>Lists seem bizarre but are really usefulRight now, we’ll use them to hold general inputs and outputs of iterative processes. Even more importantly, data frames are actually a very specific kind of list – one comprised of vectors of the same length – which is why they can store variables of different types.</p>
+<p>Lists seem bizarre but are really useful. Right now, we’ll use them to hold general inputs and outputs of iterative processes. Even more importantly, we’ll see that data frames are actually a very specific kind of list – one comprised of vectors of the same length – which is why they can store variables of different types.</p>
 </div>
 <div id="for-loops" class="section level3">
 <h3><code>for</code> loops</h3>
@@ -497,10 +497,10 @@ for (i in 1:4) {
 </div>
 <div id="map" class="section level3">
 <h3><code>map</code></h3>
-<p>A criticism of for loops is that there’s a lot of overhead – you have to define your output vector / list, there’s the for loop bookkeeping to do, etc – that distracts from the purpose of the code. In this case, we want to apply <code>mean_and_sd</code> to each column of <code>df</code>, but we have to scan inside the for loop to figure that out.</p>
+<p>A criticism of <code>for</code> loops is that there’s a lot of overhead – you have to define your output vector / list, there’s the <code>for</code> loop bookkeeping to do, etc – that distracts from the purpose of the code. In this case, we want to apply <code>mean_and_sd</code> to each column of <code>df</code>, but we have to scan inside the for loop to figure that out.</p>
 <p>The <code>map</code> functions in <code>purrr</code> try to make the purpose of your code clear. Compare the loop above to the line below.</p>
 <pre class="r"><code>output = map(df, mean_and_sd)</code></pre>
-<p>The first argument to <code>map</code> is the vector /list (/ data frame) we want to iterate over, and the second argument is the function we want to apply to each element. The line above will produce the same output as the previous loop, but is clearer and easier to understand (once you’re used to <code>map</code> …).</p>
+<p>The first argument to <code>map</code> is the vector / list ( / data frame) we want to iterate over, and the second argument is the function we want to apply to each element. The line above will produce the same output as the previous loop, but is clearer and easier to understand (once you’re used to <code>map</code> …).</p>
 <p>It’s sometimes necessary to be more specific in giving arguments to <code>map</code>. In particular, using <code>.x = df</code> for the input list and <code>~ mean_and_sd(.x)</code> to specify the function applied to the input list (using <code>.x</code> as a placeholder) will produce the same result.</p>
 <pre class="r"><code>output = map(.x = df, ~ mean_and_sd(.x))</code></pre>
 <p>This code (using <code>map</code>) is why we pointed out in <a href="writing_functions.html">writing functions</a> that functions can be passed as arguments to other functions. The second argument in <code>map(df, mean_and_sd)</code> is a function we just wrote. To see how powerful this can be, suppose we wanted to apply a different function, say <code>median</code>, to each column of <code>df</code>. The chunk below includes both the loop and the <code>map</code> approach.</p>
@@ -522,13 +522,26 @@ output = map(df, median)
 <p>Similarly, since we know <code>mean_and_sd</code> produces a data frame, we can use the output-specific <code>map_dfr</code>; this will produce a single data frame.</p>
 <pre class="r"><code>output = map_dfr(df, mean_and_sd, .id = &quot;input&quot;)</code></pre>
 <p>The <code>map_df</code> variant is helpful when your map statement is part of a longer chain of piped commands.</p>
+<p>Finally, <code>map2</code> (and <code>map2_dbl</code>, etc) is helpful when your function has two arguments. In these cases, I find it very helpful to be specific about arguments using something like the following:</p>
+<pre class="r"><code>output = map2(.x = input_1, .y = input_2, ~func(arg_1 = .x, arg_2 = .y))</code></pre>
+<p>Although we won’t go into this in detail, one example where you might use this is in loading the LoTR data using functions and inputs we defined previously.</p>
+<pre class="r"><code>lotr_data = map2_df(
+  .x = cell_ranges, .y = movie_names, 
+  ~lotr_load_and_tidy(path = &quot;./data/LotR_Words.xlsx&quot;, range = .x, movie_name = .y))</code></pre>
 </div>
-<div id="revisiting-past-examples" class="section level3">
-<h3>Revisiting past examples</h3>
-<div id="scraping-amazon" class="section level4">
-<h4>Scraping Amazon</h4>
-<p>In <a href="reading_data_from_the_web.html">reading data from the web</a>, we wrote code that allowed us to scrape information in Amazon reviews; in <a href="writing_functions.html">writing functions</a> we wrapped that code into a function called <code>read_page_reviews</code> which, for a given <code>url</code>, produces a data frame containing review titles, star ratings, and text.</p>
+<div id="revisiting-napoleon" class="section level3">
+<h3>Revisiting Napoleon</h3>
+<p>In <a href="reading_data_from_the_web.html">reading data from the web</a> and elsewhere, we wrote code that allowed us to scrape information in Amazon reviews; in <a href="writing_functions.html">writing functions</a> we wrapped that code into a function called <code>read_page_reviews</code> which, for a given <code>url</code>, produces a data frame containing review titles, star ratings, and text.</p>
 <pre class="r"><code>library(rvest)
+## Loading required package: xml2
+## 
+## Attaching package: &#39;rvest&#39;
+## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     pluck
+## The following object is masked from &#39;package:readr&#39;:
+## 
+##     guess_encoding
 
 read_page_reviews &lt;- function(url) {
   
@@ -552,244 +565,250 @@ read_page_reviews &lt;- function(url) {
 }</code></pre>
 <p><strong><em>Learning Assessment:</em></strong> Use this function to read the five pages of reviews on the URLs defined in the code chunk below.</p>
 <pre class="r"><code>url_base = &quot;https://www.amazon.com/product-reviews/B00005JNBQ/ref=cm_cr_arp_d_viewopt_rvwer?ie=UTF8&amp;reviewerType=avp_only_reviews&amp;sortBy=recent&amp;pageNumber=&quot;
-urls = str_c(url_base, 1:5)</code></pre>
+vec_urls = str_c(url_base, 1:5)</code></pre>
 <p><details> <summary> Solution </summary></p>
 <p>First I’ll define a vector of URLs to act as an input, and then I’ll iterate over that vector using both a for loop and a <code>map_df</code> statement.</p>
 <pre class="r"><code>output = vector(&quot;list&quot;, 5)
 
 for (i in 1:5) {
-  output[[i]] = read_page_reviews(urls[[i]])
+  output[[i]] = read_page_reviews(vec_urls[[i]])
 }
 
 dynamite_reviews = bind_rows(output)
 
-dynamite_reviews = map_df(urls, read_page_reviews)</code></pre>
+dynamite_reviews = map_df(vec_urls, read_page_reviews)</code></pre>
 <p>As with previous examples, using a for loop is pretty okay but the <code>map_df</code> call is clearer.</p>
 <p></details></p>
 </div>
-<div id="lotr-and-map2" class="section level4">
-<h4>LoTR and <code>map2</code></h4>
-<p>Importing the <a href="./data/LotR_Words.xlsx">LoTR words data</a> is a bit trickier. In <a href="writing_functions.html">writing functions</a> we produced the function below, which reads a sub-table of the Excel file containing the data, cleans the result, and returns a tidy data frame.</p>
-<pre class="r"><code>lotr_load_and_tidy = function(path, range, movie_name) {
-  
-  df = readxl::read_excel(path, range = range) %&gt;%
-    janitor::clean_names() %&gt;%
-    gather(key = sex, value = words, female:male) %&gt;%
-    mutate(race = tolower(race),
-           movie = movie_name)
-  
-  df
-  
+<div id="list-columns" class="section level3">
+<h3>List columns</h3>
+<p>Shifting gears a bit, let’s revisit the weather data from <a href="visualization.html">visualization</a> and elsewhere; these data consist of one year of observations from three monitoring stations. The code below pulls these data into R (using the <code>rnoaa</code> package, which interacts with the NOAA API).</p>
+<pre class="r"><code>library(rnoaa)
+
+weather = 
+  meteo_pull_monitors(c(&quot;USW00094728&quot;, &quot;USC00519397&quot;, &quot;USS0023B17S&quot;),
+                      var = c(&quot;PRCP&quot;, &quot;TMIN&quot;, &quot;TMAX&quot;), 
+                      date_min = &quot;2016-01-01&quot;,
+                      date_max = &quot;2016-12-31&quot;) %&gt;%
+  mutate(
+    name = recode(id, USW00094728 = &quot;CentralPark_NY&quot;, 
+                      USC00519397 = &quot;Waikiki_HA&quot;,
+                      USS0023B17S = &quot;Waterhole_WA&quot;),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %&gt;%
+  select(name, id, everything())</code></pre>
+<p>The station name and id are constant across the year’s temperature and precipitation data. For that reason, we can reorganize these data into a new data frame with a single row for each station. Weather data will be separated into three station-specific data frames, each of which is the data “observation” for the respective station.</p>
+<pre class="r"><code>weather_nest = 
+  nest(weather, date:tmin)
+
+weather_nest
+## # A tibble: 3 x 3
+##   name           id          data              
+##   &lt;chr&gt;          &lt;chr&gt;       &lt;list&gt;            
+## 1 CentralPark_NY USW00094728 &lt;tibble [366 × 4]&gt;
+## 2 Waikiki_HA     USC00519397 &lt;tibble [366 × 4]&gt;
+## 3 Waterhole_WA   USS0023B17S &lt;tibble [366 × 4]&gt;</code></pre>
+<p>Here I’ve used <code>nest</code> by specifying a column range to collapse within remaining variable values.</p>
+<p>The <code>name</code> column is a character column – if you pull this column from the <code>weather</code> data frame, the result is a character vector. Similarly, the <code>data</code> column is a <em>list column</em> – on it’s own, it’s a list.</p>
+<pre class="r"><code>weather_nest %&gt;% pull(name)
+## [1] &quot;CentralPark_NY&quot; &quot;Waikiki_HA&quot;     &quot;Waterhole_WA&quot;
+weather_nest %&gt;% pull(data)
+## [[1]]
+## # A tibble: 366 x 4
+##   date        prcp  tmax  tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2016-01-01     0   5.6   1.1
+## 2 2016-01-02     0   4.4   0  
+## 3 2016-01-03     0   7.2   1.7
+## 4 2016-01-04     0   2.2  -9.9
+## 5 2016-01-05     0  -1.6 -11.6
+## 6 2016-01-06     0   5    -3.8
+## # ... with 360 more rows
+## 
+## [[2]]
+## # A tibble: 366 x 4
+##   date        prcp  tmax  tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2016-01-01     0  29.4  16.7
+## 2 2016-01-02     0  28.3  16.7
+## 3 2016-01-03     0  28.3  16.7
+## 4 2016-01-04     0  28.3  16.1
+## 5 2016-01-05     0  27.2  16.7
+## 6 2016-01-06     0  27.2  20  
+## # ... with 360 more rows
+## 
+## [[3]]
+## # A tibble: 366 x 4
+##   date        prcp  tmax  tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2016-01-01     0   1.7  -5.9
+## 2 2016-01-02    25  -0.1  -6  
+## 3 2016-01-03     0  -5   -10  
+## 4 2016-01-04    25   0.3  -9.8
+## 5 2016-01-05    25   1.9  -1.8
+## 6 2016-01-06    25   1.4  -2.6
+## # ... with 360 more rows</code></pre>
+<p>The list column really is a list, and will behave as such elsewhere in R. So, for example, you can examine the first list entry using usual list index procedures.</p>
+<pre class="r"><code>weather_nest$data[[1]]
+## # A tibble: 366 x 4
+##   date        prcp  tmax  tmin
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2016-01-01     0   5.6   1.1
+## 2 2016-01-02     0   4.4   0  
+## 3 2016-01-03     0   7.2   1.7
+## 4 2016-01-04     0   2.2  -9.9
+## 5 2016-01-05     0  -1.6 -11.6
+## 6 2016-01-06     0   5    -3.8
+## # ... with 360 more rows</code></pre>
+<p>Of course, if you can <code>nest</code> data you should be able to <code>unnest</code> it as well, and you can (with the caveat that you’re unnesting a list column that contains a data frame).</p>
+<pre class="r"><code>unnest(weather_nest)
+## # A tibble: 1,098 x 6
+##   name           id          date        prcp  tmax  tmin
+##   &lt;chr&gt;          &lt;chr&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 CentralPark_NY USW00094728 2016-01-01     0   5.6   1.1
+## 2 CentralPark_NY USW00094728 2016-01-02     0   4.4   0  
+## 3 CentralPark_NY USW00094728 2016-01-03     0   7.2   1.7
+## 4 CentralPark_NY USW00094728 2016-01-04     0   2.2  -9.9
+## 5 CentralPark_NY USW00094728 2016-01-05     0  -1.6 -11.6
+## 6 CentralPark_NY USW00094728 2016-01-06     0   5    -3.8
+## # ... with 1,092 more rows</code></pre>
+<p>Nesting columns can help with data organization and comprehension by masking complexity you’re less concerned about right now and clarifying the things you are concerned about. In the weather data, it can be helpful to think of stations as the basic unit of observation, and daily weather recordings as a more granular level of observation. Nesting can also simplify the use of analytic approaches across levels of a higher variable.</p>
+</div>
+<div id="operations-on-list-columns" class="section level3">
+<h3>Operations on list columns</h3>
+<p>You will need to be able to manipulate list columns, but usual operations for columns that might appear in <code>mutate</code> (like <code>mean</code> or <code>recode</code>) often don’t apply to the entries in a list column.</p>
+<p>Instead, recognizing list columns as <strong><em>list</em></strong> columns motivates an approach for working with nested data frames.</p>
+<p>Suppose we want to fit the simple linear regression relating <code>tmax</code> to <code>tmin</code> for each station-specific data frame. First I’ll write a quick function that takes a data frame as the sole argument to fit this model.</p>
+<pre class="r"><code>weather_lm = function(df) {
+  lm(tmax ~ tmin, data = df)
 }</code></pre>
-<p>In this case we can’t use <code>map</code> directly, because there are two arguments we need to iterate over – <code>range</code> and <code>movie_name</code>. To see this more clearly, we’ve written the complete import process using a for loop.</p>
-<pre class="r"><code>cell_ranges = list(&quot;B3:D6&quot;, &quot;F3:H6&quot;, &quot;J3:L6&quot;)
-movie_names = list(&quot;fellowship&quot;, &quot;two_towers&quot;, &quot;return&quot;)
+<p>Let’s make sure this works on a single data frame.</p>
+<pre class="r"><code>weather_lm(weather_nest$data[[1]])
+## 
+## Call:
+## lm(formula = tmax ~ tmin, data = df)
+## 
+## Coefficients:
+## (Intercept)         tmin  
+##       7.779        1.045</code></pre>
+<p>Great! Keeping in mind that <code>weather$data</code> is a <strong><em>list</em></strong>, we can apply our <code>weather_lm</code> function to each data frame using <code>map</code>.</p>
+<pre class="r"><code>map(weather_nest$data, weather_lm)
+## [[1]]
+## 
+## Call:
+## lm(formula = tmax ~ tmin, data = df)
+## 
+## Coefficients:
+## (Intercept)         tmin  
+##       7.779        1.045  
+## 
+## 
+## [[2]]
+## 
+## Call:
+## lm(formula = tmax ~ tmin, data = df)
+## 
+## Coefficients:
+## (Intercept)         tmin  
+##      22.489        0.326  
+## 
+## 
+## [[3]]
+## 
+## Call:
+## lm(formula = tmax ~ tmin, data = df)
+## 
+## Coefficients:
+## (Intercept)         tmin  
+##       6.851        1.245</code></pre>
+<p>I’ll also note that you can avoid the creation of a dedicated function using <code>map</code>’s syntax for “anonymous” (i.e. not named and saved) functions.</p>
+<pre class="r"><code>map(weather_nest$data, ~lm(tmax ~ tmin, data = .x))
+## [[1]]
+## 
+## Call:
+## lm(formula = tmax ~ tmin, data = .x)
+## 
+## Coefficients:
+## (Intercept)         tmin  
+##       7.779        1.045  
+## 
+## 
+## [[2]]
+## 
+## Call:
+## lm(formula = tmax ~ tmin, data = .x)
+## 
+## Coefficients:
+## (Intercept)         tmin  
+##      22.489        0.326  
+## 
+## 
+## [[3]]
+## 
+## Call:
+## lm(formula = tmax ~ tmin, data = .x)
+## 
+## Coefficients:
+## (Intercept)         tmin  
+##       6.851        1.245</code></pre>
+<p>The <code>map</code> function returns a <em>list</em>; we could store the results as a new <strong><em>list column</em></strong> … !!!</p>
+<p>We’ve been using <code>mutate</code> to define a new variable in a data frame, especially one that is a function of an existing variable. That’s exactly what we will keep doing.</p>
+<pre class="r"><code>weather_nest = 
+  weather_nest %&gt;% 
+  mutate(models = map(data, weather_lm))
 
-output = vector(&quot;list&quot;, 3)
-
-for (i in 1:3) {
-  output[[i]] = lotr_load_and_tidy(path = &quot;./data/LotR_Words.xlsx&quot;,
-                                   range = cell_ranges[[i]],
-                                   movie_name = movie_names[[i]])
-}
-
-lotr_tidy = bind_rows(output) %&gt;%
-  select(movie, everything()) </code></pre>
-<p>The <code>map2</code> variant is handy when you have two input lists to iterate over. The implementation is similar to that for <code>map</code>: you supply the input lists and the function name, and <code>map2</code> uses elements of the input lists as arguments to the function.</p>
-<pre class="r"><code>lotr_tidy = 
-  map2_df(.x = cell_ranges, .y = movie_names, 
-          ~lotr_load_and_tidy(path = &quot;./data/LotR_Words.xlsx&quot;,
-                              range = .x, movie_name = .y)) %&gt;%
-  select(movie, everything()) </code></pre>
-<p>We can compare this to code we wrote in <a href="writing_functions.html">writing functions</a>, when we had given the <code>path</code> argument a default value.</p>
-<pre class="r"><code>lotr_tidy = 
-  bind_rows(
-    lotr_load_and_tidy(&quot;./data/LotR_Words.xlsx&quot;, &quot;B3:D6&quot;, &quot;fellowship_ring&quot;),
-    lotr_load_and_tidy(&quot;./data/LotR_Words.xlsx&quot;, &quot;F3:H6&quot;, &quot;two_towers&quot;),
-    lotr_load_and_tidy(&quot;./data/LotR_Words.xlsx&quot;, &quot;J3:L6&quot;, &quot;return_king&quot;)) %&gt;%
-  select(movie, everything()) </code></pre>
-<p>In this case it’s not obvious which coding approach is better – using <code>map2_df</code> or three function calls inside <code>bind_rows</code> – and that happens. No matter what, though, you should be able to write code either way so you have a choice instead of being constrained by your skillset!</p>
+weather_nest
+## # A tibble: 3 x 4
+##   name           id          data               models  
+##   &lt;chr&gt;          &lt;chr&gt;       &lt;list&gt;             &lt;list&gt;  
+## 1 CentralPark_NY USW00094728 &lt;tibble [366 × 4]&gt; &lt;S3: lm&gt;
+## 2 Waikiki_HA     USC00519397 &lt;tibble [366 × 4]&gt; &lt;S3: lm&gt;
+## 3 Waterhole_WA   USS0023B17S &lt;tibble [366 × 4]&gt; &lt;S3: lm&gt;</code></pre>
+<p>This is great! We now have a data frame that has rows for each station; columns contain weather datasets and fitted models. This makes it very easy to keep track of models across stations, and to perform additional analyses.</p>
+<p>This is, for sure, a fairly complex bit of code, but in just a few lines we’re able to fit separate linear models to each of our stations. And, once you get used to list columns, <code>map</code>, and the rest of it, these lines of code are pretty clear and can be extended to larger datasets with more complex structures.</p>
 </div>
-</div>
-<div id="simulation-slr-for-one-n" class="section level3">
-<h3>Simulation: SLR for one <span class="math inline">\(n\)</span></h3>
-<p>Last class we wrote a short function to simulate data from a simple linear regression, fit the regression model, and return estimates of regression coefficients. Specifically, we generate data from <span class="math display">\[ y_i = \beta_0 + \beta_1 x_i + \epsilon_i \]</span> for subjects <span class="math inline">\(1 \leq i \leq n\)</span> with <span class="math inline">\(\epsilon_i \sim N[0,1]\)</span> and return estimates <span class="math inline">\(\hat{\beta}_0, \hat{\beta}_1\)</span>. That function is below.</p>
-<pre class="r"><code>sim_regression = function(n, beta0 = 2, beta1 = 3) {
-  
-  sim_data = tibble(
-    x = rnorm(n, mean = 1, sd = 1),
-    y = beta0 + beta1 * x + rnorm(n, 0, 1)
-  )
-  
-  ls_fit = lm(y ~ x, data = sim_data)
-  
+<div id="revisiting-past-examples" class="section level3">
+<h3>Revisiting past examples</h3>
+<p>Earlier, we looked at scraping reviews of Napoleon Dynamite from several pages on Amazon. This required the creation of input and output vectors / lists; now we’ll repeat this using data frames and list columns.</p>
+<pre class="r"><code>dynamite_reviews = 
+  tibble(page = 1:5,
+         urls = str_c(url_base, page)) %&gt;% 
+  mutate(reviews = map(vec_urls, read_page_reviews)) %&gt;% 
+  unnest()</code></pre>
+<p>We also applied the <code>mean_and_sd</code> function to each element of a dataframe containing samples from various Normal distributions. We have to do some work to make that dataframe “tidy”, but then we can nest, convert the dataframe to a vector, and apply <code>mean_and_sd</code> to each sample.</p>
+<pre class="r"><code>df %&gt;% 
+  gather(key = sample, value = value, a:d) %&gt;% 
+  nest(value) %&gt;% 
+  mutate(
+    vec_values = map(.x = data, ~pull(.x, value)),
+    summary = map(vec_values, mean_and_sd) 
+  ) %&gt;% 
+  select(sample, summary) %&gt;% 
+  unnest()
+## # A tibble: 4 x 3
+##   sample    mean    sd
+##   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;
+## 1 a        2.70  1.12 
+## 2 b        0.416 4.08 
+## 3 c       10.1   0.191
+## 4 d       -3.43  1.18</code></pre>
+<p>Finally, I’ll take a look at a way to load and tidy the LoTR words data that starts with a dataframe containing cell ranges for each movie. Of all the approaches we’ve seen, this is probably my favorite.</p>
+<pre class="r"><code>lotr_cell_ranges = 
   tibble(
-    beta0_hat = coef(ls_fit)[1],
-    beta1_hat = coef(ls_fit)[2]
+    movie = c(&quot;fellowship_ring&quot;, &quot;two_towers&quot;, &quot;return_king&quot;),
+    cells = c(&quot;B3:D6&quot;, &quot;F3:H6&quot;, &quot;J3:L6&quot;)
   )
-}</code></pre>
-<p>Important statistical properties of estimates <span class="math inline">\(\hat{\beta}_0, \hat{\beta}_1\)</span> are established under the conceptual framework of repeated sampling. If you could draw from a population over and over, your estimates will have a known mean and variance: <span class="math display">\[ \hat{\beta}_0 \sim \left[\beta_0, \sigma^2 \left(\frac{1}{n} + \frac{\bar{x}}{\sum (x_i - \bar{x})^2}\right) \right] \mbox{ and } \hat{\beta}_1 \sim \left[\beta_1,\frac{\sigma^2}{\sum (x_i - \bar{x})^2} \right] \]</span> (Because our simulation design generates errors from a Normal distribution we also know that the estimates follow a Normal distribution, although that’s not guaranteed by least squares estimation.)</p>
-<p>In the real world, drawing samples is time consuming and costly, so “repeated sampling” remains conceptual. On a computer, though, drawing samples is pretty easy. That makes simulation an appealing way to examine the statistical properties of your estimators.</p>
-<p>Let’s run <code>sim_regression()</code> 100 times to see the effect of randomness in <span class="math inline">\(\epsilon\)</span> on estimates <span class="math inline">\(\hat{\beta}_0, \hat{\beta}_1\)</span>.</p>
-<pre class="r"><code>output = vector(&quot;list&quot;, 100)
 
-for (i in 1:100) {
-  output[[i]] = sim_regression(30)
-}
-
-sim_results = bind_rows(output)</code></pre>
-<p>Taking a look at the <code>for</code> loop we used to create these results, you might notice that there’s no <code>input</code> list – the sequence is used to keep track of the output but doesn’t affect the computation performed inside the <code>for</code> loop. In cases like these, the <code>purrr::rerun</code> function is very handy.</p>
-<pre class="r"><code>sim_results = 
-  rerun(100, sim_regression(30, 2, 3)) %&gt;% 
-  bind_rows()</code></pre>
-<p>Structurally, <code>rerun</code> is a lot like <code>map</code> – the first argument defines the amount of iteration and the second argument is the function to use in each iteration step. As with <code>map</code>, we’ve replaced a for loop with a segment of code that makes our purpose much more transparent but both approaches give the same results.</p>
-<p>Let’s make some quick plots and compute some summaries for our simulation results.</p>
-<pre class="r"><code>sim_results %&gt;% 
-  ggplot(aes(x = beta0_hat, y = beta1_hat)) + 
-  geom_point()</code></pre>
-<p><img src="iteration_and_listcols_files/figure-html/unnamed-chunk-23-1.png" width="90%" /></p>
-<pre class="r"><code>
-sim_results %&gt;% 
-  gather(key = parameter, value = estimate, beta0_hat:beta1_hat) %&gt;% 
-  group_by(parameter) %&gt;% 
-  summarize(emp_mean = mean(estimate),
-            emp_var = var(estimate)) %&gt;% 
-  knitr::kable(digits = 3)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">parameter</th>
-<th align="right">emp_mean</th>
-<th align="right">emp_var</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">beta0_hat</td>
-<td align="right">1.996</td>
-<td align="right">0.084</td>
-</tr>
-<tr class="even">
-<td align="left">beta1_hat</td>
-<td align="right">3.011</td>
-<td align="right">0.055</td>
-</tr>
-</tbody>
-</table>
-<p>This is <strong><em>great</em></strong>! We’ve seen how our estimates are distributed under our simulation scenario, and can compare empirical results to theoretical ones. In this way, we can build intution for fundamental statistical procedures under repeated sampling in a way that’s not possible with single data sets.</p>
-</div>
-<div id="simulation-slr-for-several-ns" class="section level3">
-<h3>Simulation: SLR for several <span class="math inline">\(n\)</span>s</h3>
-<p>Sample size makes a huge difference on the variance of estimates in SLR (and pretty much every statistical method). Let’s try to clarify that effect through simulating at a few sample sizes.</p>
-<p>I’ll start this process with a for loop around the code I established above using <code>rerun</code> (I could start from scratch by nesting one for loop in another for loop, but let’s not).</p>
-<pre class="r"><code>n_list = list(&quot;n_30&quot;  = 30, 
-              &quot;n_60&quot;  = 60, 
-              &quot;n_120&quot; = 120, 
-              &quot;n_240&quot; = 240)
-output = vector(&quot;list&quot;, length = 4)
-
-for (i in 1:4) {
-  output[[i]] = rerun(100, sim_regression(n_list[[i]])) %&gt;% 
-    bind_rows
-}</code></pre>
-<p>After this loop, <code>output</code> is a list of 4 data frames; each data frame contains the results of 100 simulations at different sample sizes.</p>
-<p>Before we spend time looking at the results of the simulation, let’s recast this using <code>map</code>. I want to use a single function in my call to <code>map_df</code>, so I’m going to write a wrapper for the call to <code>rerun</code> that allows me to change the parameters of the simulation (i.e. the argument to <code>sim_regression</code>) and the number of simulation replicates (i.e. the first argument to <code>rerun</code>). Once I have this, I’ll call <code>map_df</code> to perform the complete simulation.</p>
-<pre class="r"><code>simulate_n_regressions = function(n_runs = 100, n, beta0 = 2, beta1 = 3) {
-  
-  rerun(n_runs, sim_regression(n, beta0, beta1)) %&gt;% 
-    bind_rows()
-  
-}
-
-sim_results = 
-  map_df(.x = n_list, ~ simulate_n_regressions(n = .x), .id = &quot;sample_size&quot;) </code></pre>
-<p>Using a different call, I could increase the number of simulation runs or vary the parameters in the regression model:</p>
-<pre class="r"><code>sim_results = 
-  map_df(.x = n_list, ~ simulate_n_regressions(n = .x, n_runs = 1000, beta0 = 2, beta1 = 3),
-         .id = &quot;sample_size&quot;) </code></pre>
-<p>Let’s take a look at what we’ve accomplished in our simulations! First I’ll take a look at the distribution of slope estimates across sample sizes.</p>
-<pre class="r"><code>sim_results %&gt;% 
-  mutate(sample_size = fct_inorder(sample_size)) %&gt;% 
-  ggplot(aes(x = sample_size, y = beta1_hat, fill = sample_size)) + 
-  geom_violin()</code></pre>
-<p><img src="iteration_and_listcols_files/figure-html/unnamed-chunk-27-1.png" width="90%" /></p>
-<p>These estimates are centered around the truth (3) for each sample size, and the width of the distribution shrinks as sample size grows.</p>
-<p>Next, I’ll look at the bivariate distribution of intercept and slope estimates across sample sizes.</p>
-<pre class="r"><code>sim_results %&gt;% 
-  mutate(sample_size = fct_inorder(sample_size)) %&gt;% 
-  ggplot(aes(x = beta0_hat, y = beta1_hat)) + 
-  geom_point(alpha = .2) + 
-  facet_grid(~sample_size)</code></pre>
-<p><img src="iteration_and_listcols_files/figure-html/unnamed-chunk-28-1.png" width="90%" /></p>
-<p>The variability in the slope estimates was shown in the violin plot, but now we have a sense for the bivariate distribution of intercepts and slopes. Estimates of the intercept and slope are correlated with each other; this is expected from theoretical results describing the joint distribution of estimated regression coefficients.</p>
-<p>Lastly I’ll look at the empirical mean and variance of these estimates.</p>
-<pre class="r"><code>sim_results %&gt;% 
-  gather(key = parameter, value = estimate, beta0_hat:beta1_hat) %&gt;% 
-  group_by(parameter, sample_size) %&gt;% 
-  summarize(emp_mean = mean(estimate),
-            emp_var = var(estimate)) %&gt;% 
-  knitr::kable(digits = 3)</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">parameter</th>
-<th align="left">sample_size</th>
-<th align="right">emp_mean</th>
-<th align="right">emp_var</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">beta0_hat</td>
-<td align="left">n_120</td>
-<td align="right">1.998</td>
-<td align="right">0.017</td>
-</tr>
-<tr class="even">
-<td align="left">beta0_hat</td>
-<td align="left">n_240</td>
-<td align="right">1.997</td>
-<td align="right">0.009</td>
-</tr>
-<tr class="odd">
-<td align="left">beta0_hat</td>
-<td align="left">n_30</td>
-<td align="right">1.999</td>
-<td align="right">0.073</td>
-</tr>
-<tr class="even">
-<td align="left">beta0_hat</td>
-<td align="left">n_60</td>
-<td align="right">2.000</td>
-<td align="right">0.037</td>
-</tr>
-<tr class="odd">
-<td align="left">beta1_hat</td>
-<td align="left">n_120</td>
-<td align="right">3.002</td>
-<td align="right">0.008</td>
-</tr>
-<tr class="even">
-<td align="left">beta1_hat</td>
-<td align="left">n_240</td>
-<td align="right">3.004</td>
-<td align="right">0.004</td>
-</tr>
-<tr class="odd">
-<td align="left">beta1_hat</td>
-<td align="left">n_30</td>
-<td align="right">3.001</td>
-<td align="right">0.036</td>
-</tr>
-<tr class="even">
-<td align="left">beta1_hat</td>
-<td align="left">n_60</td>
-<td align="right">3.001</td>
-<td align="right">0.019</td>
-</tr>
-</tbody>
-</table>
-<p>These values are consistent with the formulas presented above. This kind of check is a useful way to support derivations (although they don’t serve as a formal proof in any way).</p>
+lotr_tidy = 
+  lotr_cell_ranges %&gt;% 
+  mutate(
+    word_data = map(cells, ~readxl::read_excel(&quot;./data/LotR_Words.xlsx&quot;, range = .x))
+  ) %&gt;% 
+  unnest() %&gt;% 
+  janitor::clean_names() %&gt;% 
+  gather(key = sex, value = words, female:male) %&gt;%
+  mutate(race = tolower(race)) %&gt;% 
+  select(movie, everything(), -cells) </code></pre>
 </div>
 </div>
 <div id="other-materials" class="section level2">
@@ -806,7 +825,7 @@ sim_results =
 <li>This <a href="https://juliasilge.shinyapps.io/power-app/">app</a> for understanding power uses <code>map</code> to generate power curves at various sample sizes</li>
 <li>The <a href="https://github.com/tidyverse/dplyr/blob/master/data-raw/starwars.R">R file</a> used to create the <code>starwars</code> dataset (in the <code>tidyverse</code>) using the <a href="https://swapi.co">Star Wars API</a> processes list output (from the API) using several <code>map</code> variants</li>
 </ul>
-<p>The code that I produced working examples in lecture is <a href="https://github.com/jeff-goldsmith/example_iteration">here</a>.</p>
+<p>The code that I produced working examples in lecture is <a href="https://github.com/p8105/iteration">here</a>.</p>
 </div>
 
 <br><br>

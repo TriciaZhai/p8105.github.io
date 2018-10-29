@@ -9,3 +9,6 @@ dplyr
 stringr
 forcats
 bindrcpp
+xml2
+rvest
+rnoaa

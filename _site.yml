@@ -19,8 +19,8 @@ navbar:
       href: topic_data_wrangling_ii.html
     - text: Interactivity
       href: topic_interactivity.html
-    - text: Resampling
-      href: topic_resampling.html
+    - text: Iteration
+      href: topic_iteration.html
     - text: Linear Models
       href: topic_linear_models.html
     - text: Other Materials

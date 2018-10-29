@@ -317,7 +317,7 @@ div.tocify {
       <a href="topic_interactivity.html">Interactivity</a>
     </li>
     <li>
-      <a href="topic_resampling.html">Resampling</a>
+      <a href="topic_iteration.html">Iteration</a>
     </li>
     <li>
       <a href="topic_linear_models.html">Linear Models</a>
@@ -540,29 +540,29 @@ urls = str_c(url_base, 1:5)
 read_html(urls[1]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;Nostalgic Stupidity&quot;                       
-##  [2] &quot;Happy&quot;                                     
-##  [3] &quot;Go watch THE ROCK or dumb &amp; dumber instead&quot;
-##  [4] &quot;My mom loves it&quot;                           
-##  [5] &quot;Nothing Quite Like It.&quot;                    
-##  [6] &quot;Has pretty sweet bow skills.&quot;              
-##  [7] &quot;Great&quot;                                     
-##  [8] &quot;Fast delivery&quot;                             
-##  [9] &quot;Lol&quot;                                       
-## [10] &quot;Vote For Pedro&quot;
+##  [1] &quot;Great Movie&quot;                                       
+##  [2] &quot;True to life!&quot;                                     
+##  [3] &quot;Classic family friendly comedy kids can relate to!&quot;
+##  [4] &quot;Great \&quot;Odd Ball\&quot; movie to watch&quot;                 
+##  [5] &quot;Nostalgic Stupidity&quot;                               
+##  [6] &quot;Happy&quot;                                             
+##  [7] &quot;Go watch THE ROCK or dumb &amp; dumber instead&quot;        
+##  [8] &quot;My mom loves it&quot;                                   
+##  [9] &quot;Nothing Quite Like It.&quot;                            
+## [10] &quot;Has pretty sweet bow skills.&quot;
 
 read_html(urls[2]) %&gt;% 
   html_nodes(&quot;#cm_cr-review_list .review-title&quot;) %&gt;%
   html_text()
-##  [1] &quot;So funny!&quot;                                       
-##  [2] &quot;Great move&quot;                                      
-##  [3] &quot;Refund needed. Did not pay through Amazon prime.&quot;
-##  [4] &quot;Need a laugh?&quot;                                   
-##  [5] &quot;The greatest!&quot;                                   
-##  [6] &quot;Five Stars&quot;                                      
-##  [7] &quot;Napoleon Dynamite is an awesome movie&quot;           
-##  [8] &quot;One Star&quot;                                        
-##  [9] &quot;\U0001f62b&quot;                                      
+##  [1] &quot;Great&quot;                                           
+##  [2] &quot;Fast delivery&quot;                                   
+##  [3] &quot;Lol&quot;                                             
+##  [4] &quot;Vote For Pedro&quot;                                  
+##  [5] &quot;So funny!&quot;                                       
+##  [6] &quot;Great move&quot;                                      
+##  [7] &quot;Refund needed. Did not pay through Amazon prime.&quot;
+##  [8] &quot;Need a laugh?&quot;                                   
+##  [9] &quot;The greatest!&quot;                                   
 ## [10] &quot;Five Stars&quot;</code></pre>
 <p>It would get really tedious to try to scrape all (~2500) reviews by copying code over and over; before long we’ll learn about writing R functions to reuse code and make this much easier!</p>
 </div>
