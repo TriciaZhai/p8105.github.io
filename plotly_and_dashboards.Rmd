@@ -179,7 +179,7 @@ You can share the HTML files for dashboards directly (e.g. by email); you can al
 However, the website's `_site.yml` file conflicts with the dashboard's `YAML` header (and the website's `_site.yml` "wins). To avoid this, instead of knitting you can use
 
 ```{r, eval = FALSE}
-rmarkdown::render("dashboard_template.Rmd", output = "flex_dashboard")
+rmarkdown::render("dashboard_template.Rmd", output_format = "flex_dashboard")
 ```
 
 This will create `dashboard_template.html` but not open it in RStudio's Viewer pane; you can open the file in a browser instead. Alternatively, using RStudio's Build pane to Build Website will produce the same results. To illustrate, we'll put the dashboard we just created on a website for this topic. 
