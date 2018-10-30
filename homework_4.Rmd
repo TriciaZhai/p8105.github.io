@@ -16,10 +16,9 @@ Due: November 2 at 4:00pm.
 
 ### Points
 
-* Problem 0: 10 points
-* Problem 1: 30 points
-* Problem 2: 30 points
-* Problem 3: 30 points
+* Problem 0: 20 points
+* Problem 1: 40 points
+* Problem 2: 40 points
 
 ### Problem 0
 
