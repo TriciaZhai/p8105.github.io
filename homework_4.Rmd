@@ -22,7 +22,7 @@ Due: November 2 at 4:00pm.
 
 ### Problem 0
 
-This "problem" focuses on structure of your submission, especially the use git and GitHub for reproducibility, R Projects to organize your work, R Markdown to write reproducible reports, relative paths to load data from local files, and reasonable naming structures for your files. 
+This "problem" focuses on structure of your submission, especially the use git and GitHub for reproducibility, R Projects to organize your work, R Markdown to write reproducible reports, relative paths to load data from local files (if necessary), and reasonable naming structures for your files. 
 
 To that end: 
 
@@ -47,7 +47,7 @@ Create a personal website at `<YOUR_GH_NAME>.github.io` (or some other reasonabl
 
 ### Problem 2
 
-Create a flexdashboard using `plotly` for that includes at least three distinct plot types (e.g. scatterplots, line plots, bar plots, box plots, etc.). Use one of the following datasets:
+Create a flexdashboard using `plotly` for that includes at least three distinct plot types (e.g. scatterplots, line plots, bar plots, box plots, etc.). Use one of the following datasets, and load from the `p8105.datasets` package:
 
 * [Instacart](dataset_instacart.html)
 * [NY NOAA](dataset_noaa.html)
