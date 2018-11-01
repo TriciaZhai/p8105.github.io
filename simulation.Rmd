@@ -263,7 +263,7 @@ The power increases as the effect size of $\beta_1$ increases. For $\beta_1=0$, 
 
 The next plot shows the average of $\hat{\beta}_1$ on the y axis and the true value of $\beta_1$ on the x axis (in red), along with the average of $\hat{\beta}_1$ in cases for which the null is rejected. 
 
-```{r summary2, echo=FALSE}
+```{r summary2}
 results_summary = 
   sim_results %>% 
   group_by(beta1_true) %>%

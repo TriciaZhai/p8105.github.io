@@ -627,6 +627,21 @@ sim_results =
 <p><img src="simulation_files/figure-html/simulation_summary-1.png" width="90%" /></p>
 <p>The power increases as the effect size of <span class="math inline">\(\beta_1\)</span> increases. For <span class="math inline">\(\beta_1=0\)</span>, the probability of rejection is near 0.05, which is exactly as expected.</p>
 <p>The next plot shows the average of <span class="math inline">\(\hat{\beta}_1\)</span> on the y axis and the true value of <span class="math inline">\(\beta_1\)</span> on the x axis (in red), along with the average of <span class="math inline">\(\hat{\beta}_1\)</span> in cases for which the null is rejected.</p>
+<pre class="r"><code>results_summary = 
+  sim_results %&gt;% 
+  group_by(beta1_true) %&gt;%
+  nest() %&gt;% 
+  mutate(
+    all = map_dbl(.x = data, ~ .x %&gt;% pull(estimate) %&gt;% mean),
+    signif = map_dbl(.x = data, ~ .x %&gt;% filter(significant == 1) %&gt;% pull(estimate) %&gt;% mean)
+  ) %&gt;% 
+  select(-data) %&gt;% 
+  gather(key = results, value = average, all:signif) 
+
+results_summary %&gt;% 
+  ggplot(aes(x = beta1_true, y = average, color = results)) + 
+  geom_point() +
+  geom_path() </code></pre>
 <p><img src="simulation_files/figure-html/summary2-1.png" width="90%" /></p>
 <p>As before, the average of <span class="math inline">\(\hat{\beta}_1\)</span> is approximately equal to the true value when looking at all simulated datasets for that true value. However, the sample average of <span class="math inline">\(\hat{\beta}_1\)</span> only when the null hypothesis is rejected is not approximately equal to the true value of <span class="math inline">\(\beta_1\)</span>.</p>
 <p>To help see why this is the case, the following figure shows the distribution of <span class="math inline">\(\hat{\beta}_1\)</span> values, separately for each true <span class="math inline">\(\beta_1\)</span> and according to whether the associated test rejects the null hypothesis.</p>
