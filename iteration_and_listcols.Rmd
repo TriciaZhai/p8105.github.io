@@ -155,7 +155,7 @@ The first argument to `map` is the vector / list ( / data frame) we want to iter
 It's sometimes necessary to be more specific in giving arguments to `map`. In particular, using `.x = df` for the input list and `~ mean_and_sd(.x)` to specify the function applied to the input list (using `.x` as a placeholder) will produce the same result. 
 
 ```{r}
-output = map(.x = df, ~ mean_and_sd(.x))
+output = map_df(.x = df, ~ mean_and_sd(.x))
 ```
 
 This code (using `map`) is why we pointed out in [writing functions](writing_functions.html) that functions can be passed as arguments to other functions. The second argument in `map(df, mean_and_sd)` is a function we just wrote. To see how powerful this can be, suppose we wanted to apply a different function, say `median`, to each column of `df`. The chunk below includes both the loop and the `map` approach.
@@ -378,21 +378,7 @@ dynamite_reviews =
   unnest()
 ```
 
-We also applied the `mean_and_sd` function to each element of a dataframe containing samples from various Normal distributions. We have to do some work to make that dataframe "tidy", but then we can nest, convert the dataframe to a vector, and apply `mean_and_sd` to each sample.
-
-```{r}
-df %>% 
-  gather(key = sample, value = value, a:d) %>% 
-  nest(value) %>% 
-  mutate(
-    vec_values = map(data, "value"),
-    summary = map(vec_values, mean_and_sd) 
-  ) %>% 
-  select(sample, summary) %>% 
-  unnest()
-```
-
-Finally, I'll take a look at a way to load and tidy the LoTR words data that starts with a dataframe containing cell ranges for each movie. Of all the approaches we've seen, this is probably my favorite.
+I'll also revisit a way to load and tidy the LoTR words data that starts with a dataframe containing cell ranges for each movie. Of all the approaches we've seen, this is probably my favorite.
 
 ```{r}
 lotr_cell_ranges = 
