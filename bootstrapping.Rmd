@@ -1,16 +1,14 @@
 ---
-title: "Simulation and Bootstrapping"
+title: "Bootstrapping"
 output:
   html_document: 
     toc: true
     toc_float: true
 ---
 
-We've noted that functions are helpful when you repeat code more than twice; we've also noted that a lot of statistical methods involve doing the same thing a large number of times. Simulation and bootstrapping are common statistical approaches that take advantage of iterating many times using computers. 
-
 Bootstrapping is a popular resampling-based approach to statistical inference, and is helpful when usual statistical methods are intractable or inappropriate. The idea is to draw repeated samples from your original sample _with replacement_, thereby approximating the repeated sampling framework. Using list columns to store bootstrap samples is natural and provides a "tidy" approach to resampling-based inference.
 
-This is the third module in the [Iteration](topic_iteration.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCAAE7XDW).
+This is the third module in the [Linear Models](topic_linear_models.html) topic; the relevant slack channel is [here](https://p8105-fall2018.slack.com/messages/CCAAE9AAU).
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -395,6 +393,5 @@ Boostrapping and resampling are also new concepts; the materials below explore t
 
 * The [`modelr` package](https://github.com/tidyverse/modelr) has a page
 * The bootsrapping [vignette](https://cran.r-project.org/web/packages/broom/vignettes/bootstrapping.html) uses a framework similar to the one we used
-* We didn't discuss cross validation, another popular approach, ut you can read up on it [here](https://drsimonj.svbtle.com/k-fold-cross-validation-with-modelr-and-broom) and [here](http://rpubs.com/dgrtwo/cv-modelr)
 
-The code that I produced working examples in lecture is [here](https://github.com/jeff-goldsmith/example_iteration).
+The code that I produced working examples in lecture is [here](https://github.com/jeff-goldsmith/linear_models).
