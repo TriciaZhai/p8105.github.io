@@ -467,13 +467,15 @@ summary(fit)
 </div>
 <div id="tidying-output" class="section level3">
 <h3>Tidying output</h3>
-<pre class="r"><code>broom::glance(fit)
+<pre class="r"><code>fit %&gt;% 
+  broom::glance()
 ## # A tibble: 1 x 11
 ##   r.squared adj.r.squared sigma statistic   p.value    df  logLik    AIC
 ## *     &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;
 ## 1    0.0342        0.0341  182.      271. 6.73e-229     5 -2.02e5 4.04e5
 ## # ... with 3 more variables: BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
-<pre class="r"><code>broom::tidy(fit) %&gt;% 
+<pre class="r"><code>fit %&gt;% 
+  broom::tidy() %&gt;% 
   select(term, estimate, p.value) %&gt;% 
   mutate(term = str_replace(term, &quot;^boro&quot;, &quot;Boro: &quot;)) %&gt;% 
   knitr::kable(digits = 3)</code></pre>
@@ -712,14 +714,125 @@ manhattan_nest_lm_res %&gt;%
 </div>
 <div id="binary-outcomes" class="section level3">
 <h3>Binary outcomes</h3>
-<p><strong>Generalized</strong> linear model</p>
-<p>logit ect</p>
+<p>Linear models are appropriate for outcomes that follow a continuous distribution, but binary outcomes are common. In these cases, logistic regression is a useful analytic framework.</p>
+<p>The <em>Washington Post</em> has gathered data on homicides in 50 large U.S. cities and made the data available through a<a href="https://github.com/washingtonpost/data-homicides">GitHub repository</a>; the final CSV is <a href="data/homicide-data.csv">here</a>. You can read their accompanying article <a href="https://www.washingtonpost.com/graphics/2018/investigations/where-murders-go-unsolved/">here</a>. We’ll use data on unresolved murders in Baltimore, MD to illustrate logistic regression in R. The code below imports, cleans, and generally wrangles the data for analysis.</p>
+<pre class="r"><code>baltimore_df = 
+  read_csv(&quot;data/homicide-data.csv&quot;) %&gt;% 
+  filter(city == &quot;Baltimore&quot;) %&gt;% 
+  mutate(resolved = as.numeric(disposition == &quot;Closed by arrest&quot;),
+         victim_age = as.numeric(victim_age),
+         victim_race = fct_relevel(victim_race, &quot;White&quot;))
+## Parsed with column specification:
+## cols(
+##   uid = col_character(),
+##   reported_date = col_integer(),
+##   victim_last = col_character(),
+##   victim_first = col_character(),
+##   victim_race = col_character(),
+##   victim_age = col_character(),
+##   victim_sex = col_character(),
+##   city = col_character(),
+##   state = col_character(),
+##   lat = col_double(),
+##   lon = col_double(),
+##   disposition = col_character()
+## )</code></pre>
+<p>Using these data, we can fit a logistic regression for the binary “resolved” outcome and victim demographics as predictors. This uses the <code>glm</code> function with the family specified to account for the non-Gaussian outcome distribution.</p>
+<pre class="r"><code>fit_logistic = 
+  baltimore_df %&gt;% 
+  glm(resolved ~ victim_age + victim_race + victim_sex, data = ., family = binomial()) </code></pre>
+<p>Many of the same tools we used to work with <code>lm</code> fits can be used for <code>glm</code> fits. The table below summaries the coefficients from the model fit; because logistic model estimates are log odds ratios, we include a step to compute odds ratios as well.</p>
+<pre class="r"><code>fit_logistic %&gt;% 
+  broom::tidy() %&gt;% 
+  mutate(OR = exp(estimate)) %&gt;%
+  select(term, log_OR = estimate, OR, p.value) %&gt;% 
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">log_OR</th>
+<th align="right">OR</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">1.190</td>
+<td align="right">3.287</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">victim_age</td>
+<td align="right">-0.007</td>
+<td align="right">0.993</td>
+<td align="right">0.027</td>
+</tr>
+<tr class="odd">
+<td align="left">victim_raceAsian</td>
+<td align="right">0.296</td>
+<td align="right">1.345</td>
+<td align="right">0.653</td>
+</tr>
+<tr class="even">
+<td align="left">victim_raceBlack</td>
+<td align="right">-0.842</td>
+<td align="right">0.431</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">victim_raceHispanic</td>
+<td align="right">-0.265</td>
+<td align="right">0.767</td>
+<td align="right">0.402</td>
+</tr>
+<tr class="even">
+<td align="left">victim_raceOther</td>
+<td align="right">-0.768</td>
+<td align="right">0.464</td>
+<td align="right">0.385</td>
+</tr>
+<tr class="odd">
+<td align="left">victim_sexMale</td>
+<td align="right">-0.880</td>
+<td align="right">0.415</td>
+<td align="right">0.000</td>
+</tr>
+</tbody>
+</table>
+<p>We can also compute fitted values; similarly to the estimates in the model summary, these are expressed as log odds and can be transformed to produce probabilities for each subject.</p>
+<pre class="r"><code>baltimore_df %&gt;% 
+  modelr::add_predictions(fit_logistic) %&gt;% 
+  mutate(fitted_prob = boot::inv.logit(pred))
+## # A tibble: 2,827 x 15
+##    uid   reported_date victim_last victim_first victim_race victim_age
+##    &lt;chr&gt;         &lt;int&gt; &lt;chr&gt;       &lt;chr&gt;        &lt;fct&gt;            &lt;dbl&gt;
+##  1 Bal-…      20070101 NELSON      LEON         Black               17
+##  2 Bal-…      20070102 GOLF        EDDIE        Black               26
+##  3 Bal-…      20070105 MACKENNEY   THOMAS JOSE… Black               21
+##  4 Bal-…      20070105 CANUPP      EDWARD LEE   White               61
+##  5 Bal-…      20070106 CUNNINGHAN  MICHAEL      Black               46
+##  6 Bal-…      20070106 ALSTON      RAY WILLIAM  Black               27
+##  7 Bal-…      20070107 HENDERSON   YULE ANTONIO Black               21
+##  8 Bal-…      20070108 MCDOWELL    MARCU        Black               16
+##  9 Bal-…      20070108 GARDNER     RODNEY THOM… Black               21
+## 10 Bal-…      20070108 BURNETTE    NELSENE      Black               44
+## # ... with 2,817 more rows, and 9 more variables: victim_sex &lt;chr&gt;,
+## #   city &lt;chr&gt;, state &lt;chr&gt;, lat &lt;dbl&gt;, lon &lt;dbl&gt;, disposition &lt;chr&gt;,
+## #   resolved &lt;dbl&gt;, pred &lt;dbl&gt;, fitted_prob &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <div id="other-materials" class="section level2">
 <h2>Other materials</h2>
 <ul>
-<li></li>
+<li>This page touches on ideas that arise in several chapters on modeling in R for Data Science. These tend to assume that this is your first exposure to linear models but good reading:
+<ul>
+<li><a href="https://r4ds.had.co.nz/model-intro.html">Intro to modeling</a></li>
+<li><a href="https://r4ds.had.co.nz/model-basics.html">Basics</a></li>
+<li><a href="https://r4ds.had.co.nz/many-models.html">Many models</a></li>
+</ul></li>
+<li>The <code>modelr</code> package also has a <a href="https://modelr.tidyverse.org">website</a></li>
 </ul>
 <p>The code that I produced working examples in lecture is <a href="https://github.com/P8105/linear_models">here</a>.</p>
 </div>

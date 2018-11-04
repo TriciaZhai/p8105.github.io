@@ -74,11 +74,13 @@ summary(fit)
 ### Tidying output
 
 ```{r}
-broom::glance(fit)
+fit %>% 
+  broom::glance()
 ```
 
 ```{r}
-broom::tidy(fit) %>% 
+fit %>% 
+  broom::tidy() %>% 
   select(term, estimate, p.value) %>% 
   mutate(term = str_replace(term, "^boro", "Boro: ")) %>% 
   knitr::kable(digits = 3)
@@ -199,17 +201,52 @@ manhattan_airbnb %>%
 
 ### Binary outcomes
 
-**Generalized** linear model
+Linear models are appropriate for outcomes that follow a continuous distribution, but binary outcomes are common. In these cases, logistic regression is a useful analytic framework. 
 
-logit ect
+The _Washington Post_ has gathered data on homicides in 50 large U.S. cities and made the data available through a[GitHub repository](https://github.com/washingtonpost/data-homicides); the final CSV is [here](data/homicide-data.csv). You can read their accompanying article [here](https://www.washingtonpost.com/graphics/2018/investigations/where-murders-go-unsolved/). We'll use data on unresolved murders in Baltimore, MD to illustrate logistic regression in R. The code below imports, cleans, and generally wrangles the data for analysis.
 
 ```{r}
+baltimore_df = 
+  read_csv("data/homicide-data.csv") %>% 
+  filter(city == "Baltimore") %>% 
+  mutate(resolved = as.numeric(disposition == "Closed by arrest"),
+         victim_age = as.numeric(victim_age),
+         victim_race = fct_relevel(victim_race, "White"))
+```
 
+Using these data, we can fit a logistic regression for the binary "resolved" outcome and victim demographics as predictors. This uses the `glm` function with the family specified to account for the non-Gaussian outcome distribution.
+
+```{r}
+fit_logistic = 
+  baltimore_df %>% 
+  glm(resolved ~ victim_age + victim_race + victim_sex, data = ., family = binomial()) 
+```
+
+Many of the same tools we used to work with `lm` fits can be used for `glm` fits. The table below summaries the coefficients from the model fit; because logistic model estimates are log odds ratios, we include a step to compute odds ratios as well.
+
+```{r}
+fit_logistic %>% 
+  broom::tidy() %>% 
+  mutate(OR = exp(estimate)) %>%
+  select(term, log_OR = estimate, OR, p.value) %>% 
+  knitr::kable(digits = 3)
+```
+
+We can also compute fitted values; similarly to the estimates in the model summary, these are expressed as log odds and can be transformed to produce probabilities for each subject.
+
+```{r}
+baltimore_df %>% 
+  modelr::add_predictions(fit_logistic) %>% 
+  mutate(fitted_prob = boot::inv.logit(pred))
 ```
 
 
 ## Other materials
 
-* 
+* This page touches on ideas that arise in several chapters on modeling in R for Data Science. These tend to assume that this is your first exposure to linear models but good reading:
+    * [Intro to modeling](https://r4ds.had.co.nz/model-intro.html)
+    * [Basics](https://r4ds.had.co.nz/model-basics.html)
+    * [Many models](https://r4ds.had.co.nz/many-models.html)
+* The `modelr` package also has a [website](https://modelr.tidyverse.org)
 
 The code that I produced working examples in lecture is [here](https://github.com/P8105/linear_models).
