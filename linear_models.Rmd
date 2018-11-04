@@ -31,15 +31,181 @@ theme_set(theme_bw() + theme(legend.position = "bottom"))
 
 ## Example
 
-I'll write code for today's content in a new R Markdown document called `simulation.Rmd` in the `iteration` directory / repo. The code chunk below loads the usual packages and sets a seed for reproducibility.
+I'll write code for today's content in a new R Markdown document called `linear_models.Rmd` in a `linear_models` directory / repo. The code chunk below loads the usual packages and sets a seed for reproducibility.
 
 ```{r}
 library(tidyverse)
+library(p8105.datasets)
 
 set.seed(1)
 ```
 
-### asdf
+
+### Model fitting
+
+```{r}
+data("nyc_airbnb")
+
+nyc_airbnb = 
+  nyc_airbnb %>% 
+  mutate(stars = review_scores_location / 2) %>% 
+  rename(boro = neighbourhood_group,
+         neighborhood = neighbourhood) %>% 
+  filter(boro != "Staten Island") %>% 
+  select(price, stars, boro, neighborhood, room_type)
+```
+
+```{r}
+fit = lm(price ~ stars + boro, data = nyc_airbnb)
+summary(fit)
+```
+
+```{r}
+nyc_airbnb = 
+  nyc_airbnb %>% 
+  mutate(boro = fct_infreq(boro),
+         room_type = fct_infreq(room_type))
+
+fit = lm(price ~ stars + boro, data = nyc_airbnb)
+summary(fit)
+```
+
+
+### Tidying output
+
+```{r}
+broom::glance(fit)
+```
+
+```{r}
+broom::tidy(fit) %>% 
+  select(term, estimate, p.value) %>% 
+  mutate(term = str_replace(term, "^boro", "Boro: ")) %>% 
+  knitr::kable(digits = 3)
+```
+
+`broom::tidy` works with lots of things...
+
+
+### Diagnostics
+
+```{r}
+nyc_airbnb %>% 
+  modelr::add_residuals(fit) %>% 
+  modelr::add_predictions(fit)
+```
+
+```{r}
+nyc_airbnb %>% 
+  modelr::add_residuals(fit) %>% 
+  ggplot(aes(x = boro, y = resid)) + geom_violin()
+
+nyc_airbnb %>% 
+  modelr::add_residuals(fit) %>% 
+  ggplot(aes(x = stars, y = resid)) + geom_point()
+```
+
+Huge outliers / skewed distribution!! Should we exclude? Transform ...? Use a "robust" regression???
+
+For now I'm gonna ignore this, although it is definitely a problem. 
+
+
+### Hypothesis testing
+
+Testing a single coef is pretty easy -- it's right there in the output.
+
+Comparing nested models 
+
+```{r}
+fit_null = lm(price ~ stars + boro, data = nyc_airbnb)
+fit_alt = lm(price ~ stars + boro + room_type, data = nyc_airbnb)
+
+anova(fit_null, fit_alt) %>% 
+  broom::tidy()
+```
+
+This works for nested models only
+
+
+
+### Nesting data
+
+(not nesting models -- sorry)
+
+This is confusing
+
+```{r}
+nyc_airbnb %>% 
+  lm(price ~ stars * boro + room_type * boro, data = .)
+```
+
+This is clearer
+
+```{r}
+nest_lm_res =
+  nyc_airbnb %>% 
+  group_by(boro) %>% 
+  nest() %>% 
+  mutate(models = map(data, ~lm(price ~ stars + room_type, data = .x)),
+         models = map(models, broom::tidy)) %>% 
+  select(-data) %>% 
+  unnest()
+
+nest_lm_res %>% 
+  select(boro, term, estimate) %>% 
+  mutate(term = fct_inorder(term)) %>% 
+  spread(key = term, value = estimate) %>% 
+  knitr::kable(digits = 3)
+```
+
+tradeoff: nesting gives you separate models, which is an easy-to-interpret way to examine effect modification in an exploratory way. But it *doesn't* give a way to test. 
+
+Even more extreme:
+
+```{r}
+manhattan_airbnb =
+  nyc_airbnb %>% 
+  filter(boro == "Manhattan")
+
+manhattan_airbnb %>% 
+  count(neighborhood)
+
+manhattan_nest_lm_res =
+  manhattan_airbnb %>% 
+  group_by(neighborhood) %>% 
+  nest() %>% 
+  mutate(models = map(data, ~lm(price ~ stars + room_type, data = .x)),
+         models = map(models, broom::tidy)) %>% 
+  select(-data) %>% 
+  unnest()
+
+manhattan_nest_lm_res %>% 
+  mutate(term = fct_inorder(term)) %>% 
+  ggplot(aes(x = neighborhood, y = estimate)) + 
+  geom_point() + 
+  facet_wrap(~term, nrow = 2, ncol = 2) + 
+  theme(axis.text.x = element_text(angle = 80, hjust = 1, size = 5))
+```
+
+
+Really the way to fit this is a mixed model -- random intercepts and slopes for each neighborhood
+
+```{r}
+manhattan_airbnb %>% 
+  lme4::lmer(price ~ stars + room_type + (1 + room_type | neighborhood), data = .) %>% 
+  broom::tidy()
+```
+
+
+### Binary outcomes
+
+**Generalized** linear model
+
+logit ect
+
+```{r}
+
+```
 
 
 ## Other materials

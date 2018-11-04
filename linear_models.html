@@ -395,12 +395,325 @@ div.tocify {
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>I’ll write code for today’s content in a new R Markdown document called <code>simulation.Rmd</code> in the <code>iteration</code> directory / repo. The code chunk below loads the usual packages and sets a seed for reproducibility.</p>
+<p>I’ll write code for today’s content in a new R Markdown document called <code>linear_models.Rmd</code> in a <code>linear_models</code> directory / repo. The code chunk below loads the usual packages and sets a seed for reproducibility.</p>
 <pre class="r"><code>library(tidyverse)
+library(p8105.datasets)
 
 set.seed(1)</code></pre>
-<div id="asdf" class="section level3">
-<h3>asdf</h3>
+<div id="model-fitting" class="section level3">
+<h3>Model fitting</h3>
+<pre class="r"><code>data(&quot;nyc_airbnb&quot;)
+
+nyc_airbnb = 
+  nyc_airbnb %&gt;% 
+  mutate(stars = review_scores_location / 2) %&gt;% 
+  rename(boro = neighbourhood_group,
+         neighborhood = neighbourhood) %&gt;% 
+  filter(boro != &quot;Staten Island&quot;) %&gt;% 
+  select(price, stars, boro, neighborhood, room_type)</code></pre>
+<pre class="r"><code>fit = lm(price ~ stars + boro, data = nyc_airbnb)
+summary(fit)
+## 
+## Call:
+## lm(formula = price ~ stars + boro, data = nyc_airbnb)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -169.8  -64.0  -29.0   20.2 9870.0 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    -70.414     14.021  -5.022 5.14e-07 ***
+## stars           31.990      2.527  12.657  &lt; 2e-16 ***
+## boroBrooklyn    40.500      8.559   4.732 2.23e-06 ***
+## boroManhattan   90.254      8.567  10.534  &lt; 2e-16 ***
+## boroQueens      13.206      9.065   1.457    0.145    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 181.5 on 30525 degrees of freedom
+##   (9962 observations deleted due to missingness)
+## Multiple R-squared:  0.03423,    Adjusted R-squared:  0.03411 
+## F-statistic: 270.5 on 4 and 30525 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>nyc_airbnb = 
+  nyc_airbnb %&gt;% 
+  mutate(boro = fct_infreq(boro),
+         room_type = fct_infreq(room_type))
+
+fit = lm(price ~ stars + boro, data = nyc_airbnb)
+summary(fit)
+## 
+## Call:
+## lm(formula = price ~ stars + boro, data = nyc_airbnb)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -169.8  -64.0  -29.0   20.2 9870.0 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    19.839     12.189   1.628    0.104    
+## stars          31.990      2.527  12.657   &lt;2e-16 ***
+## boroBrooklyn  -49.754      2.235 -22.262   &lt;2e-16 ***
+## boroQueens    -77.048      3.727 -20.675   &lt;2e-16 ***
+## boroBronx     -90.254      8.567 -10.534   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 181.5 on 30525 degrees of freedom
+##   (9962 observations deleted due to missingness)
+## Multiple R-squared:  0.03423,    Adjusted R-squared:  0.03411 
+## F-statistic: 270.5 on 4 and 30525 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div id="tidying-output" class="section level3">
+<h3>Tidying output</h3>
+<pre class="r"><code>broom::glance(fit)
+## # A tibble: 1 x 11
+##   r.squared adj.r.squared sigma statistic   p.value    df  logLik    AIC
+## *     &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1    0.0342        0.0341  182.      271. 6.73e-229     5 -2.02e5 4.04e5
+## # ... with 3 more variables: BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
+<pre class="r"><code>broom::tidy(fit) %&gt;% 
+  select(term, estimate, p.value) %&gt;% 
+  mutate(term = str_replace(term, &quot;^boro&quot;, &quot;Boro: &quot;)) %&gt;% 
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">19.839</td>
+<td align="right">0.104</td>
+</tr>
+<tr class="even">
+<td align="left">stars</td>
+<td align="right">31.990</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">Boro: Brooklyn</td>
+<td align="right">-49.754</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">Boro: Queens</td>
+<td align="right">-77.048</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">Boro: Bronx</td>
+<td align="right">-90.254</td>
+<td align="right">0.000</td>
+</tr>
+</tbody>
+</table>
+<p><code>broom::tidy</code> works with lots of things…</p>
+</div>
+<div id="diagnostics" class="section level3">
+<h3>Diagnostics</h3>
+<pre class="r"><code>nyc_airbnb %&gt;% 
+  modelr::add_residuals(fit) %&gt;% 
+  modelr::add_predictions(fit)
+## # A tibble: 40,492 x 7
+##    price stars boro  neighborhood room_type        resid  pred
+##    &lt;int&gt; &lt;dbl&gt; &lt;fct&gt; &lt;chr&gt;        &lt;fct&gt;            &lt;dbl&gt; &lt;dbl&gt;
+##  1    99   5   Bronx City Island  Private room      9.47  89.5
+##  2   200  NA   Bronx City Island  Private room     NA     NA  
+##  3   300  NA   Bronx City Island  Entire home/apt  NA     NA  
+##  4   125   5   Bronx City Island  Entire home/apt  35.5   89.5
+##  5    69   5   Bronx City Island  Private room    -20.5   89.5
+##  6   125   5   Bronx City Island  Entire home/apt  35.5   89.5
+##  7    85   5   Bronx City Island  Entire home/apt  -4.53  89.5
+##  8    39   4.5 Bronx Allerton     Private room    -34.5   73.5
+##  9    95   5   Bronx Allerton     Entire home/apt   5.47  89.5
+## 10   125   4.5 Bronx Allerton     Entire home/apt  51.5   73.5
+## # ... with 40,482 more rows</code></pre>
+<pre class="r"><code>nyc_airbnb %&gt;% 
+  modelr::add_residuals(fit) %&gt;% 
+  ggplot(aes(x = boro, y = resid)) + geom_violin()
+## Warning: Removed 9962 rows containing non-finite values (stat_ydensity).</code></pre>
+<p><img src="linear_models_files/figure-html/unnamed-chunk-9-1.png" width="90%" /></p>
+<pre class="r"><code>
+nyc_airbnb %&gt;% 
+  modelr::add_residuals(fit) %&gt;% 
+  ggplot(aes(x = stars, y = resid)) + geom_point()
+## Warning: Removed 9962 rows containing missing values (geom_point).</code></pre>
+<p><img src="linear_models_files/figure-html/unnamed-chunk-9-2.png" width="90%" /></p>
+<p>Huge outliers / skewed distribution!! Should we exclude? Transform …? Use a “robust” regression???</p>
+<p>For now I’m gonna ignore this, although it is definitely a problem.</p>
+</div>
+<div id="hypothesis-testing" class="section level3">
+<h3>Hypothesis testing</h3>
+<p>Testing a single coef is pretty easy – it’s right there in the output.</p>
+<p>Comparing nested models</p>
+<pre class="r"><code>fit_null = lm(price ~ stars + boro, data = nyc_airbnb)
+fit_alt = lm(price ~ stars + boro + room_type, data = nyc_airbnb)
+
+anova(fit_null, fit_alt) %&gt;% 
+  broom::tidy()
+## Warning: Unknown or uninitialised column: &#39;term&#39;.
+## # A tibble: 2 x 6
+##   res.df         rss    df     sumsq statistic p.value
+## *  &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1  30525 1005601724.    NA       NA        NA       NA
+## 2  30523  921447496.     2 84154228.     1394.       0</code></pre>
+<p>This works for nested models only</p>
+</div>
+<div id="nesting-data" class="section level3">
+<h3>Nesting data</h3>
+<p>(not nesting models – sorry)</p>
+<p>This is confusing</p>
+<pre class="r"><code>nyc_airbnb %&gt;% 
+  lm(price ~ stars * boro + room_type * boro, data = .)
+## 
+## Call:
+## lm(formula = price ~ stars * boro + room_type * boro, data = .)
+## 
+## Coefficients:
+##                        (Intercept)                               stars  
+##                             95.694                              27.110  
+##                       boroBrooklyn                          boroQueens  
+##                            -26.066                              -4.118  
+##                          boroBronx               room_typePrivate room  
+##                             -5.627                            -124.188  
+##               room_typeShared room                  stars:boroBrooklyn  
+##                           -153.635                              -6.139  
+##                   stars:boroQueens                     stars:boroBronx  
+##                            -17.455                             -22.664  
+## boroBrooklyn:room_typePrivate room    boroQueens:room_typePrivate room  
+##                             31.965                              54.933  
+##    boroBronx:room_typePrivate room   boroBrooklyn:room_typeShared room  
+##                             71.273                              47.797  
+##    boroQueens:room_typeShared room      boroBronx:room_typeShared room  
+##                             58.662                              83.089</code></pre>
+<p>This is clearer</p>
+<pre class="r"><code>nest_lm_res =
+  nyc_airbnb %&gt;% 
+  group_by(boro) %&gt;% 
+  nest() %&gt;% 
+  mutate(models = map(data, ~lm(price ~ stars + room_type, data = .x)),
+         models = map(models, broom::tidy)) %&gt;% 
+  select(-data) %&gt;% 
+  unnest()
+
+nest_lm_res %&gt;% 
+  select(boro, term, estimate) %&gt;% 
+  mutate(term = fct_inorder(term)) %&gt;% 
+  spread(key = term, value = estimate) %&gt;% 
+  knitr::kable(digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">boro</th>
+<th align="right">(Intercept)</th>
+<th align="right">stars</th>
+<th align="right">room_typePrivate room</th>
+<th align="right">room_typeShared room</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Manhattan</td>
+<td align="right">95.694</td>
+<td align="right">27.110</td>
+<td align="right">-124.188</td>
+<td align="right">-153.635</td>
+</tr>
+<tr class="even">
+<td align="left">Brooklyn</td>
+<td align="right">69.627</td>
+<td align="right">20.971</td>
+<td align="right">-92.223</td>
+<td align="right">-105.839</td>
+</tr>
+<tr class="odd">
+<td align="left">Queens</td>
+<td align="right">91.575</td>
+<td align="right">9.654</td>
+<td align="right">-69.255</td>
+<td align="right">-94.973</td>
+</tr>
+<tr class="even">
+<td align="left">Bronx</td>
+<td align="right">90.067</td>
+<td align="right">4.446</td>
+<td align="right">-52.915</td>
+<td align="right">-70.547</td>
+</tr>
+</tbody>
+</table>
+<p>tradeoff: nesting gives you separate models, which is an easy-to-interpret way to examine effect modification in an exploratory way. But it <em>doesn’t</em> give a way to test.</p>
+<p>Even more extreme:</p>
+<pre class="r"><code>manhattan_airbnb =
+  nyc_airbnb %&gt;% 
+  filter(boro == &quot;Manhattan&quot;)
+
+manhattan_airbnb %&gt;% 
+  count(neighborhood)
+## # A tibble: 32 x 2
+##    neighborhood           n
+##    &lt;chr&gt;              &lt;int&gt;
+##  1 Battery Park City     65
+##  2 Chelsea             1072
+##  3 Chinatown            360
+##  4 Civic Center          42
+##  5 East Harlem         1048
+##  6 East Village        1858
+##  7 Financial District   391
+##  8 Flatiron District     90
+##  9 Gramercy             307
+## 10 Greenwich Village    383
+## # ... with 22 more rows
+
+manhattan_nest_lm_res =
+  manhattan_airbnb %&gt;% 
+  group_by(neighborhood) %&gt;% 
+  nest() %&gt;% 
+  mutate(models = map(data, ~lm(price ~ stars + room_type, data = .x)),
+         models = map(models, broom::tidy)) %&gt;% 
+  select(-data) %&gt;% 
+  unnest()
+
+manhattan_nest_lm_res %&gt;% 
+  mutate(term = fct_inorder(term)) %&gt;% 
+  ggplot(aes(x = neighborhood, y = estimate)) + 
+  geom_point() + 
+  facet_wrap(~term, nrow = 2, ncol = 2) + 
+  theme(axis.text.x = element_text(angle = 80, hjust = 1, size = 5))</code></pre>
+<p><img src="linear_models_files/figure-html/unnamed-chunk-13-1.png" width="90%" /></p>
+<p>Really the way to fit this is a mixed model – random intercepts and slopes for each neighborhood</p>
+<pre class="r"><code>manhattan_airbnb %&gt;% 
+  lme4::lmer(price ~ stars + room_type + (1 + room_type | neighborhood), data = .) %&gt;% 
+  broom::tidy()
+## Warning in bind_rows_(x, .id): binding factor and character vector,
+## coercing into character vector
+## Warning in bind_rows_(x, .id): binding character and factor vector,
+## coercing into character vector
+## # A tibble: 11 x 5
+##    term                              estimate std.error statistic group   
+##    &lt;chr&gt;                                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;   
+##  1 (Intercept)                        250.        26.6      9.41  fixed   
+##  2 stars                               -3.16       5.00    -0.631 fixed   
+##  3 room_typePrivate room             -124.         7.80   -15.9   fixed   
+##  4 room_typeShared room              -157.        12.9    -12.2   fixed   
+##  5 sd_(Intercept).neighborhood         59.3       NA       NA     neighbo…
+##  6 sd_room_typePrivate room.neighbo…   36.7       NA       NA     neighbo…
+##  7 sd_room_typeShared room.neighbor…   43.6       NA       NA     neighbo…
+##  8 cor_(Intercept).room_typePrivate…   -0.987     NA       NA     neighbo…
+##  9 cor_(Intercept).room_typeShared …   -1.000     NA       NA     neighbo…
+## 10 cor_room_typePrivate room.room_t…    0.992     NA       NA     neighbo…
+## 11 sd_Observation.Residual            198.        NA       NA     Residual</code></pre>
+</div>
+<div id="binary-outcomes" class="section level3">
+<h3>Binary outcomes</h3>
+<p><strong>Generalized</strong> linear model</p>
+<p>logit ect</p>
 </div>
 </div>
 <div id="other-materials" class="section level2">
