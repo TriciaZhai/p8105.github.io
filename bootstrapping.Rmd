@@ -17,182 +17,29 @@ knitr::opts_chunk$set(
   fig.asp = .6,
   out.width = "90%"
 )
+
+library(tidyverse)
+
+theme_set(theme_bw() + theme(legend.position = "bottom"))
 ```
 
 
 ## Some slides
 
 <script async class="speakerdeck-embed" data-id="285289b17d194a4282d53f1800d37199" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
-<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-simulation-and-bootstrapping" title="Simulation and Bootstrapping" target="_blank">Simulation and Bootstrapping</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
+<div style="margin-bottom:5px"> <strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-bootstrapping" title="Simulation and Bootstrapping" target="_blank">Bootstrapping</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>. </div><br>
 
 
 ## Example
 
-I'll write code for today's content in a new R Markdown document called `listcols_and_bootstrapping.Rmd` in the `example_iteration` directory / repo. The code chunk below loads the usual packages.
+I'll write code for today's content in a new R Markdown document called `bootstrapping.Rmd` in the `linear_models` directory / repo. The code chunk below loads usual packages and sets a seed for reproducibility.
 
 ```{r}
 library(tidyverse)
-
-theme_set(theme_bw())
-theme_update(legend.position = "bottom")
+library(p8105.datasets)
 
 set.seed(1)
 ```
-
-Things are gonna get a little weird...
-
-### Simulation: SLR for one $n$
-
-Last class we wrote a short function to simulate data from a simple linear regression, fit the regression model, and return estimates of regression coefficients. Specifically, we generate data from 
-$$ y_i = \beta_0 + \beta_1 x_i + \epsilon_i $$
-for subjects $1 \leq i \leq n$ with $\epsilon_i \sim N[0,1]$ and return estimates $\hat{\beta}_0, \hat{\beta}_1$. That function is below. 
-
-```{r sim_regression, cache = TRUE}
-sim_regression = function(n, beta0 = 2, beta1 = 3) {
-  
-  sim_data = tibble(
-    x = rnorm(n, mean = 1, sd = 1),
-    y = beta0 + beta1 * x + rnorm(n, 0, 1)
-  )
-  
-  ls_fit = lm(y ~ x, data = sim_data)
-  
-  tibble(
-    beta0_hat = coef(ls_fit)[1],
-    beta1_hat = coef(ls_fit)[2]
-  )
-}
-```
-
-Important statistical properties of estimates $\hat{\beta}_0, \hat{\beta}_1$ are established under the conceptual framework of repeated sampling. If you could draw from a population over and over, your estimates will have a known mean and variance:
-$$ \hat{\beta}_0 \sim \left[\beta_0, \sigma^2 \left(\frac{1}{n} + \frac{\bar{x}}{\sum (x_i - \bar{x})^2}\right) \right] \mbox{ and } \hat{\beta}_1 \sim \left[\beta_1,\frac{\sigma^2}{\sum (x_i - \bar{x})^2} \right] $$
-(Because our simulation design generates errors from a Normal distribution we also know that the estimates follow a Normal distribution, although that's not guaranteed by least squares estimation.)
-
-In the real world, drawing samples is time consuming and costly, so "repeated sampling" remains conceptual. On a computer, though, drawing samples is pretty easy. That makes simulation an appealing way to examine the statistical properties of your estimators. 
-
-Let's run `sim_regression()` 100 times to see the effect of randomness in $\epsilon$ on estimates $\hat{\beta}_0, \hat{\beta}_1$.
-
-```{r loop_sim, cache = TRUE}
-output = vector("list", 100)
-
-for (i in 1:100) {
-  output[[i]] = sim_regression(30)
-}
-
-sim_results = bind_rows(output)
-```
-
-Taking a look at the `for` loop we used to create these results, you might notice that there's no `input` list -- the sequence is used to keep track of the output but doesn't affect the computation performed inside the `for` loop. In cases like these, the `purrr::rerun` function is very handy. 
-
-```{r}
-sim_results = 
-  rerun(100, sim_regression(30, 2, 3)) %>% 
-  bind_rows()
-```
-
-Structurally, `rerun` is a lot like `map` -- the first argument defines the amount of iteration and the second argument is the function to use in each iteration step. As with `map`, we've replaced a for loop with a segment of code that makes our purpose much more transparent but both approaches give the same results. 
-
-Let's make some quick plots and compute some summaries for our simulation results.
-
-```{r}
-sim_results %>% 
-  ggplot(aes(x = beta0_hat, y = beta1_hat)) + 
-  geom_point()
-
-sim_results %>% 
-  gather(key = parameter, value = estimate, beta0_hat:beta1_hat) %>% 
-  group_by(parameter) %>% 
-  summarize(emp_mean = mean(estimate),
-            emp_var = var(estimate)) %>% 
-  knitr::kable(digits = 3)
-```
-
-This is **_great_**! We've seen how our estimates are distributed under our simulation scenario, and can compare empirical results to theoretical ones. In this way, we can build intution for fundamental statistical procedures under repeated sampling in a way that's not possible with single data sets. 
-
-
-### Simulation: SLR for several $n$s
-
-Sample size makes a huge difference on the variance of estimates in SLR (and pretty much every statistical method). Let's try to clarify that effect through simulating at a few sample sizes. 
-
-I'll start this process with a for loop around the code I established above using `rerun` (I could start from scratch by nesting one for loop in another for loop, but let's not). 
-
-```{r}
-n_list = list("n_30"  = 30, 
-              "n_60"  = 60, 
-              "n_120" = 120, 
-              "n_240" = 240)
-output = vector("list", length = 4)
-
-for (i in 1:4) {
-  output[[i]] = rerun(100, sim_regression(n_list[[i]])) %>% 
-    bind_rows
-}
-```
-
-After this loop, `output` is a list of 4 data frames; each data frame contains the results of 100 simulations at different sample sizes. 
-
-Before we spend time looking at the results of the simulation, let's recast this using `map`. I want to use a single function in my call to `map_df`, so I'm going to write a wrapper for the call to `rerun` that allows me to change the parameters of the simulation (i.e. the argument to `sim_regression`) and the number of simulation replicates (i.e. the first argument to `rerun`). Once I have this, I'll call `map_df` to perform the complete simulation.
-
-```{r, cache = TRUE, dependson=sim_regression}
-simulate_n_regressions = function(n_runs = 100, n, beta0 = 2, beta1 = 3) {
-  
-  rerun(n_runs, sim_regression(n, beta0, beta1)) %>% 
-    bind_rows()
-  
-}
-
-sim_results = 
-  map_df(.x = n_list, ~ simulate_n_regressions(n = .x), .id = "sample_size") 
-```
-
-Using a different call, I could increase the number of simulation runs or vary the parameters in the regression model:
-
-```{r}
-sim_results = 
-  map_df(.x = n_list, ~ simulate_n_regressions(n = .x, n_runs = 1000, beta0 = 2, beta1 = 3),
-         .id = "sample_size") 
-```
-
-
-Let's take a look at what we've accomplished in our simulations! First I'll take a look at the distribution of slope estimates across sample sizes. 
-
-```{r}
-sim_results %>% 
-  mutate(sample_size = fct_inorder(sample_size)) %>% 
-  ggplot(aes(x = sample_size, y = beta1_hat, fill = sample_size)) + 
-  geom_violin()
-```
-
-These estimates are centered around the truth (3) for each sample size, and the width of the distribution shrinks as sample size grows. 
-
-Next, I'll look at the bivariate distribution of intercept and slope estimates across sample sizes.
-
-```{r}
-sim_results %>% 
-  mutate(sample_size = fct_inorder(sample_size)) %>% 
-  ggplot(aes(x = beta0_hat, y = beta1_hat)) + 
-  geom_point(alpha = .2) + 
-  facet_grid(~sample_size)
-```
-
-The variability in the slope estimates was shown in the violin plot, but now we have a sense for the bivariate distribution of intercepts and slopes. Estimates of the intercept and slope are correlated with each other; this is expected from theoretical results describing the joint distribution of estimated regression coefficients. 
-
-Lastly I'll look at the empirical mean and variance of these estimates.
-
-```{r}
-sim_results %>% 
-  gather(key = parameter, value = estimate, beta0_hat:beta1_hat) %>% 
-  group_by(parameter, sample_size) %>% 
-  summarize(emp_mean = mean(estimate),
-            emp_var = var(estimate)) %>% 
-  knitr::kable(digits = 3)
-```
-
-These values are consistent with the formulas presented above. This kind of check is a useful way to support derivations (although they don't serve as a formal proof in any way).
-
-
-
-
 
 ### Bootstrapping
 
@@ -204,33 +51,36 @@ Repeated sampling _can_ happen on a computer though. To bootstrap, one draws rep
 
 ### Bootstrapping in SLR
 
-Let's look at a couple of simulated data sets. Both are generated from a simple linear regression, but they have different error distributions. 
+Let's create some simulated data. First I'll generate `x`, then an `error` sampled from a normal distribution, and then a response `y`; this all gets stored in `sim_df_const`. Then I'll modify this by multiplying the errors by a term that involves `x`, and create a new response variable `y`.
 
 ```{r}
-set.seed(10)
-
 n_samp = 250
 
-sim_df_const = tibble(
-  x = rnorm(n_samp, 1, 1),
-  error = rnorm(n_samp, 0, 1),
-  y = 2 + 3 * x + error
-)
+sim_df_const = 
+  tibble(
+    x = rnorm(n_samp, 1, 1),
+    error = rnorm(n_samp, 0, 1),
+    y = 2 + 3 * x + error
+  )
 
 sim_df_nonconst = sim_df_const %>% 
   mutate(
   error = error * .75 * x,
   y = 2 + 3 * x + error
 )
+```
 
-bind_rows(
-  mutate(sim_df_const, data = "sim_df_const"),
-  mutate(sim_df_nonconst, data = "sim_df_nonconst")
-) %>% 
+By generating data in this way, I'm creating one case in which the usual linear regression assumptions hold and one case in which they don't. The plot below illustrates the differences between the dataset. 
+
+```{r}
+sim_df = 
+  bind_rows(const = sim_df_const, nonconst = sim_df_nonconst, .id = "data_source") 
+
+sim_df %>% 
   ggplot(aes(x = x, y = y)) + 
   geom_point(alpha = .5) +
   stat_smooth(method = "lm") +
-  facet_grid(~data) 
+  facet_grid(~data_source) 
 ```
 
 These datasets have roughly the same overall variance, but the left panel shows data with constant variance and the right panel shows data with non-constant variance. For this reason, ordinary least squares should provide reasonable estimates in both cases, but inference is standard inference approaches may only be justified for the data on the left.
@@ -238,13 +88,18 @@ These datasets have roughly the same overall variance, but the left panel shows 
 The output below shows results from fitting simple linear regressions to both datasets.
 
 ```{r}
-lm(y ~ x, data = sim_df_const) %>% summary()
-lm(y ~ x, data = sim_df_nonconst) %>% summary()
+lm(y ~ x, data = sim_df_const) %>% 
+  broom::tidy() %>% 
+  knitr::kable(digits = 3)
+
+lm(y ~ x, data = sim_df_nonconst) %>% 
+  broom::tidy() %>% 
+  knitr::kable(digits = 3)
 ```
 
 Despite the very different error structures, standard errors for coefficient estimates are similar in both cases! 
 
-We'll use the bootstrap to make inference for the data on the right. This is intended largely as an illustration for how to use the bootstrap in cases where the theoretical distribution is "unknown", although for these data in particular weighted least squares is more appropriate.
+We'll use the bootstrap to make inference for the data on the right. This is intended largely as an illustration for how to use the bootstrap in cases where the theoretical distribution is "unknown", although for these data in particular weighted least squares could be more appropriate.
 
 
 ### Drawing one bootstrap sample
@@ -260,10 +115,13 @@ boot_sample = function(df) {
 We should also do a quick check to see if this is working.
 
 ```{r}
-boot_sample(sim_df_nonconst)
+boot_sample(sim_df_nonconst) %>% 
+  ggplot(aes(x = x, y = y)) + 
+  geom_point(alpha = .5) +
+  stat_smooth(method = "lm")
 ```
 
-That looks about right. 
+That looks about right. In comparison with the original data, the bootstrap sample has the same characteristics but isn't a perfect duplicate -- some original data points appear more than once, others don't appear at all. 
 
 ### Drawing many bootstrap samples
 
@@ -289,7 +147,7 @@ boot_straps %>%
   pull(strap_sample)
 ```
 
-Seems okay -- some values are repeated, some don't appear in both datasets. Next I'll use ggplot to show some of these datasets, and to include a linear fit for each.
+Seems okay -- some values are repeated, some don't appear in both datasets. Next I'll use `ggplot` to show some of these datasets, and to include a linear fit for each.
 
 ```{r}
 boot_straps %>% 
@@ -308,7 +166,7 @@ This shows some of the differences across bootstrap samples, and shows that the 
 
 My goal, of course, isn't to analyze bootstrap samples by plotting them -- I'd like to get a sense of the variability in estimated intercepts and slopes across all my bootstrap samples.
 
-To do that, I'll use the analytic pipeline we established above: fit the model; tidy the output; unnest and examine the results. The code chunk below uses this pipeline to look at bootstrap standard errors for the estimated regression coefficients. 
+To do that, I'll use the analytic pipeline we established when looking at nested datasets in [linear models](linear_models.html): fit the model; tidy the output; unnest and examine the results. The code chunk below uses this pipeline to look at bootstrap standard errors for the estimated regression coefficients. 
 
 ```{r}
 bootstrap_results = 
@@ -320,12 +178,13 @@ bootstrap_results =
   group_by(term) %>% 
   summarize(boot_se = sd(estimate))
 
-bootstrap_results
+bootstrap_results %>% 
+  knitr::kable(digits = 3)
 ```
 
-Comparing these to the results of ordinary least squares, we see that the standard error for the intercept is much smaller and the standard error for the intercept is a bit larger. This is reasonable, given the non-constant variance in the data given smaller residuals around zero and larger residuals in the the tails of the `x` distribution.
+Comparing these to the results of ordinary least squares, the standard error for the intercept is much smaller and the standard error for the intercept is a bit larger. This is reasonable, given the non-constant variance in the data given smaller residuals around zero and larger residuals in the the tails of the `x` distribution.
 
-In this case, we can expand the three-panel plot we showed previously to visualize the results of our bootstrap process. 
+For a simple linear regression, we can show the fitted lines for each bootstrap sample to build intuition for these results. 
 
 ```{r}
 boot_straps %>% 
@@ -339,14 +198,12 @@ In comparison to the standard error bands in our previous plot (which are based 
 
 ### `bootstrap`
 
-Bootstrapping is common enough that it's been automated, to some degree, in the `modelr::boostrap` function. This function makes it easy to draw bootstrap samples, and stores them in a mostly-helpful way -- as a `resample` object that can be converted to and treated like a data frame.
+Bootstrapping is common enough that it's been automated, to some degree, in the `modelr::boostrap` function. This function makes it easy to draw bootstrap samples, and stores them in a mostly-helpful way -- as a `resample` object that can be converted to and treated like a data frame. (This keeps you from having to actually store 1000 dataframes, and saves a lot of memory on your computer.)
 
 ```{r}
-library(modelr)
-
 boot_straps = 
   sim_df_nonconst %>% 
-  bootstrap(n = 1000)
+  modelr::bootstrap(n = 1000)
 
 boot_straps$strap[[1]]
 as_data_frame(boot_straps$strap[[1]])
@@ -356,7 +213,7 @@ Let's repeat our analysis pipeline using the `bootstrap` function instead of our
 
 ```{r}
 sim_df_nonconst %>% 
-  bootstrap(n = 1000) %>% 
+  modelr::bootstrap(n = 1000) %>% 
   mutate(models = map(strap, ~lm(y ~ x, data = .x) ),
          results = map(models, broom::tidy)) %>% 
   select(-strap, -models) %>% 
@@ -371,7 +228,7 @@ Also, check this out -- to bootstrap the dataset with constant error variance, w
 
 ```{r}
 sim_df_const %>% 
-  bootstrap(n = 1000) %>% 
+  modelr::bootstrap(n = 1000) %>% 
   mutate(models = map(strap, ~lm(y ~ x, data = .x) ),
          results = map(models, broom::tidy)) %>% 
   select(-strap, -models) %>% 
@@ -381,6 +238,91 @@ sim_df_const %>%
 ```
 
 These results generally agree with the output of the OLS procedure, which is nice. 
+
+
+
+### Non-standard parameters
+
+The boostrap is also helpful when you'd like to construct a confidence interval for a parameter / value / summary that doesn't have an easy-to-write-down distribution in the usual repeated sampling framework. In the following, we'll look at the distribution of $\hat{r}^2$ and $\log(\beta_0 * \beta1)$ in a simple linear regression. 
+
+First, we'll generate data. This is similar to the constant-variance dataset we saw previously, but contains a sample of size 25. 
+
+```{r}
+sim_df = 
+  tibble(
+    x = rnorm(25, 1, 1),
+    error = rnorm(25, 0, 1),
+    y = 2 + 3 * x + error
+  )
+```
+
+To obtain a distribution for $\hat{r}^2$, we'll follow basically the same procedure we used for regression coefficients: draw bootstrap samples; the a model to each; extract the value I'm concerned with; and summarize. Here, we'll use `modelr::bootstrap` to draw the samples and `broom::glance` to produce `r.squared` values. 
+
+```{r}
+sim_df %>% 
+  modelr::bootstrap(n = 1000) %>% 
+  mutate(models = map(strap, ~lm(y ~ x, data = .x) ),
+         results = map(models, broom::glance)) %>% 
+  select(-strap, -models) %>% 
+  unnest() %>% 
+  ggplot(aes(x = r.squared)) + geom_density()
+```
+
+In this example, the $\hat{r}^2$ value is high, and the upper bound at 1 may be a cause for the generally skewed shape of the distribution. If we wanted to construct a confidence interval for $R^2$, we could take the 2.5% and 97.5% quantiles of the estimates across bootstrap samples. However, because the shape isn't symmetric, using the mean +/- 1.96 times the standard error probably wouldn't work well.
+
+We can produce a distribution for $\log(\beta_0 * \beta1)$ using a similar approach, with a bit more wrangling before we make our plot.
+
+```{r}
+sim_df %>% 
+  modelr::bootstrap(n = 1000) %>% 
+  mutate(models = map(strap, ~lm(y ~ x, data = .x) ),
+         results = map(models, broom::tidy)) %>% 
+  select(-strap, -models) %>% 
+  unnest() %>% 
+  select(id = `.id`, term, estimate) %>% 
+  spread(key = term, value = estimate) %>% 
+  rename(beta0 = `(Intercept)`, beta1 = x) %>% 
+  mutate(log_b0b1 = (beta0 * beta1)) %>% 
+  ggplot(aes(x = log_b0b1)) + geom_density()
+```
+
+As with $r^2$, this distrubtion is somewhat skewed and has some outliers. 
+
+The point of this is not to say you should always use the bootstrap -- it's possible to establish "large sample" distributions for strange parameters / values / summaries in a lot of cases, and those are great to hvae. But it is helpful to know that there's a way to do inference even in tough cases. 
+
+
+### Airbnb data
+
+As a final example, we'll revisit the [Airbnb data](dataset_airbnb.html). The code chunk below loads and tidies the data. 
+
+```{r}
+data("nyc_airbnb")
+
+nyc_airbnb = 
+  nyc_airbnb %>% 
+  mutate(stars = review_scores_location / 2) %>% 
+  rename(boro = neighbourhood_group,
+         neighborhood = neighbourhood) %>% 
+  filter(boro != "Staten Island") %>% 
+  select(price, stars, boro, neighborhood, room_type)
+```
+
+In [linear models](linear_models.html), we noticed that some large outliers in price might affect estimates and inference for the association between star rating and price. Although estimates are likely to be sensitive to those outliers, the code chunk below uses the bootstrap to examine the distribution of regression coefficients under repeated sampling.
+
+```{r}
+nyc_airbnb %>% 
+  filter(boro == "Manhattan") %>% 
+  modelr::bootstrap(n = 1000) %>% 
+  mutate(models = map(strap, ~ lm(price ~ stars + room_type, data = .x)),
+         results = map(models, broom::tidy)) %>% 
+  select(results) %>% 
+  unnest() %>% 
+  filter(term == "stars") %>% 
+  ggplot(aes(x = estimate)) + geom_density()
+```
+
+This distribution has a heavy tail extending to low values and a bit of a "shoulder", features that may be related to the frequency with which large outliers are included in the bootstrap sample. 
+
 
 ## Other materials
 
