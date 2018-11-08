@@ -403,7 +403,7 @@ library(p8105.datasets)
 set.seed(1)</code></pre>
 <div id="model-fitting" class="section level3">
 <h3>Model fitting</h3>
-<p>The code below loads and cleans the <a href="dataset_airbnb.html">Airbnb</a>data, which we’ll use as a primary example for fitting linear models.</p>
+<p>The code below loads and cleans the <a href="dataset_airbnb.html">Airbnb</a> data, which we’ll use as a primary example for fitting linear models.</p>
 <pre class="r"><code>data(&quot;nyc_airbnb&quot;)
 
 nyc_airbnb = 
@@ -413,17 +413,17 @@ nyc_airbnb =
          neighborhood = neighbourhood) %&gt;% 
   filter(boro != &quot;Staten Island&quot;) %&gt;% 
   select(price, stars, boro, neighborhood, room_type)</code></pre>
-<p>An obvious place to start is to consider price as an outcome that may depend on rating and boro. We fit that initial model in the following code.</p>
+<p>An good place to start is to consider price as an outcome that may depend on rating and borough. We fit that initial model in the following code.</p>
 <pre class="r"><code>fit = lm(price ~ stars + boro, data = nyc_airbnb)</code></pre>
 <p>The <code>lm</code> function begins with the formula specification – outcome on the left of the <code>~</code> and predictors separated by <code>+</code> on the right. As we’ll see shortly, interactions between variables can be specified using <code>*</code>. You can also specify an intercept-only model (<code>outcome ~ 1</code>), a model with no intercept (<code>outcome ~ 0 + ...</code>), and a model using all available predictors (<code>outcome ~ .</code>).</p>
-<p>R will treat categorical (factor) covariates appropriately and predictably: indicator variables are created for each non-reference category and included in your model, and the factor level is treated as the reference. As with <code>ggplot</code>, being in control of your factors is therefore critical!</p>
+<p>R will treat categorical (factor) covariates appropriately and predictably: indicator variables are created for each non-reference category and included in your model, and the factor level is treated as the reference. As with <code>ggplot</code>, being careful with factors is therefore critical!</p>
 <pre class="r"><code>nyc_airbnb = 
   nyc_airbnb %&gt;% 
   mutate(boro = fct_infreq(boro),
          room_type = fct_infreq(room_type))
 
 fit = lm(price ~ stars + boro, data = nyc_airbnb)</code></pre>
-<p>It’s important to note that changing reference categories won’t change “fit” or statistical sigificance, but can affect interpretation.</p>
+<p>It’s important to note that changing reference categories won’t change “fit” or statistical sigificance, but can affect ease of interpretation.</p>
 </div>
 <div id="tidying-output" class="section level3">
 <h3>Tidying output</h3>
@@ -432,27 +432,24 @@ fit = lm(price ~ stars + boro, data = nyc_airbnb)</code></pre>
 summary(fit)$coef
 coef(fit)
 fitted.values(fit)</code></pre>
-<p>The reason that we omitted the output is because it’s a huge pain to deal with. <code>summary</code> produces an object of class <code>summary.lm</code>, which is also a list – that’s how we got to the coefficients. <code>coef</code> produces a vector of coefficient values, and <code>fitted.values</code> is a vector of fitted values. None of this is tidy.</p>
+<p>The reason that we omit the output is that it’s a huge pain to deal with. <code>summary</code> produces an object of class <code>summary.lm</code>, which is also a list – that’s how we extracted the coefficients using <code>summary(fit)$coef</code>. <code>coef</code> produces a vector of coefficient values, and <code>fitted.values</code> is a vector of fitted values. None of this is tidy.</p>
 <p>It’s helpful to know about the products of <code>lm</code> and to know there are a range of ways to interact with models in base R. That said, for the most part it’s easiest to use tidy tools.</p>
 <p>The <code>broom</code> package has functions for obtaining a quick summary of the model and for cleaning up the coefficient table.</p>
 <pre class="r"><code>fit %&gt;% 
   broom::glance()
-## # A tibble: 1 x 11
-##   r.squared adj.r.squared sigma statistic   p.value    df  logLik    AIC
-## *     &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;
-## 1    0.0342        0.0341  182.      271. 6.73e-229     5 -2.02e5 4.04e5
-## # ... with 3 more variables: BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;
+##   r.squared adj.r.squared    sigma statistic       p.value df    logLik
+## 1 0.0342338    0.03410725 181.5036  270.5072 6.727024e-229  5 -202112.6
+##        AIC      BIC   deviance df.residual
+## 1 404237.3 404287.2 1005601724       30525
 
 fit %&gt;% 
   broom::tidy()
-## # A tibble: 5 x 5
-##   term         estimate std.error statistic   p.value
-##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)      19.8     12.2       1.63 1.04e-  1
-## 2 stars            32.0      2.53     12.7  1.27e- 36
-## 3 boroBrooklyn    -49.8      2.23    -22.3  6.32e-109
-## 4 boroQueens      -77.0      3.73    -20.7  2.58e- 94
-## 5 boroBronx       -90.3      8.57    -10.5  6.64e- 26</code></pre>
+##           term  estimate std.error  statistic       p.value
+## 1  (Intercept)  19.83946 12.189256   1.627619  1.036160e-01
+## 2        stars  31.98989  2.527500  12.656733  1.269392e-36
+## 3 boroBrooklyn -49.75363  2.234878 -22.262345 6.317605e-109
+## 4   boroQueens -77.04776  3.726632 -20.674904  2.584908e-94
+## 5    boroBronx -90.25393  8.567490 -10.534465  6.638618e-26</code></pre>
 <p>Both of these functions produce data frames, which makes it straightforward to include the results in subsequent steps.</p>
 <pre class="r"><code>fit %&gt;% 
   broom::tidy() %&gt;% 
@@ -531,7 +528,7 @@ modelr::add_predictions(nyc_airbnb, fit)
 ##  9    95   5   Bronx Allerton     Entire home/apt  89.5
 ## 10   125   4.5 Bronx Allerton     Entire home/apt  73.5
 ## # ... with 40,482 more rows</code></pre>
-<p>Of course, these can be included in pipeline of commands to conduct inspections and perform diagnostics.</p>
+<p>Like many things in the tidyverse, the first argument is a dataframe. That makes it easy to included steps adding residuals or predictions in pipeline of commands to conduct inspections and perform diagnostics.</p>
 <pre class="r"><code>nyc_airbnb %&gt;% 
   modelr::add_residuals(fit) %&gt;% 
   ggplot(aes(x = boro, y = resid)) + geom_violin()
@@ -543,24 +540,21 @@ nyc_airbnb %&gt;%
   ggplot(aes(x = stars, y = resid)) + geom_point()
 ## Warning: Removed 9962 rows containing missing values (geom_point).</code></pre>
 <p><img src="linear_models_files/figure-html/unnamed-chunk-10-2.png" width="90%" /></p>
-<p>This example has some obvious issues, most notably the presence of extremely large outliers in price and a generally skewed distribution. There are a few things we might try to do here – including creating a formal rule for the exclusion of outliers, transforming the price variable (e.g. using a log transformation), or fitting a model that is robust to outliers. Dealing with these issues isn’t really the purpose, though, so we’ll note the issues and move on; shortly we’ll look at using the <a href="bootstrapping.html">bootstrap</a> for inference in cases like this, where standard approaches to inference may fail.</p>
-<p>(For what it’s worth, I’d probably use a combination of median regression, which is less sensitive to outliers than OLS, and bootstrapping for inference. If that’s not feasible, I’d omit rentals with price over $1000 (&lt; 0.5% of the sample) from the primary analysis and examine these separately. I usually avoid transforming the outcome, because models become difficult to interpret.)</p>
+<p>This example has some obvious issues, most notably the presence of extremely large outliers in price and a generally skewed residual distribution. There are a few things we might try to do here – including creating a formal rule for the exclusion of outliers, transforming the price variable (e.g. using a log transformation), or fitting a model that is robust to outliers. Dealing with these issues isn’t really the purpose, though, so we’ll note the issues and move on; shortly we’ll look at using the <a href="bootstrapping.html">bootstrap</a> for inference in cases like this, where standard approaches to inference may fail.</p>
+<p>(For what it’s worth, I’d probably use a combination of median regression, which is less sensitive to outliers than OLS, and maybe bootstrapping for inference. If that’s not feasible, I’d omit rentals with price over $1000 (&lt; 0.5% of the sample) from the primary analysis and examine these separately. I usually avoid transforming the outcome, because the results model is difficult to interpret.)</p>
 </div>
 <div id="hypothesis-testing" class="section level3">
 <h3>Hypothesis testing</h3>
 <p>We’ll comment briefly on hypothesis testing. Model summaries include results of t-tests for single coefficients, and are the standard way of assessing statistical significance.</p>
-<p>Testing multiple coefficients is somewhat more complicated. A useful approach is to use nested models, meaning that the coefficients in a simple “null” model are a subset of the coefficients in a more complex “alternative” model. The are formal tests for comparing the null and alternative models, even when several coefficients are added in the alternative model. Tests of this kind are required to assess the significance of a categorical predictor with more than two levels, as in the example below.</p>
+<p>Testing multiple coefficients is somewhat more complicated. A useful approach is to use nested models, meaning that the terms in a simple “null” model are a subset of the terms in a more complex “alternative” model. The are formal tests for comparing the null and alternative models, even when several coefficients are added in the alternative model. Tests of this kind are required to assess the significance of a categorical predictor with more than two levels, as in the example below.</p>
 <pre class="r"><code>fit_null = lm(price ~ stars + boro, data = nyc_airbnb)
 fit_alt = lm(price ~ stars + boro + room_type, data = nyc_airbnb)</code></pre>
-<p>The test of interest is implemented in the <code>anova</code> function which, of course, summarized using <code>broom::tidy</code>.</p>
+<p>The test of interest is implemented in the <code>anova</code> function which, of course, can be summarized using <code>broom::tidy</code>.</p>
 <pre class="r"><code>anova(fit_null, fit_alt) %&gt;% 
   broom::tidy()
-## Warning: Unknown or uninitialised column: &#39;term&#39;.
-## # A tibble: 2 x 6
-##   res.df         rss    df     sumsq statistic p.value
-## *  &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-## 1  30525 1005601724.    NA       NA        NA       NA
-## 2  30523  921447496.     2 84154228.     1394.       0</code></pre>
+##   res.df        rss df    sumsq statistic p.value
+## 1  30525 1005601724 NA       NA        NA      NA
+## 2  30523  921447496  2 84154228  1393.807       0</code></pre>
 <p>Note that this works for <em>nested</em> models only. Comparing non-nested models is a common problem that requires other methods; we’ll see one approach in <a href="cross_validation.html">cross validation</a>.</p>
 </div>
 <div id="nesting-data" class="section level3">
@@ -753,7 +747,7 @@ fit_alt = lm(price ~ stars + boro + room_type, data = nyc_airbnb)</code></pre>
 </tr>
 </tbody>
 </table>
-<p>The estimates here are consistent with those in the model containing interactions, but are easier to identify.</p>
+<p>The estimates here are the same as those in the model containing interactions, but are easier to extract from the output.</p>
 <p>Fitting models to nested datasets is a way of performing stratified analyses. These have a tradeoff: stratified models make it easy to interpret covariate effects in each stratum, but don’t provide a mechanism for assessing the significance of differences across strata.</p>
 <p>An even more extreme example is the assessment of neighborhood effects in Manhattan. The code chunk below fits neighborhood-specific models:</p>
 <pre class="r"><code>manhattan_airbnb =
@@ -770,7 +764,6 @@ manhattan_nest_lm_res =
   unnest()</code></pre>
 <p>And the chunk below shows neighborhood-specific estimates for the coefficients related to room type.</p>
 <pre class="r"><code>manhattan_nest_lm_res %&gt;% 
-  mutate(term = fct_inorder(term)) %&gt;% 
   filter(str_detect(term, &quot;room_type&quot;)) %&gt;% 
   ggplot(aes(x = neighborhood, y = estimate)) + 
   geom_point() + 
@@ -782,30 +775,36 @@ manhattan_nest_lm_res =
 <pre class="r"><code>manhattan_airbnb %&gt;% 
   lme4::lmer(price ~ stars + room_type + (1 + room_type | neighborhood), data = .) %&gt;% 
   broom::tidy()
-## Warning in bind_rows_(x, .id): binding factor and character vector,
-## coercing into character vector
-## Warning in bind_rows_(x, .id): binding character and factor vector,
-## coercing into character vector
-## # A tibble: 11 x 5
-##    term                              estimate std.error statistic group   
-##    &lt;chr&gt;                                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;   
-##  1 (Intercept)                        250.        26.6      9.41  fixed   
-##  2 stars                               -3.16       5.00    -0.631 fixed   
-##  3 room_typePrivate room             -124.         7.80   -15.9   fixed   
-##  4 room_typeShared room              -157.        12.9    -12.2   fixed   
-##  5 sd_(Intercept).neighborhood         59.3       NA       NA     neighbo…
-##  6 sd_room_typePrivate room.neighbo…   36.7       NA       NA     neighbo…
-##  7 sd_room_typeShared room.neighbor…   43.6       NA       NA     neighbo…
-##  8 cor_(Intercept).room_typePrivate…   -0.987     NA       NA     neighbo…
-##  9 cor_(Intercept).room_typeShared …   -1.000     NA       NA     neighbo…
-## 10 cor_room_typePrivate room.room_t…    0.992     NA       NA     neighbo…
-## 11 sd_Observation.Residual            198.        NA       NA     Residual</code></pre>
+##                                                           term
+## 1                                                  (Intercept)
+## 2                                                        stars
+## 3                                        room_typePrivate room
+## 4                                         room_typeShared room
+## 5                                  sd_(Intercept).neighborhood
+## 6                        sd_room_typePrivate room.neighborhood
+## 7                         sd_room_typeShared room.neighborhood
+## 8           cor_(Intercept).room_typePrivate room.neighborhood
+## 9            cor_(Intercept).room_typeShared room.neighborhood
+## 10 cor_room_typePrivate room.room_typeShared room.neighborhood
+## 11                                     sd_Observation.Residual
+##        estimate std.error  statistic        group
+## 1   249.8962752 26.567299   9.406160        fixed
+## 2    -3.1559390  5.000680  -0.631102        fixed
+## 3  -123.9659425  7.802407 -15.888166        fixed
+## 4  -156.5833251 12.871569 -12.165053        fixed
+## 5    59.3301651        NA         NA neighborhood
+## 6    36.6670849        NA         NA neighborhood
+## 7    43.6155574        NA         NA neighborhood
+## 8    -0.9874765        NA         NA neighborhood
+## 9    -0.9995581        NA         NA neighborhood
+## 10    0.9917299        NA         NA neighborhood
+## 11  197.8341459        NA         NA     Residual</code></pre>
 <p>Mixed models are pretty great!</p>
 </div>
 <div id="binary-outcomes" class="section level3">
 <h3>Binary outcomes</h3>
 <p>Linear models are appropriate for outcomes that follow a continuous distribution, but binary outcomes are common. In these cases, logistic regression is a useful analytic framework.</p>
-<p>The <em>Washington Post</em> has gathered data on homicides in 50 large U.S. cities and made the data available through a<a href="https://github.com/washingtonpost/data-homicides">GitHub repository</a>; the final CSV is <a href="data/homicide-data.csv">here</a>. You can read their accompanying article <a href="https://www.washingtonpost.com/graphics/2018/investigations/where-murders-go-unsolved/">here</a>. We’ll use data on unresolved murders in Baltimore, MD to illustrate logistic regression in R. The code below imports, cleans, and generally wrangles the data for analysis.</p>
+<p>The <em>Washington Post</em> has gathered data on homicides in 50 large U.S. cities and made the data available through a <a href="https://github.com/washingtonpost/data-homicides">GitHub repository</a>; the final CSV is <a href="data/homicide-data.csv">here</a>. You can read their accompanying article <a href="https://www.washingtonpost.com/graphics/2018/investigations/where-murders-go-unsolved/">here</a>. We’ll use data on unresolved murders in Baltimore, MD to illustrate logistic regression in R. The code below imports, cleans, and generally wrangles the data for analysis.</p>
 <pre class="r"><code>baltimore_df = 
   read_csv(&quot;data/homicide-data.csv&quot;) %&gt;% 
   filter(city == &quot;Baltimore&quot;) %&gt;% 
