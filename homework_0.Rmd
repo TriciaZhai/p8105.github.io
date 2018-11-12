@@ -21,7 +21,7 @@ Download and install the latest versions of [R](https://cran.r-project.org) (3.5
 Install several packages (and their dependencies) using the code below:
 
 ```{r eval = FALSE}
-install.packages(c("tidyverse", "knitr", "janitor", "broom", "here", "shiny", "readxl", "haven", "rnoaa", "ggridges", "viridis", "skimr", "rvest", "httr", "flexdashboard", "devtools", "rmarkdown", "modelr"))
+install.packages(c("tidyverse", "knitr", "janitor", "broom", "here", "shiny", "readxl", "haven", "rnoaa", "ggridges", "viridis", "skimr", "rvest", "httr", "flexdashboard", "devtools", "rmarkdown", "modelr", "mgcv"))
 ```
 
 Upload a screenshot of RStudio that shows your R version and that you can successfully load the packages `tidyverse` and `knitr`; include your UNI on the command line. Here's an example "solution":
