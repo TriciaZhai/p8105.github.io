@@ -395,7 +395,7 @@ div.tocify {
 </div>
 <div id="example" class="section level2">
 <h2>Example</h2>
-<p>I’ll write code for today’s content in a new R Markdown document called <code>simulation.Rmd</code> in the <code>iteration</code> directory / repo. The code chunk below loads the usual packages and sets a seed for reproducibility.</p>
+<p>I’ll write code for today’s content in a new R Markdown document called <code>simulation.Rmd</code> in the <code>iteration</code> directory / repo. The code chunk below loads the usual packages (plus <code>mgcv</code>) and sets a seed for reproducibility.</p>
 <pre class="r"><code>library(tidyverse)
 library(modelr)
 library(mgcv)
@@ -409,7 +409,8 @@ library(mgcv)
 
 set.seed(1)</code></pre>
 <div id="cv-by-hand" class="section level3">
-<h3>CV by hand</h3>
+<h3>CV “by hand”</h3>
+<p>Start with a simulated example. Going to show a nonlinear model, because “complexity” is easier for me to interpret in a case where I can see it.</p>
 <pre class="r"><code>nonlin_df = tibble(
   id = 1:100,
   x = runif(100, 0, 1),
@@ -418,12 +419,20 @@ set.seed(1)</code></pre>
 
 ggplot(nonlin_df, aes(x = x, y = y)) + geom_point() + theme_bw()</code></pre>
 <p><img src="cross_validation_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
+<p>Split into training and testing (we get to use <code>anti_join</code>!).</p>
 <pre class="r"><code>train_df = sample_n(nonlin_df, 80)
-test_df = anti_join(nonlin_df, train_df, by = &quot;id&quot;)</code></pre>
+test_df = anti_join(nonlin_df, train_df, by = &quot;id&quot;)
+
+ggplot(train_df, aes(x = x, y = y)) + 
+  geom_point() + 
+  geom_point(data = test_df, color = &quot;red&quot;)</code></pre>
+<p><img src="cross_validation_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
+<p>Fit three models to the training data. I’m using <code>mgcv::gam</code> which fits “additive models.” For today, you don’t have to know what this means or how it works – we’re putting smooth lines through data clouds, and we can control how smooth we want that to be.</p>
+<p>These aren’t nested, so we can’t compare using statistical tests</p>
 <pre class="r"><code>lin_mod = lm(y ~ x, data = train_df)
 nonlin_mod = mgcv::gam(y ~ s(x), data = train_df)
 wiggly_mod = mgcv::gam(y ~ s(x, k = 30), sp = 10e-6, data = train_df)</code></pre>
-<p>gam is weird, let’s see some fits</p>
+<p>To understand, let’s see some fits.</p>
 <pre class="r"><code>train_df %&gt;% 
   add_predictions(nonlin_mod) %&gt;% 
   ggplot(aes(x = x, y = y)) + geom_point() + 
@@ -435,15 +444,28 @@ train_df %&gt;%
   ggplot(aes(x = x, y = y)) + geom_point() + 
   geom_line(aes(y = pred), color = &quot;red&quot;)</code></pre>
 <p><img src="cross_validation_files/figure-html/unnamed-chunk-6-2.png" width="90%" /></p>
+<p>I can also use <code>gather_predictions</code>, which is handy</p>
+<pre class="r"><code>train_df %&gt;% 
+  gather_predictions(lin_mod, nonlin_mod, wiggly_mod) %&gt;% 
+  mutate(model = fct_inorder(model)) %&gt;% 
+  ggplot(aes(x = x, y = y)) + 
+  geom_point() + 
+  geom_line(aes(y = pred), color = &quot;red&quot;) + 
+  facet_wrap(~model)</code></pre>
+<p><img src="cross_validation_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
+<p>Now I’ll compute RMSEs for each</p>
 <pre class="r"><code>rmse(lin_mod, test_df)
 ## [1] 0.7163422
 rmse(nonlin_mod, test_df)
 ## [1] 0.2437012
 rmse(wiggly_mod, test_df)
 ## [1] 0.3471883</code></pre>
+<p>This is suggestive that both nonlinear models work better than the linear model, but not conclusive about the smooth and wiggly fits.</p>
+<p>For that, we’ll need to iterate. Could be done using loops, but that’s a hassle …</p>
 </div>
 <div id="cv-using-modelr" class="section level3">
 <h3>CV using <code>modelr</code></h3>
+<p>Luckily, <code>modelr</code> has some tools to automate the CV process. In particular <code>crossv_mc</code> repeats a training / testing split; datasets are stored using list columns.</p>
 <pre class="r"><code>cv_df = 
   crossv_mc(nonlin_df, 100) 
 
@@ -477,10 +499,12 @@ cv_df %&gt;% pull(test) %&gt;% .[[1]] %&gt;% as_tibble
 ##  9    46 0.789  -1.23  
 ## 10    50 0.693  -0.684 
 ## # ... with 11 more rows</code></pre>
+<p><code>crossv_mc</code> tries to be smart about memory – rather than repeating the dataset a bunch of times, it saves the data once and stores the indexes for each training / testing split using a <code>resample</code> object. This can be coerced to a dataframe (as above) and can often be treated exactly like a dataframe. However, it’s not compatible with <code>gam</code>, so we have to mess all that up using the code below (if all you want to fit uses <code>lm</code>, you can skip this).</p>
 <pre class="r"><code>cv_df =
   cv_df %&gt;% 
   mutate(train = map(train, as_tibble),
          test = map(test, as_tibble))</code></pre>
+<p>Now I’ll fit models and get RMSEs using mutate / map</p>
 <pre class="r"><code>cv_df = 
   cv_df %&gt;% 
   mutate(lin_mod = map(train, ~lm(y ~ x, data = .x)),
@@ -489,36 +513,44 @@ cv_df %&gt;% pull(test) %&gt;% .[[1]] %&gt;% as_tibble
   mutate(rmse_lin    = map2_dbl(lin_mod, test, ~rmse(model = .x, data = .y)),
          rmse_nonlin = map2_dbl(nonlin_mod, test, ~rmse(model = .x, data = .y)),
          rmse_wiggly = map2_dbl(wiggly_mod, test, ~rmse(model = .x, data = .y)))</code></pre>
+<p>Last step is plotting the results.</p>
 <pre class="r"><code>cv_df %&gt;% 
   select(starts_with(&quot;rmse&quot;)) %&gt;% 
   gather(key = model, value = rmse) %&gt;% 
   mutate(model = str_replace(model, &quot;rmse_&quot;, &quot;&quot;),
          model = fct_inorder(model)) %&gt;% 
   ggplot(aes(x = model, y = rmse)) + geom_violin()</code></pre>
-<p><img src="cross_validation_files/figure-html/unnamed-chunk-11-1.png" width="90%" /></p>
+<p><img src="cross_validation_files/figure-html/unnamed-chunk-12-1.png" width="90%" /></p>
+<p>Repeating the split helps! Get a sense of variance in prediction error and compare distributions across methods. Smooth fit wins.</p>
+<p>No p-values, though.</p>
 </div>
-<div id="nepalese-children" class="section level3">
-<h3>Nepalese children</h3>
+<div id="example-child-growth" class="section level3">
+<h3>Example: Child Growth</h3>
+<p>Child growth …</p>
+<p>Import data (available <a href="./data/nepalese_children.csv">here</a>).</p>
 <pre class="r"><code>child_growth = read_csv(&quot;./data/nepalese_children.csv&quot;)
 ## Parsed with column specification:
 ## cols(
-##   id = col_integer(),
 ##   age = col_integer(),
 ##   sex = col_integer(),
 ##   weight = col_double(),
 ##   height = col_double(),
 ##   armc = col_double()
 ## )</code></pre>
+<p>Quick data plot</p>
 <pre class="r"><code>child_growth %&gt;% 
   ggplot(aes(x = weight, y = armc)) + 
   geom_point(alpha = .5)</code></pre>
-<p><img src="cross_validation_files/figure-html/unnamed-chunk-13-1.png" width="90%" /></p>
+<p><img src="cross_validation_files/figure-html/unnamed-chunk-14-1.png" width="90%" /></p>
+<p>Add a “spline term” to allow piecewise linear fits. There’s a lot that goes into this that we won’t talk about, but these are pretty good models.</p>
 <pre class="r"><code>child_growth =
   child_growth %&gt;% 
   mutate(weight_sp = (weight &gt; 7) * (weight - 7))</code></pre>
+<p>Fit three (non-nested) models</p>
 <pre class="r"><code>lin_mod = lm(armc ~ weight, data = child_growth)
 pwl_mod = lm(armc ~ weight + weight_sp, data = child_growth)
 nonlin_mod = gam(armc ~ s(weight), data = child_growth)</code></pre>
+<p>Plot three models</p>
 <pre class="r"><code>child_growth %&gt;% 
   gather_predictions(lin_mod, pwl_mod, nonlin_mod) %&gt;% 
   mutate(model = fct_inorder(model)) %&gt;% 
@@ -526,7 +558,8 @@ nonlin_mod = gam(armc ~ s(weight), data = child_growth)</code></pre>
   geom_point(alpha = .5) +
   geom_line(aes(y = pred), color = &quot;red&quot;) + 
   facet_grid(~model)</code></pre>
-<p><img src="cross_validation_files/figure-html/unnamed-chunk-16-1.png" width="90%" /></p>
+<p><img src="cross_validation_files/figure-html/unnamed-chunk-17-1.png" width="90%" /></p>
+<p>Not clear which is best! Better check prediction errors…</p>
 <pre class="r"><code>cv_df =
   crossv_mc(child_growth, 100) %&gt;% 
   mutate(train = map(train, as_tibble),
@@ -545,101 +578,18 @@ nonlin_mod = gam(armc ~ s(weight), data = child_growth)</code></pre>
   mutate(model = str_replace(model, &quot;rmse_&quot;, &quot;&quot;),
          model = fct_inorder(model)) %&gt;% 
   ggplot(aes(x = model, y = rmse)) + geom_violin()</code></pre>
-<p><img src="cross_validation_files/figure-html/unnamed-chunk-19-1.png" width="90%" /></p>
-</div>
-<div id="real-example" class="section level3">
-<h3>real example</h3>
-<pre class="r"><code>
-
-## penalized spline
-fx = gam(armc ~ s(weight), data = data.train)
-plot.fx = data.frame(weight = data.train$weight, fx = fitted(fx))
-p1 + geom_line(data = plot.fx, aes(x = weight, y = fx, color = NULL), color = &quot;blue&quot;, size = 1.5)
-
-CV[5] = mean((data.valid$armc - predict(fx, newdata = data.valid))^2)
-
-
-## kernel smoother
-plot.fx = with(data.train, as.data.frame(ksmooth(weight, armc, kernel = &quot;normal&quot;, bandwidth = 2)))
-p1 + geom_line(data = plot.fx, aes(x = x, y = y, color = NULL), color = &quot;blue&quot;, size = 1.5)
-
-fx.cv = with(data.train, ksmooth(weight, armc, kernel = &quot;normal&quot;, bandwidth = 2, x.points = data.valid$weight)$y)
-CV[6] = mean((data.valid$armc[order(data.valid$weight)] - fx.cv)^2)
-
-
-## compare CV
-CV = data.frame(x = 1:6, CV = CV)
-ggplot(CV, aes(x = x, y = CV)) + geom_point() + geom_line() + labs(x = &quot;&quot;) + 
-  scale_x_continuous(breaks = 1:6, labels = c(&quot;Obs Mean&quot;, &quot;SLR&quot;, &quot;Poly&quot;, &quot;Spline&quot;, &quot;P-Spline&quot;, &quot;Kernel&quot;)) + 
-  theme_bw()
-
-
-####################################################################
-## extended case study of arm circumference
-####################################################################
-
-## penalized spline
-fx = gam(armc ~ s(weight), data = data.train)
-plot.fx = data.frame(weight = data.train$weight, fx = fitted(fx))
-p1 + geom_line(data = plot.fx, aes(x = weight, y = fx, color = NULL), color = &quot;blue&quot;, size = 1.5)
-summary(fx)
-
-## penalized spline -- different penalty and spline basis
-fx = gam(armc ~ s(weight, k = 100), data = data.train, sp = (.0001))
-plot.fx = data.frame(weight = data.train$weight, fx = fitted(fx))
-p1 + geom_line(data = plot.fx, aes(x = weight, y = fx, color = NULL), color = &quot;blue&quot;, size = 1.5)
-summary(fx)
-
-
-## separate boys and girls
-ggplot(data.train, aes(x = weight, y = armc, color = as.factor(sex))) + geom_point(alpha = .2) +
-  scale_color_manual(values = c(&quot;blue&quot;, &quot;red&quot;), guide = FALSE) +
-  stat_smooth(method = &quot;gam&quot;, formula = y ~ s(x), se = FALSE, size = 1.5) + 
-  theme_bw()
-
-fx = gam(armc ~ sex + sex * weight + s(weight), data = data.train) 
-summary(fx)
-summary(lm(armc ~ sex + sex * weight, data = data.train))
-
-plot(fx)
-
-## separate age groups
-data.train = mutate(data.train, ageGroup = cut(age, breaks = c(0, 22, 32, 40, 50, 100), labels = 1:5))
-data.valid = mutate(data.valid, ageGroup = cut(age, breaks = c(0, 22, 32, 40, 50, 100), labels = 1:5))
-
-ggplot(data.train, aes(x = weight, y = armc, color = ageGroup)) + geom_point(alpha = .2) +
-  stat_smooth(method = &quot;gam&quot;, formula = y ~ s(x), se = FALSE, size = 1.5) + 
-  scale_color_discrete(guide = FALSE) + 
-  theme_bw()
-
-## smooth effects of age and weight
-fx = gam(armc ~ s(age) + s(weight), data = data.train) 
-summary(fx)
-
-CV[7,] = c(7, mean((data.valid$armc - predict(fx, newdata = data.valid))^2))
-
-par(mfrow = c(1,2))
-plot(fx)
-
-## linear model for comparison
-fx = lm(armc ~ age + weight, data = data.train)
-summary(fx)
-
-CV[8,] = c(8, mean((data.valid$armc - predict(fx, newdata = data.valid))^2))
-
-
-## compare CV
-ggplot(CV, aes(x = x, y = CV)) + geom_point() + geom_line() + labs(x = &quot;&quot;) + 
-  scale_x_continuous(breaks = 1:8, labels = c(&quot;Obs Mean&quot;, &quot;SLR&quot;, &quot;Poly&quot;, &quot;Spline&quot;, &quot;P-Spline&quot;, &quot;Kernel&quot;, &quot;Smooth&quot;, &quot;MLR&quot;)) + 
-  theme_bw()
-</code></pre>
+<p><img src="cross_validation_files/figure-html/unnamed-chunk-20-1.png" width="90%" /></p>
+<p>Based on these fits, nonlin might be a bit better than PWL. I’d probably accept that and use the PWL model for ease of interpretation.</p>
 </div>
 </div>
 <div id="other-materials" class="section level2">
 <h2>Other materials</h2>
+<p>Cross validation is important, but still a bit new to the tidyverse. Some helpful posts are available, though, including:</p>
 <ul>
-<li>We didn’t discuss cross validation, another popular approach, but you can read up on it <a href="https://drsimonj.svbtle.com/k-fold-cross-validation-with-modelr-and-broom">here</a> and <a href="http://rpubs.com/dgrtwo/cv-modelr">here</a></li>
+<li>This <a href="https://drsimonj.svbtle.com/k-fold-cross-validation-with-modelr-and-broom">post</a> has a pretty detailed analysis of K fold CV</li>
+<li><a href="http://rpubs.com/dgrtwo/cv-modelr">This</a> is a shorter, somewhat more dated example</li>
 </ul>
+<p>The Introduction to Statistical Learning with R isn’t free online, but if you can track it down Chapter 5 has some useful material as well.</p>
 <p>The code that I produced working examples in lecture is <a href="https://github.com/P8105/linear_models">here</a>.</p>
 </div>
 
