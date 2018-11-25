@@ -384,12 +384,20 @@ div.tocify {
 
 
 <p>If you write more than two functions, you need a package – this will remind you what functions do and how they interact with each other, help you keep track of inputs and outputs, and, if you want to share you code, allow you to do so in a standard format. The <a href="writing_r_packages_i.html">first part</a> of this module covered getting to a complete package from scratch; this module covers some important but more advanced issues in R package development.</p>
-<p>This is the second module in the <a href="topic_writing_r_packages.html">Writing R Packages</a> topic; the relevant slack channel is <a href="https://p8105-fall2017.slack.com/messages/C86A5JU9L">here</a>.</p>
+<p>This is the second of two lectures on writing R packages.</p>
+<pre><code>## ── Attaching packages ────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
+## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
+## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
+## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
+<pre><code>## ── Conflicts ───────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="some-slides" class="section level2">
 <h2>Some slides</h2>
-<script async class="speakerdeck-embed" data-id="7c0c3b85cf824c209a4b691dda1b967b" data-ratio="1.33333333333333" src="//speakerdeck.com/assets/embed.js"></script>
+<script async class="speakerdeck-embed" data-id="7c0c3b85cf824c209a4b691dda1b967b" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
 <div style="margin-bottom:5px">
-<strong> <a href="https://speakerdeck.com/jeffgoldsmith/dsi-writing-r-packages-ii" title="Writing R Packages II" target="_blank">Writing R Packages II</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>.
+<strong> <a href="https://speakerdeck.com/jeffgoldsmith/p8105-writing-r-packages-ii" title="Writing R Packages II" target="_blank">Writing R Packages II</a> </strong> from <strong><a href="https://speakerdeck.com/jeffgoldsmith" target="_blank">Jeff Goldsmith</a></strong>.
 </div>
 <p><br></p>
 </div>
@@ -403,165 +411,50 @@ div.tocify {
 <div id="search-path" class="section level3">
 <h3>Search path</h3>
 <p>Before jumping into new pacakge development stuff, we’re going to take a closer look at R’s search path. You can see your current search path at any time using <code>search()</code>.</p>
-<pre class="r"><code>search()
-##  [1] &quot;.GlobalEnv&quot;             &quot;package:patchwork&quot;     
-##  [3] &quot;package:hexbin&quot;         &quot;package:ggridges&quot;      
-##  [5] &quot;package:tidytext&quot;       &quot;package:shiny&quot;         
-##  [7] &quot;package:janitor&quot;        &quot;package:httr&quot;          
-##  [9] &quot;package:plotly&quot;         &quot;package:p8105.datasets&quot;
-## [11] &quot;package:viridis&quot;        &quot;package:viridisLite&quot;   
-## [13] &quot;package:rvest&quot;          &quot;package:xml2&quot;          
-## [15] &quot;package:haven&quot;          &quot;package:readxl&quot;        
-## [17] &quot;package:modelr&quot;         &quot;package:bindrcpp&quot;      
-## [19] &quot;package:forcats&quot;        &quot;package:stringr&quot;       
-## [21] &quot;package:dplyr&quot;          &quot;package:purrr&quot;         
-## [23] &quot;package:readr&quot;          &quot;package:tidyr&quot;         
-## [25] &quot;package:tibble&quot;         &quot;package:ggplot2&quot;       
-## [27] &quot;package:tidyverse&quot;      &quot;package:stats&quot;         
-## [29] &quot;package:graphics&quot;       &quot;package:grDevices&quot;     
-## [31] &quot;package:utils&quot;          &quot;package:datasets&quot;      
-## [33] &quot;package:methods&quot;        &quot;Autoloads&quot;             
-## [35] &quot;package:base&quot;</code></pre>
+<pre class="r"><code>search()</code></pre>
 <p>There’s not much here yet, since we haven’t loaded anything – mostly we have default packages and the global environment.</p>
 <p>When you call a function, R has to find it. We’ve often made the location of a function explicit using <code>package::function()</code> which tells R specifically where to look but doesn’t affect the search path.</p>
 <pre class="r"><code>iris = janitor::clean_names(iris)
-search()
-##  [1] &quot;.GlobalEnv&quot;             &quot;package:patchwork&quot;     
-##  [3] &quot;package:hexbin&quot;         &quot;package:ggridges&quot;      
-##  [5] &quot;package:tidytext&quot;       &quot;package:shiny&quot;         
-##  [7] &quot;package:janitor&quot;        &quot;package:httr&quot;          
-##  [9] &quot;package:plotly&quot;         &quot;package:p8105.datasets&quot;
-## [11] &quot;package:viridis&quot;        &quot;package:viridisLite&quot;   
-## [13] &quot;package:rvest&quot;          &quot;package:xml2&quot;          
-## [15] &quot;package:haven&quot;          &quot;package:readxl&quot;        
-## [17] &quot;package:modelr&quot;         &quot;package:bindrcpp&quot;      
-## [19] &quot;package:forcats&quot;        &quot;package:stringr&quot;       
-## [21] &quot;package:dplyr&quot;          &quot;package:purrr&quot;         
-## [23] &quot;package:readr&quot;          &quot;package:tidyr&quot;         
-## [25] &quot;package:tibble&quot;         &quot;package:ggplot2&quot;       
-## [27] &quot;package:tidyverse&quot;      &quot;package:stats&quot;         
-## [29] &quot;package:graphics&quot;       &quot;package:grDevices&quot;     
-## [31] &quot;package:utils&quot;          &quot;package:datasets&quot;      
-## [33] &quot;package:methods&quot;        &quot;Autoloads&quot;             
-## [35] &quot;package:base&quot;</code></pre>
+search()</code></pre>
 <p>The <code>iris</code> dataset is included in the <code>datasets</code> package, which is in the search path. We can also use the <code>clean_names()</code> function since we’ve been very clear about where R should find it. We didn’t do anything to the search path, though!</p>
 <p>If you don’t specify the package for a specific function, R will look for it in the global environment and then in attached packages – that is, in the search path. The <code>library()</code> function attaches a package to the search path, including it in the collection of packages R searches when trying to find a function. For example, to call <code>clean_names()</code> without specifying the package, we can use <code>library(janitor)</code> to attach the package to the search path.</p>
 <pre class="r"><code>library(janitor)
 search()
-##  [1] &quot;.GlobalEnv&quot;             &quot;package:patchwork&quot;     
-##  [3] &quot;package:hexbin&quot;         &quot;package:ggridges&quot;      
-##  [5] &quot;package:tidytext&quot;       &quot;package:shiny&quot;         
-##  [7] &quot;package:janitor&quot;        &quot;package:httr&quot;          
-##  [9] &quot;package:plotly&quot;         &quot;package:p8105.datasets&quot;
-## [11] &quot;package:viridis&quot;        &quot;package:viridisLite&quot;   
-## [13] &quot;package:rvest&quot;          &quot;package:xml2&quot;          
-## [15] &quot;package:haven&quot;          &quot;package:readxl&quot;        
-## [17] &quot;package:modelr&quot;         &quot;package:bindrcpp&quot;      
-## [19] &quot;package:forcats&quot;        &quot;package:stringr&quot;       
-## [21] &quot;package:dplyr&quot;          &quot;package:purrr&quot;         
-## [23] &quot;package:readr&quot;          &quot;package:tidyr&quot;         
-## [25] &quot;package:tibble&quot;         &quot;package:ggplot2&quot;       
-## [27] &quot;package:tidyverse&quot;      &quot;package:stats&quot;         
-## [29] &quot;package:graphics&quot;       &quot;package:grDevices&quot;     
-## [31] &quot;package:utils&quot;          &quot;package:datasets&quot;      
-## [33] &quot;package:methods&quot;        &quot;Autoloads&quot;             
-## [35] &quot;package:base&quot;
 
 iris = clean_names(iris)
 detach(&quot;package:janitor&quot;, unload = TRUE)</code></pre>
 <p>Why not just attach everything? In part, at least, to avoid naming conflicts. Both <code>MASS</code> and <code>dplyr</code> have functions called <code>select()</code>, for example, and they do really different things. If you load both packages, which version you get depends on the order in which they’re loaded.</p>
 <p>To use <code>tidyverse::select</code>, we load that package second.</p>
 <pre class="r"><code>library(MASS)
-## 
-## Attaching package: &#39;MASS&#39;
-## The following object is masked from &#39;package:plotly&#39;:
-## 
-##     select
-## The following object is masked from &#39;package:dplyr&#39;:
-## 
-##     select
 library(dplyr)
 
 iris %&gt;% 
   as_tibble() %&gt;% 
-  select(sepal_length)
-## Error in select(., sepal_length): unused argument (sepal_length)</code></pre>
+  select(sepal_length)</code></pre>
 <p>Note the warning that <code>dplyr::select()</code> masks <code>MASS::select()</code> – these warnings are easy to overlook but are really important!</p>
 <p>I’ll detach both packages (and first detach <code>janitor</code>, since having it loaded prevents me from detaching <code>dplyr</code>), then reverse the order in which I attach them and try again.</p>
 <pre class="r"><code>detach(&quot;package:dplyr&quot;, unload = TRUE)
-## Warning: &#39;dplyr&#39; namespace cannot be unloaded:
-##   namespace &#39;dplyr&#39; is imported by &#39;broom&#39;, &#39;tidytext&#39;, &#39;plotly&#39; so cannot be unloaded
 detach(&quot;package:MASS&quot;, unload = TRUE)
 
 library(dplyr)
-## 
-## Attaching package: &#39;dplyr&#39;
-## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag
-## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union
 library(MASS)
-## 
-## Attaching package: &#39;MASS&#39;
-## The following object is masked from &#39;package:dplyr&#39;:
-## 
-##     select
-## The following object is masked from &#39;package:plotly&#39;:
-## 
-##     select
 
 iris %&gt;% 
   as_tibble() %&gt;% 
   select(sepal_length)
-## Error in select(., sepal_length): unused argument (sepal_length)
 
 iris %&gt;% 
   as_tibble() %&gt;% 
-  dplyr::select(sepal_length)
-## # A tibble: 150 x 1
-##   sepal_length
-##          &lt;dbl&gt;
-## 1          5.1
-## 2          4.9
-## 3          4.7
-## 4          4.6
-## 5          5  
-## # ... with 145 more rows</code></pre>
+  dplyr::select(sepal_length)</code></pre>
 <p>The command that just uses <code>select</code> produces an error, because it’s using (implicitly) <code>MASS::select()</code>; the second is clear about using <code>dplyr::select</code> and works as desired.</p>
-<p>As you work more in R you will run into search path issues (if you haven’t already), and understanding how attaching packages affects the search path will help you resolve this. This discussion also ilustrates why it’s best to only attach the packages you need, and to use <code>package::function()</code> notation in cases where a package isn’t used repeatedly.</p>
+<p>As you work more in R you will run into search path issues (if you haven’t already), and understanding how attaching packages affects the search path will help you resolve this. This discussion also illustrates why it’s best to only attach the packages you need, and to use <code>package::function()</code> notation in cases where a package isn’t used repeatedly.</p>
 </div>
 <div id="namespace" class="section level3">
 <h3><code>NAMESPACE</code></h3>
 <p>The search path discussion is particularly relevant in the context of writing your own packages. In particular, the <code>NAMESPACE</code> file determines search path associated with your package. The <code>NAMESPACE</code> file for <code>example.package</code> is shown below.</p>
-<pre><code># Generated by roxygen2: do not edit by hand
-
-export(sim_bern_mean)
-export(sim_regression)
-export(simulate_nrep)
-import(dplyr)
-import(purrr)
-importFrom(magrittr,&quot;%&gt;%&quot;)
-importFrom(tibble,tibble)</code></pre>
 <p>We used <code>@import dplyr</code> and <code>@import purrr</code> in our roxygen comments, which adds the statements <code>import(dplyr)</code> and <code>import(purrr)</code> to the <code>NAMESPACE</code>. As a result, code in our package will include <code>dplyr</code> and <code>purrr</code> when looking for functions.</p>
 <p>We also used <code>@importFrom tibble tibble</code> and <code>@importFrom magrittr &quot;%&gt;%&quot;</code> in our roxygen comments, which adds the statements <code>importFrom(tibble,tibble)</code> and <code>importFrom(magrittr,&quot;%&gt;%&quot;)</code> to the <code>NAMESPACE</code>. As a result, code in our package will include <em>these specific functions</em> when executing code.</p>
 <p>There’s an important but confusing distinction between import <strong><em>directives</em></strong> in the <code>NAMESPACE</code> and the <code>Import</code> <strong><em>field</em></strong> in the <code>DESCRIPTION</code> (shown below). Although they share a name, these mean different things: roughly, in the <code>NAMESPACE</code> we’re listing packages that need to be included in the search path, while in the <code>DESCRIPTION</code> we’re listing packages that have to be installed for our package to work.</p>
-<pre><code>Package: example.package
-Title: Simuates Data and Summarizes
-Version: 0.1.0
-Authors@R: person(&quot;Jeff&quot;, &quot;Goldsmith&quot;, email = &quot;ajg2202@cumc.columbia.edu&quot;, role = c(&quot;aut&quot;, &quot;cre&quot;))
-Description: What the package does (one paragraph).
-Depends: R (&gt;= 3.4.1)
-License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 6.0.1
-Imports: broom,
-    dplyr,
-    magrittr,
-    purrr,
-    tibble,</code></pre>
 <p>To illustrate this distinction, recall that we used <code>broom::tidy()</code> in our functions rather than including <code>@import broom</code> in the roxygen comments. This makes it very clear where <code>tidy()</code> comes from, and means we don’t need <code>broom</code> in the search path; thus, these don’t appear in the <code>NAMESPACE</code>. We do still need the packages though, so they’re listed as a dependency in the <code>DESCRIPTION</code>.</p>
 <p>The <code>NAMESPACE</code> and roxygen comments also include exports, which identify functions that are visible when your package is attached. In bigger, more complex packages you may have functions you don’t want users to have access to; for those, remove <code>@export</code> from the roxygen comments.</p>
 </div>
@@ -570,49 +463,6 @@ Imports: broom,
 <p>Checking yor package for common issues – things like the presence of all needed files, the completeness of documentation, whether the code and examples run – is critical to making sure your package is complete and self-contained. You can perform these checks using <code>devtools::check()</code> or a button in RStudio. This is going to be frustrating, at least until you start to recognize that this is a helpful process. The checks really get into the corners of your package and find things you wouldn’t expect. The messages take some practice to understand. Correcting issues will force you to complete all your documentation.</p>
 <p>You don’t have to do this for packages written for yourself, although I do recommend it. You <em>do</em> have to do this for packages that go on CRAN, which is part of the reason that CRAN packages are a bit more trustworthy. Many packages on GitHub has passed checks; look for a happy <code>build | passing</code> sticker at the top of the README!</p>
 <p>Below is the (redacted) output of checking <code>example.package</code>.</p>
-<pre><code>Updating example.package documentation
-Loading example.package
-Warning: @examples [sim_bern_mean.R#12]: requires a value
-Warning: @param [simulate_nrep.R#4]: requires name and description
-Warning: @examples [simulate_nrep.R#13]: requires a value
-
-...
-
-* checking package namespace information ... OK
-* checking package dependencies ... OK
-* checking if this is a source package ... OK
-* checking if there is a namespace ... OK
-
-...
-
-* checking R code for possible problems ... NOTE
-sim_bern_mean: no visible global function definition for ‘rbinom’
-sim_regression: no visible global function definition for ‘rnorm’
-sim_regression: no visible binding for global variable ‘x’
-
-...
-
-* checking examples ... ERROR
-Running examples in ‘example.package-Ex.R’ failed
-The error most likely occurred in:
-
-&gt; base::assign(&quot;.ptime&quot;, proc.time(), pos = &quot;CheckExEnv&quot;)
-&gt; ### Name: sim_regression
-&gt; ### Title: Simulate from an SLR
-&gt; ### Aliases: sim_regression
-&gt; 
-&gt; ### ** Examples
-&gt; 
-&gt; # simulate a dataset and return estimates
-&gt; sim_regression(30, 2, 3)
-Error in lm(y ~ x, data = sim_data) %&gt;% broom::tidy() : 
-  could not find function &quot;%&gt;%&quot;
-Calls: sim_regression
-Execution halted
-* DONE
-Status: 1 ERROR, 1 WARNING, 2 NOTEs
-
-...</code></pre>
 <p>We did pretty well! There are some warnings about our documentation (incomplete <code>@param</code> and <code>@example</code> roxygen comments), a note about being clear about where some functions come from, and an error in one of our examples (which needs <code>%&gt;%</code> to run, but doesn’t load the necessary package). This gives a sense of the kind of issues that checking your package will turn up.</p>
 </div>
 <div id="tests" class="section level3">
@@ -626,34 +476,7 @@ Status: 1 ERROR, 1 WARNING, 2 NOTEs
 <p>Informal testing is common during development – you run your functions on code snippets and make sure they give the results you expect. Formal testing makes this process more rigorous and saving the informal tests and running them each time you check your package. Like other best practices for development, this takes some time to get used to but guards against future trouble and improves your software.</p>
 <p>The <code>testthat</code> package does as much as possible to facilitate formal testing. To set this up for your package, run <code>devtools::use_testthat()</code>. Doing so will create a directory <code>/tests/testthat/</code> to hold tests and a file <code>/tests/testthat.R</code> to run tests. It’s your job to write the tests!</p>
 <p>The file <code>tests/testthat/test_sim_bern.R</code> is shown below (note: test files have to start with <code>test</code> and be in the right directory):</p>
-<pre><code>context(&quot;sim_bern_mean&quot;)
-
-test_that(&quot;simualtion returns a 2x1 dataframe&quot;, {
-
-  sim_output = sim_bern_mean(30, .5)
-
-  expect_is(output, &quot;tbl_df&quot;)
-  expect_equal(ncol(output), 2)
-  expect_equal(nrow(output), 1)
-
-})
-
-test_that(&quot;simulation gives anticipated results&quot;, {
-
-  set.seed(1)
-  output = sim_bern_mean(30, .5)
-
-  set.seed(1)
-  sample = rbinom(30, 1, .5)
-
-  expect_equal(output$n, length(sample))
-  expect_equal(output$samp_avg, mean(sample))
-
-})</code></pre>
 <p>These are pretty contrived tests, but give you an idea of how testing in general might work. Use <code>devtools::test()</code> to run your tests (these will also run when you check your package); output for my tests is shown below.</p>
-<pre><code>Loading example.package
-Testing example.package
-sim_bern_mean: .....</code></pre>
 <p>This output contains <code>.</code> for each passed test in each context, and will indicate when a test is failed.</p>
 </div>
 <div id="vignettes" class="section level3">
@@ -677,7 +500,7 @@ sim_bern_mean: .....</code></pre>
 <p>Disseminating your vignette gets complicated, unfortunately – the knitted RMD is in <code>/inst/doc/</code>, which git is ignoring. <em>Building</em> a package (going from source to bundle) using <code>devtools::build()</code> will compile the vignette and include it in the bundle, so packages installed from a bundle or binary will have vignettes available. That means you can check out vignettes for packages you’ve installed from CRAN; see what’s available with <code>browseVignettes()</code>, or go straight to a vignette using <code>vignette(&quot;dplyr&quot;)</code>.</p>
 <p>Installing from github first builds the package bundle and then installs that; by default, this won’t knit vignettes in case they are time consuming or complex. You can force the inclusion of a vignette using <code>devtools::install_github(build_vignettes = TRUE)</code>.</p>
 <p>For packages I put on GH, I usually include a code chunk like the one below in my README to let users know how to include and access the vignette.</p>
-<pre class="r"><code>devtools::install_github(&quot;jeff-goldsmith/example.package&quot;, 
+<pre class="r"><code>devtools::install_github(&quot;p8105/example.package&quot;, 
                          build_vignettes = TRUE)
 # vignette(&quot;sim_vignette&quot;)</code></pre>
 </div>
@@ -700,7 +523,7 @@ sim_bern_mean: .....</code></pre>
 <li>The <a href="https://www.tidyverse.org/articles/2017/11/usethis-1.0.0/"><code>usethis</code> package</a> should automate a lot of the package writing process, although I haven’t used it myself</li>
 <li>The official guide to <a href="https://cran.r-project.org/doc/manuals/r-release/R-exts.html">Writing R Extensions</a> also exists, although I’m not sure I exactly <em>recommend</em> it …</li>
 </ul>
-<p>The code that I produced working examples in lecture is <a href="https://github.com/jeff-goldsmith/example.package">here</a>.</p>
+<p>The code that I produced working examples in lecture is <a href="https://github.com/p8105/example.package">here</a>.</p>
 </div>
 
 <br><br>
