@@ -1,8 +1,9 @@
 ---
-title: "Untitled"
+title: "Shiny Dashboard"
 output: 
   flexdashboard::flex_dashboard:
-    orientation: row
+    orientation: columns
+    vertical_layout: fill
 runtime: shiny
 ---
 
@@ -17,8 +18,7 @@ Column {.sidebar}
 
 ```
 
-
-Row
+Column {data-width=650}
 -----------------------------------------------------------------------
 
 ### Chart A
@@ -27,7 +27,7 @@ Row
 
 ```
 
-Row {.tabset .tabset-fade}
+Column {data-width=350}
 -----------------------------------------------------------------------
 
 ### Chart B
