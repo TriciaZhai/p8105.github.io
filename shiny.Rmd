@@ -8,9 +8,9 @@ output:
 
 `Shiny` is RStudio's framework for creating interactive graphics and web-like applications. There are several ways to use `Shiny`, and we're going to focus on how to use it in conjunction with `flexdashboard` to make interactive dashboards within R Markdown.
 
-This page is related to content in [plotly and dashboards](plotly_and_dashboards.html).
+This page is related to content in [plotly and dashboards](plotly_and_dashboards.html), and the slack channel for extra topics is [here](https://p8105-fall2018.slack.com/messages/CEC9L1JKV).
 
-```{r, echo = FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   fig.width = 6,
