@@ -56,3 +56,10 @@ Traditional analyses of accelerometer data focus on the total activity over the 
 One advantage of accelerometer data is the ability to inspect activity over the course of the day, rather than aggregating over 24 hours. Explore the distribution of activity counts in the full dataset, taking into account other variables of interest. Make a visualization that shows the 24-hour activity "profiles" for each day. Also visualize effects of time and day of the week on 24-hour activity profiles; incorporating smooth estimates of mean activity profiles may clarify these effects. Comment on relationships you think are interesting. (No formal statistical analyses are needed.)
 
 
+### "Solutions"
+
+Because this assignment is open-ended, approaches will vary widely. With that in mind, in place of formal solutions we're providing links to several successful projects. These had clearly-written code, conducted necessary exploratory analyses, and documented results in a clear report. 
+
+* [Project 1](https://github.com/Raarbiarsan1899/p8105_mtp_zf2213)
+* [Project 2](https://github.com/sal2222/p8105_mtp_sal2222)
+* [Project 3](https://github.com/tiffanyxi/p8105_mtp_hx2263)
