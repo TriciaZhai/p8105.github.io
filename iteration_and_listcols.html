@@ -545,7 +545,7 @@ output = map(df, median)
 ## 
 ##     guess_encoding
 
-read_page_reviews &lt;- function(url) {
+read_page_reviews = function(url) {
   
   h = read_html(url)
   
@@ -560,7 +560,7 @@ read_page_reviews &lt;- function(url) {
     as.numeric()
   
   text = h %&gt;%
-    html_nodes(&quot;.review-data:nth-child(4)&quot;) %&gt;%
+    html_nodes(&quot;.review-data:nth-child(5)&quot;) %&gt;%
     html_text()
   
   data_frame(title, stars, text)
@@ -795,7 +795,7 @@ weather_nest
 <pre class="r"><code>dynamite_reviews = 
   tibble(page = 1:5,
          urls = str_c(url_base, page)) %&gt;% 
-  mutate(reviews = map(vec_urls, read_page_reviews)) %&gt;% 
+  mutate(reviews = map(urls, read_page_reviews)) %&gt;% 
   unnest()</code></pre>
 <p>I’ll also revisit a way to load and tidy the LoTR words data that starts with a dataframe containing cell ranges for each movie. Of all the approaches we’ve seen, this is probably my favorite.</p>
 <pre class="r"><code>lotr_cell_ranges = 

@@ -158,7 +158,7 @@ review_stars = dynamite_html %>%
   html_text()
 
 review_text = dynamite_html %>%
-    html_nodes(".review-data:nth-child(4)") %>%
+    html_nodes(".review-data:nth-child(5)") %>%
     html_text()
 
 reviews = tibble(

@@ -213,7 +213,7 @@ In [reading data from the web](reading_data_from_the_web.html) and elsewhere, we
 ```{r}
 library(rvest)
 
-read_page_reviews <- function(url) {
+read_page_reviews = function(url) {
   
   h = read_html(url)
   
@@ -228,7 +228,7 @@ read_page_reviews <- function(url) {
     as.numeric()
   
   text = h %>%
-    html_nodes(".review-data:nth-child(4)") %>%
+    html_nodes(".review-data:nth-child(5)") %>%
     html_text()
   
   data_frame(title, stars, text)
@@ -374,7 +374,7 @@ Earlier, we looked at scraping reviews of Napoleon Dynamite from several pages o
 dynamite_reviews = 
   tibble(page = 1:5,
          urls = str_c(url_base, page)) %>% 
-  mutate(reviews = map(vec_urls, read_page_reviews)) %>% 
+  mutate(reviews = map(urls, read_page_reviews)) %>% 
   unnest()
 ```
 
